@@ -1,1317 +1,1515 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CraftBorn Role Play — Hakkımızda</title>
-<link href="https://fonts.googleapis.com/css2?family=MedievalSharp&family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@400;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,400&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --bg-deep: #050a04;
-    --bg-mid: #0a1208;
-    --bg-panel: #0d1a0b;
-    --green-dark: #1a3d0f;
-    --green-mid: #2d6b1a;
-    --green-bright: #4caf26;
-    --green-glow: #72ff3a;
-    --zombie-red: #b81c1c;
-    --zombie-blood: #7a0000;
-    --dirt-brown: #5c3d1e;
-    --stone-grey: #8a8a8a;
-    --stone-light: #c8c8c8;
-    --gold: #f0c040;
-    --gold-dim: #a07a10;
-    --text-main: #d4e8c2;
-    --text-dim: #7a9e6a;
-    --border-moss: #2d5a1a;
-    --pixel: 4px;
-  }
-
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-
-  html { scroll-behavior: smooth; }
-
-  body {
-    background-color: var(--bg-deep);
-    color: var(--text-main);
-    font-family: 'Crimson Pro', serif;
-    font-size: 18px;
-    line-height: 1.7;
-    overflow-x: hidden;
-    cursor: default;
-  }
-
-  /* ───── PIXEL NOISE OVERLAY ───── */
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4'%3E%3Crect width='1' height='1' x='0' y='0' fill='%2300ff0008'/%3E%3Crect width='1' height='1' x='2' y='2' fill='%2300ff0008'/%3E%3C/svg%3E");
-    background-size: 4px 4px;
-    pointer-events: none;
-    z-index: 9999;
-    opacity: 0.5;
-  }
-
-  /* ───── SCROLLBAR ───── */
-  ::-webkit-scrollbar { width: 8px; }
-  ::-webkit-scrollbar-track { background: var(--bg-deep); }
-  ::-webkit-scrollbar-thumb { background: var(--green-dark); border: 2px solid var(--green-mid); }
-  ::-webkit-scrollbar-thumb:hover { background: var(--green-mid); }
-
-  /* ───── MINECRAFT BLOCK BORDER MIXIN ───── */
-  .block-border {
-    border: 3px solid var(--border-moss);
-    box-shadow:
-      inset 2px 2px 0 rgba(255,255,255,0.07),
-      inset -2px -2px 0 rgba(0,0,0,0.5),
-      0 0 20px rgba(76,175,38,0.08);
-  }
-
-  /* ───── NAV ───── */
-  nav {
-    position: fixed;
-    top: 0; left: 0; right: 0;
-    z-index: 1000;
-    background: rgba(5,10,4,0.92);
-    border-bottom: 3px solid var(--green-dark);
-    box-shadow: 0 2px 30px rgba(76,175,38,0.15);
-    backdrop-filter: blur(6px);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 3rem;
-    height: 64px;
-  }
-
-  .nav-logo {
-    font-family: 'Cinzel Decorative', serif;
-    font-size: 1.1rem;
-    font-weight: 900;
-    color: var(--green-glow);
-    text-shadow: 0 0 12px var(--green-bright), 0 0 30px rgba(114,255,58,0.3);
-    letter-spacing: 0.05em;
-    text-decoration: none;
-  }
-
-  .nav-logo span {
-    color: var(--gold);
-    text-shadow: 0 0 10px var(--gold);
-  }
-
-  .nav-links {
-    display: flex;
-    gap: 2rem;
-    list-style: none;
-  }
-
-  .nav-links a {
-    font-family: 'Cinzel', serif;
-    font-size: 0.8rem;
-    font-weight: 600;
-    letter-spacing: 0.1em;
-    color: var(--text-dim);
-    text-decoration: none;
-    text-transform: uppercase;
-    transition: color 0.2s, text-shadow 0.2s;
-    position: relative;
-  }
-
-  .nav-links a::after {
-    content: '';
-    position: absolute;
-    bottom: -4px; left: 0; right: 0;
-    height: 2px;
-    background: var(--green-bright);
-    transform: scaleX(0);
-    transition: transform 0.2s;
-  }
-
-  .nav-links a:hover { color: var(--green-glow); text-shadow: 0 0 8px var(--green-bright); }
-  .nav-links a:hover::after { transform: scaleX(1); }
-
-  /* ───── HERO ───── */
-  #hero {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    text-align: center;
-    padding: 6rem 2rem 4rem;
-    overflow: hidden;
-  }
-
-  /* Minecraft grass/stone layered background */
-  #hero::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background:
-      radial-gradient(ellipse 80% 60% at 50% 40%, rgba(29,65,15,0.35) 0%, transparent 70%),
-      radial-gradient(ellipse 60% 40% at 20% 80%, rgba(114,255,58,0.05) 0%, transparent 60%),
-      radial-gradient(ellipse 50% 50% at 80% 20%, rgba(184,28,28,0.08) 0%, transparent 60%);
-    pointer-events: none;
-  }
-
-  /* Pixel grid pattern */
-  #hero::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background-image:
-      linear-gradient(rgba(76,175,38,0.03) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(76,175,38,0.03) 1px, transparent 1px);
-    background-size: 32px 32px;
-    pointer-events: none;
-  }
-
-  .hero-badge {
-    font-family: 'Cinzel', serif;
-    font-size: 0.7rem;
-    font-weight: 700;
-    letter-spacing: 0.3em;
-    text-transform: uppercase;
-    color: var(--green-bright);
-    border: 1px solid var(--green-dark);
-    padding: 0.4em 1.2em;
-    margin-bottom: 2rem;
-    animation: fadeDown 0.8s ease both;
-    background: rgba(76,175,38,0.07);
-  }
-
-  .hero-title {
-    font-family: 'Cinzel Decorative', serif;
-    font-size: clamp(2.8rem, 7vw, 6rem);
-    font-weight: 900;
-    line-height: 1.1;
-    color: var(--green-glow);
-    text-shadow:
-      0 0 20px var(--green-bright),
-      0 0 60px rgba(114,255,58,0.2),
-      4px 4px 0 var(--green-dark),
-      8px 8px 0 rgba(0,0,0,0.5);
-    margin-bottom: 0.3em;
-    animation: fadeDown 0.9s 0.1s ease both;
-    position: relative;
-    z-index: 1;
-  }
-
-  .hero-subtitle {
-    font-family: 'Cinzel', serif;
-    font-size: clamp(1.1rem, 2.5vw, 1.6rem);
-    font-weight: 600;
-    letter-spacing: 0.25em;
-    text-transform: uppercase;
-    color: var(--gold);
-    text-shadow: 0 0 15px var(--gold-dim);
-    margin-bottom: 2.5rem;
-    animation: fadeDown 1s 0.2s ease both;
-    position: relative;
-    z-index: 1;
-  }
-
-  .hero-desc {
-    max-width: 600px;
-    font-size: 1.1rem;
-    color: var(--text-dim);
-    font-style: italic;
-    margin-bottom: 3rem;
-    animation: fadeDown 1s 0.3s ease both;
-    position: relative;
-    z-index: 1;
-  }
-
-  .hero-buttons {
-    display: flex;
-    gap: 1rem;
-    flex-wrap: wrap;
-    justify-content: center;
-    animation: fadeDown 1s 0.4s ease both;
-    position: relative;
-    z-index: 1;
-  }
-
-  /* ───── BUTTONS ───── */
-  .btn {
-    font-family: 'Cinzel', serif;
-    font-size: 0.8rem;
-    font-weight: 700;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    text-decoration: none;
-    padding: 0.9em 2.2em;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.6em;
-    transition: all 0.15s;
-    position: relative;
-    cursor: pointer;
-    border: none;
-  }
-
-  .btn::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(180deg, rgba(255,255,255,0.12) 0%, transparent 50%);
-    pointer-events: none;
-  }
-
-  .btn-primary {
-    background: var(--green-dark);
-    color: var(--green-glow);
-    border: 2px solid var(--green-mid);
-    box-shadow: 0 4px 0 var(--bg-deep), inset 0 1px 0 rgba(255,255,255,0.1);
-    text-shadow: 0 0 10px var(--green-bright);
-  }
-
-  .btn-primary:hover {
-    background: var(--green-mid);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 0 var(--bg-deep), 0 0 25px rgba(76,175,38,0.3);
-  }
-
-  .btn-primary:active { transform: translateY(2px); box-shadow: 0 2px 0 var(--bg-deep); }
-
-  .btn-discord {
-    background: #2c2f7a;
-    color: #b8beff;
-    border: 2px solid #4752c4;
-    box-shadow: 0 4px 0 var(--bg-deep);
-  }
-
-  .btn-discord:hover {
-    background: #3c42a0;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 0 var(--bg-deep), 0 0 25px rgba(71,82,196,0.4);
-    color: #fff;
-  }
-
-  /* ───── FLOATING CUBES ───── */
-  .cubes-container {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    overflow: hidden;
-  }
-
-  .cube {
-    position: absolute;
-    opacity: 0.15;
-    animation: floatCube linear infinite;
-  }
-
-  .cube::before {
-    content: '';
-    display: block;
-    background: var(--green-dark);
-    border: 2px solid var(--green-mid);
-    box-shadow: inset 1px 1px 0 rgba(255,255,255,0.15), inset -1px -1px 0 rgba(0,0,0,0.4);
-  }
-
-  /* Zombie cube variant */
-  .cube.zombie::before {
-    background: var(--zombie-blood);
-    border-color: var(--zombie-red);
-    box-shadow: inset 1px 1px 0 rgba(255,100,100,0.2);
-  }
-
-  @keyframes floatCube {
-    0% { transform: translateY(110vh) rotate(0deg); opacity: 0; }
-    10% { opacity: 0.15; }
-    90% { opacity: 0.15; }
-    100% { transform: translateY(-20vh) rotate(360deg); opacity: 0; }
-  }
-
-  /* ───── SECTION SHARED ───── */
-  section {
-    padding: 6rem 2rem;
-    max-width: 1100px;
-    margin: 0 auto;
-  }
-
-  .section-header {
-    text-align: center;
-    margin-bottom: 4rem;
-  }
-
-  .section-tag {
-    font-family: 'Cinzel', serif;
-    font-size: 0.65rem;
-    font-weight: 700;
-    letter-spacing: 0.4em;
-    text-transform: uppercase;
-    color: var(--green-bright);
-    display: block;
-    margin-bottom: 0.8rem;
-  }
-
-  .section-title {
-    font-family: 'Cinzel Decorative', serif;
-    font-size: clamp(1.8rem, 4vw, 3rem);
-    font-weight: 700;
-    color: var(--text-main);
-    text-shadow: 2px 2px 0 var(--green-dark);
-    line-height: 1.15;
-  }
-
-  .section-title em {
-    color: var(--green-glow);
-    font-style: normal;
-    text-shadow: 0 0 15px var(--green-bright);
-  }
-
-  .section-divider {
-    width: 80px;
-    height: 4px;
-    background: linear-gradient(90deg, transparent, var(--green-bright), transparent);
-    margin: 1.5rem auto 0;
-  }
-
-  /* ───── ABOUT PANELS ───── */
-  .about-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 2px;
-    background: var(--green-dark);
-    border: 3px solid var(--green-dark);
-    overflow: hidden;
-  }
-
-  .about-panel {
-    background: var(--bg-panel);
-    padding: 2.5rem;
-    position: relative;
-    transition: background 0.2s;
-  }
-
-  .about-panel:hover { background: #0f1f0c; }
-
-  .about-panel .panel-icon {
-    font-size: 2.5rem;
-    margin-bottom: 1rem;
-    display: block;
-    filter: drop-shadow(0 0 8px var(--green-bright));
-  }
-
-  .about-panel h3 {
-    font-family: 'Cinzel', serif;
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: var(--gold);
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    margin-bottom: 0.8rem;
-    text-shadow: 0 0 10px var(--gold-dim);
-  }
-
-  .about-panel p {
-    color: var(--text-dim);
-    font-size: 1rem;
-    line-height: 1.7;
-  }
-
-  /* ───── DETROWORLD SECTION ───── */
-  #detroworld {
-    position: relative;
-    max-width: 100%;
-    padding: 0;
-    overflow: hidden;
-  }
-
-  .detroworld-wrapper {
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 6rem 2rem;
-  }
-
-  #detroworld::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background:
-      linear-gradient(180deg, var(--bg-deep) 0%, rgba(122,0,0,0.12) 40%, rgba(122,0,0,0.08) 60%, var(--bg-deep) 100%);
-    pointer-events: none;
-  }
-
-  /* Blood drip effect */
-  #detroworld::after {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 6px;
-    background: repeating-linear-gradient(
-      90deg,
-      var(--zombie-blood) 0px, var(--zombie-blood) 20px,
-      transparent 20px, transparent 40px,
-      var(--zombie-red) 40px, var(--zombie-red) 55px,
-      transparent 55px, transparent 80px
-    );
-    box-shadow: 0 0 15px var(--zombie-blood);
-  }
-
-  .detroworld-inner {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 4rem;
-    align-items: center;
-  }
-
-  .detroworld-content h2 {
-    font-family: 'Cinzel Decorative', serif;
-    font-size: clamp(2rem, 4vw, 3.2rem);
-    font-weight: 900;
-    line-height: 1.1;
-    margin-bottom: 0.3em;
-  }
-
-  .detroworld-content h2 .dw-name {
-    color: var(--zombie-red);
-    text-shadow: 0 0 20px var(--zombie-blood), 2px 2px 0 #330000;
-    display: block;
-    font-size: 1.2em;
-  }
-
-  .detroworld-content h2 .dw-sub {
-    color: var(--stone-grey);
-    font-size: 0.5em;
-    font-family: 'Cinzel', serif;
-    font-weight: 600;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    display: block;
-    margin-bottom: 0.5em;
-  }
-
-  .detroworld-content .project-tag {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5em;
-    font-family: 'Cinzel', serif;
-    font-size: 0.7rem;
-    font-weight: 700;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--green-bright);
-    background: rgba(76,175,38,0.1);
-    border: 1px solid var(--green-dark);
-    padding: 0.35em 1em;
-    margin-bottom: 1.5rem;
-  }
-
-  .project-tag .dot {
-    width: 6px; height: 6px;
-    background: var(--green-bright);
-    border-radius: 50%;
-    animation: blink 1.2s ease infinite;
-  }
-
-  @keyframes blink {
-    0%, 100% { opacity: 1; box-shadow: 0 0 4px var(--green-bright); }
-    50% { opacity: 0.2; box-shadow: none; }
-  }
-
-  .detroworld-content p {
-    color: var(--text-dim);
-    margin-bottom: 1rem;
-    line-height: 1.8;
-  }
-
-  .zombie-features {
-    margin-top: 1.5rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.6rem;
-  }
-
-  .zombie-feature {
-    display: flex;
-    align-items: center;
-    gap: 0.8em;
-    font-family: 'Cinzel', serif;
-    font-size: 0.8rem;
-    font-weight: 600;
-    letter-spacing: 0.05em;
-    color: var(--text-main);
-  }
-
-  .zombie-feature .feat-icon {
-    font-size: 1.1rem;
-    width: 28px;
-    text-align: center;
-    filter: drop-shadow(0 0 4px var(--zombie-red));
-  }
-
-  /* DetroWorld visual block */
-  .detroworld-visual {
-    position: relative;
-  }
-
-  .dw-card {
-    background: var(--bg-panel);
-    border: 3px solid var(--zombie-blood);
-    box-shadow:
-      inset 2px 2px 0 rgba(255,100,100,0.05),
-      inset -2px -2px 0 rgba(0,0,0,0.6),
-      0 0 40px rgba(184,28,28,0.2);
-    padding: 2.5rem;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .dw-card::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background:
-      radial-gradient(ellipse 80% 60% at 50% 50%, rgba(122,0,0,0.12) 0%, transparent 70%);
-    pointer-events: none;
-  }
-
-  .dw-card-label {
-    font-family: 'Cinzel', serif;
-    font-size: 0.6rem;
-    font-weight: 700;
-    letter-spacing: 0.4em;
-    text-transform: uppercase;
-    color: var(--zombie-red);
-    margin-bottom: 0.8rem;
-    opacity: 0.8;
-  }
-
-  .dw-card h3 {
-    font-family: 'Cinzel Decorative', serif;
-    font-size: 1.8rem;
-    font-weight: 900;
-    color: var(--zombie-red);
-    text-shadow: 0 0 20px rgba(184,28,28,0.6), 2px 2px 0 #1a0000;
-    margin-bottom: 1.5rem;
-    line-height: 1.2;
-  }
-
-  .stat-rows {
-    display: flex;
-    flex-direction: column;
-    gap: 0.8rem;
-  }
-
-  .stat-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid rgba(122,0,0,0.3);
-    padding-bottom: 0.6rem;
-    font-size: 0.9rem;
-  }
-
-  .stat-row .label {
-    font-family: 'Cinzel', serif;
-    font-size: 0.7rem;
-    font-weight: 600;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--stone-grey);
-  }
-
-  .stat-row .value {
-    font-weight: 600;
-    color: var(--text-main);
-  }
-
-  .stat-row .value.active {
-    color: var(--green-bright);
-    text-shadow: 0 0 8px var(--green-bright);
-  }
-
-  .stat-row .value.zombie {
-    color: var(--zombie-red);
-    text-shadow: 0 0 8px var(--zombie-blood);
-  }
-
-  /* ───── FOUNDER SECTION ───── */
-  .founder-card {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 3rem;
-    align-items: center;
-    background: var(--bg-panel);
-    padding: 3rem;
-    border: 3px solid var(--green-dark);
-    box-shadow:
-      inset 2px 2px 0 rgba(255,255,255,0.04),
-      inset -2px -2px 0 rgba(0,0,0,0.5),
-      0 0 40px rgba(76,175,38,0.06);
-    position: relative;
-    overflow: hidden;
-  }
-
-  .founder-card::before {
-    content: '';
-    position: absolute;
-    top: 0; right: 0;
-    width: 300px; height: 300px;
-    background: radial-gradient(circle, rgba(76,175,38,0.04) 0%, transparent 70%);
-    pointer-events: none;
-  }
-
-  .founder-avatar {
-    width: 160px;
-    height: 160px;
-    position: relative;
-    flex-shrink: 0;
-  }
-
-  /* Minecraft-style character face */
-  .mc-face {
-    width: 160px;
-    height: 160px;
-    image-rendering: pixelated;
-    position: relative;
-  }
-
-  .mc-face canvas {
-    width: 100%;
-    height: 100%;
-  }
-
-  .founder-avatar-bg {
-    width: 160px;
-    height: 160px;
-    background: var(--green-dark);
-    border: 3px solid var(--green-mid);
-    box-shadow:
-      inset 3px 3px 0 rgba(255,255,255,0.1),
-      inset -3px -3px 0 rgba(0,0,0,0.5),
-      0 0 30px rgba(76,175,38,0.15);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 5rem;
-    position: relative;
-  }
-
-  .founder-avatar-bg::after {
-    content: 'FOUNDER';
-    position: absolute;
-    bottom: -28px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-family: 'Cinzel', serif;
-    font-size: 0.55rem;
-    font-weight: 700;
-    letter-spacing: 0.25em;
-    color: var(--gold);
-    white-space: nowrap;
-    text-shadow: 0 0 6px var(--gold-dim);
-  }
-
-  .founder-info {
-    position: relative;
-    z-index: 1;
-  }
-
-  .founder-name {
-    font-family: 'Cinzel Decorative', serif;
-    font-size: 2.2rem;
-    font-weight: 900;
-    color: var(--gold);
-    text-shadow: 0 0 20px var(--gold-dim), 2px 2px 0 rgba(0,0,0,0.6);
-    margin-bottom: 0.3rem;
-    line-height: 1;
-  }
-
-  .founder-role {
-    font-family: 'Cinzel', serif;
-    font-size: 0.75rem;
-    font-weight: 700;
-    letter-spacing: 0.25em;
-    text-transform: uppercase;
-    color: var(--green-bright);
-    margin-bottom: 1.5rem;
-  }
-
-  .founder-bio {
-    color: var(--text-dim);
-    font-size: 1.05rem;
-    margin-bottom: 1.5rem;
-    line-height: 1.8;
-    max-width: 520px;
-  }
-
-  .founder-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-  }
-
-  .tag {
-    font-family: 'Cinzel', serif;
-    font-size: 0.65rem;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    padding: 0.3em 0.9em;
-    background: rgba(76,175,38,0.08);
-    border: 1px solid var(--green-dark);
-    color: var(--text-dim);
-  }
-
-  .tag.highlight {
-    background: rgba(240,192,64,0.08);
-    border-color: var(--gold-dim);
-    color: var(--gold);
-  }
-
-  /* ───── CONTACT SECTION ───── */
-  #contact {
-    max-width: 100%;
-    padding: 0;
-    background: var(--bg-panel);
-    border-top: 3px solid var(--green-dark);
-    border-bottom: 3px solid var(--green-dark);
-  }
-
-  .contact-wrapper {
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 6rem 2rem;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 4rem;
-    align-items: center;
-  }
-
-  .contact-left h2 {
-    font-family: 'Cinzel Decorative', serif;
-    font-size: clamp(1.8rem, 3.5vw, 2.8rem);
-    font-weight: 900;
-    color: var(--text-main);
-    text-shadow: 2px 2px 0 var(--green-dark);
-    line-height: 1.2;
-    margin-bottom: 1rem;
-  }
-
-  .contact-left h2 em {
-    color: var(--green-glow);
-    font-style: normal;
-    text-shadow: 0 0 15px var(--green-bright);
-  }
-
-  .contact-left p {
-    color: var(--text-dim);
-    font-size: 1.05rem;
-    line-height: 1.8;
-    margin-bottom: 2rem;
-  }
-
-  .contact-items {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-  }
-
-  .contact-item {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    background: rgba(76,175,38,0.04);
-    border: 1px solid var(--green-dark);
-    padding: 1rem 1.2rem;
-    transition: background 0.2s, border-color 0.2s;
-    text-decoration: none;
-  }
-
-  .contact-item:hover {
-    background: rgba(76,175,38,0.08);
-    border-color: var(--green-mid);
-  }
-
-  .contact-item-icon {
-    font-size: 1.4rem;
-    width: 36px;
-    text-align: center;
-    flex-shrink: 0;
-    filter: drop-shadow(0 0 6px var(--green-bright));
-  }
-
-  .contact-item-icon.discord {
-    filter: drop-shadow(0 0 6px #7289da);
-  }
-
-  .contact-item-text {
-    flex: 1;
-  }
-
-  .contact-item-label {
-    font-family: 'Cinzel', serif;
-    font-size: 0.6rem;
-    font-weight: 700;
-    letter-spacing: 0.3em;
-    text-transform: uppercase;
-    color: var(--text-dim);
-    margin-bottom: 0.2rem;
-  }
-
-  .contact-item-value {
-    font-size: 1rem;
-    font-weight: 600;
-    color: var(--text-main);
-    font-family: 'Crimson Pro', serif;
-  }
-
-  .contact-item-value.discord-val {
-    color: #7289da;
-  }
-
-  /* Discord big CTA */
-  .discord-cta {
-    background: linear-gradient(135deg, #1e2058, #2c3099);
-    border: 3px solid #4752c4;
-    box-shadow:
-      inset 2px 2px 0 rgba(255,255,255,0.08),
-      inset -2px -2px 0 rgba(0,0,0,0.4),
-      0 0 40px rgba(71,82,196,0.2);
-    padding: 2.5rem;
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .discord-cta::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(ellipse 80% 60% at 50% 50%, rgba(114,137,218,0.1) 0%, transparent 70%);
-    pointer-events: none;
-  }
-
-  .discord-cta .dc-icon {
-    font-size: 3.5rem;
-    margin-bottom: 1rem;
-    display: block;
-    filter: drop-shadow(0 0 15px rgba(114,137,218,0.5));
-  }
-
-  .discord-cta h3 {
-    font-family: 'Cinzel', serif;
-    font-size: 1.3rem;
-    font-weight: 700;
-    color: #fff;
-    text-shadow: 0 0 15px rgba(114,137,218,0.5);
-    margin-bottom: 0.5rem;
-  }
-
-  .discord-cta p {
-    color: #8fa3ff;
-    font-size: 0.95rem;
-    margin-bottom: 1.5rem;
-  }
-
-  .online-indicator {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5em;
-    font-family: 'Cinzel', serif;
-    font-size: 0.65rem;
-    font-weight: 700;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--green-bright);
-    margin-top: 1rem;
-  }
-
-  .online-dot {
-    width: 8px; height: 8px;
-    background: var(--green-bright);
-    border-radius: 50%;
-    animation: blink 1.5s ease infinite;
-    box-shadow: 0 0 6px var(--green-bright);
-  }
-
-  /* ───── FOOTER ───── */
-  footer {
-    background: var(--bg-deep);
-    border-top: 3px solid var(--green-dark);
-    padding: 3rem 2rem;
-    text-align: center;
-  }
-
-  .footer-logo {
-    font-family: 'Cinzel Decorative', serif;
-    font-size: 1.4rem;
-    font-weight: 900;
-    color: var(--green-glow);
-    text-shadow: 0 0 10px var(--green-bright);
-    margin-bottom: 0.5rem;
-  }
-
-  .footer-logo span { color: var(--gold); text-shadow: 0 0 8px var(--gold-dim); }
-
-  .footer-tagline {
-    font-family: 'Cinzel', serif;
-    font-size: 0.65rem;
-    font-weight: 600;
-    letter-spacing: 0.3em;
-    text-transform: uppercase;
-    color: var(--text-dim);
-    margin-bottom: 1.5rem;
-  }
-
-  .footer-copy {
-    font-size: 0.85rem;
-    color: var(--text-dim);
-    opacity: 0.5;
-  }
-
-  /* ───── ANIMATIONS ───── */
-  @keyframes fadeDown {
-    from { opacity: 0; transform: translateY(-20px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(30px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-
-  .reveal {
-    opacity: 0;
-    transform: translateY(30px);
-    transition: opacity 0.7s ease, transform 0.7s ease;
-  }
-
-  .reveal.visible {
-    opacity: 1;
-    transform: translateY(0);
-  }
-
-  /* ───── PIXEL DECORATION ELEMENTS ───── */
-  .pixel-bar {
-    height: 8px;
-    background: repeating-linear-gradient(
-      90deg,
-      var(--green-dark) 0px, var(--green-dark) 8px,
-      var(--green-mid) 8px, var(--green-mid) 16px,
-      var(--green-bright) 16px, var(--green-bright) 24px,
-      var(--green-mid) 24px, var(--green-mid) 32px
-    );
-    margin: 2rem 0;
-    opacity: 0.4;
-  }
-
-  /* ───── RESPONSIVE ───── */
-  @media (max-width: 768px) {
-    nav { padding: 0 1.2rem; }
-    .nav-links { display: none; }
-    .about-grid { grid-template-columns: 1fr; }
-    .detroworld-inner { grid-template-columns: 1fr; gap: 2rem; }
-    .founder-card { grid-template-columns: 1fr; text-align: center; gap: 1.5rem; }
-    .founder-avatar-bg { margin: 0 auto; }
-    .founder-avatar-bg::after { bottom: -24px; }
-    .contact-wrapper { grid-template-columns: 1fr; gap: 2rem; }
-    .hero-buttons { flex-direction: column; align-items: center; }
-  }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ReviveMeBrother — CraftBorn RP</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --red: #c41e3a;
+            --red-dark: #8b0000;
+            --red-glow: #ff2244;
+            --black: #0a0a0a;
+            --black-2: #111111;
+            --black-3: #1a1a1a;
+            --black-4: #222222;
+            --gold: #ffd700;
+            --text: #e8e8e8;
+            --text-muted: #888;
+            --border: rgba(196,30,58,0.3);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background: var(--black);
+            color: var(--text);
+            overflow-x: hidden;
+        }
+
+        /* ─── LANGUAGE SELECTOR OVERLAY ─── */
+        #lang-overlay {
+            position: fixed;
+            inset: 0;
+            background: var(--black);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 50px;
+        }
+
+        .lang-overlay-bg {
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(ellipse 60% 40% at 50% 50%, rgba(196,30,58,0.12) 0%, transparent 70%),
+                repeating-linear-gradient(0deg, transparent, transparent 60px, rgba(196,30,58,0.04) 60px, rgba(196,30,58,0.04) 61px),
+                repeating-linear-gradient(90deg, transparent, transparent 60px, rgba(196,30,58,0.04) 60px, rgba(196,30,58,0.04) 61px);
+            pointer-events: none;
+        }
+
+        .lang-logo {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(2.5rem, 6vw, 5rem);
+            letter-spacing: 0.08em;
+            text-align: center;
+            line-height: 1;
+            position: relative;
+        }
+
+        .lang-logo span {
+            color: var(--red);
+            display: block;
+            font-size: 0.45em;
+            letter-spacing: 0.3em;
+            color: var(--text-muted);
+            margin-top: 6px;
+        }
+
+        .lang-prompt {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+        }
+
+        .lang-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 16px;
+            position: relative;
+        }
+
+        .lang-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            padding: 20px 24px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(196,30,58,0.2);
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            min-width: 110px;
+            text-decoration: none;
+        }
+
+        .lang-btn:hover {
+            background: rgba(196,30,58,0.12);
+            border-color: var(--red);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(196,30,58,0.3);
+        }
+
+        .lang-btn .flag {
+            font-size: 2.4rem;
+            line-height: 1;
+            filter: drop-shadow(0 2px 6px rgba(0,0,0,0.5));
+        }
+
+        .lang-btn .lang-name {
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700;
+            font-size: 0.85rem;
+            letter-spacing: 0.12em;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            transition: color 0.25s;
+        }
+
+        .lang-btn:hover .lang-name { color: var(--text); }
+
+        @media (max-width: 640px) {
+            .lang-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+            .lang-grid .lang-btn:last-child { grid-column: span 2; justify-self: center; }
+        }
+
+        /* ─── SCANLINE EFFECT ─── */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.08) 2px, rgba(0,0,0,0.08) 4px);
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        /* ─── NOISE TEXTURE ─── */
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.035'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 999;
+            opacity: 0.4;
+        }
+
+        /* ─── NAV ─── */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 500;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 40px;
+            height: 64px;
+            background: rgba(10,10,10,0.92);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .nav-logo {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.4rem;
+            letter-spacing: 0.1em;
+            color: var(--red);
+        }
+
+        .nav-logo em {
+            color: var(--text-muted);
+            font-style: normal;
+            font-size: 0.7em;
+            letter-spacing: 0.2em;
+            margin-left: 8px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            font-weight: 600;
+            font-size: 0.85rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color 0.2s;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            right: 100%;
+            height: 1px;
+            background: var(--red);
+            transition: right 0.25s ease;
+        }
+
+        .nav-links a:hover { color: var(--text); }
+        .nav-links a:hover::after { right: 0; }
+
+        #lang-switcher {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.8rem;
+            background: rgba(196,30,58,0.15);
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            padding: 6px 14px;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: all 0.2s;
+            letter-spacing: 0.1em;
+        }
+
+        #lang-switcher:hover {
+            background: rgba(196,30,58,0.3);
+            color: var(--text);
+            border-color: var(--red);
+        }
+
+        @media (max-width: 768px) {
+            nav { padding: 0 20px; }
+            .nav-links { display: none; }
+        }
+
+        /* ─── HERO ─── */
+        #hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            padding: 80px 20px 40px;
+        }
+
+        .hero-bg {
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(ellipse 80% 60% at 50% 40%, rgba(196,30,58,0.18) 0%, transparent 65%),
+                radial-gradient(ellipse 40% 30% at 20% 80%, rgba(139,0,0,0.1) 0%, transparent 60%);
+        }
+
+        .hero-grid {
+            position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(196,30,58,0.06) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(196,30,58,0.06) 1px, transparent 1px);
+            background-size: 50px 50px;
+            mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 80%);
+        }
+
+        .hero-content {
+            position: relative;
+            text-align: center;
+            max-width: 900px;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(196,30,58,0.15);
+            border: 1px solid rgba(196,30,58,0.4);
+            border-radius: 2px;
+            padding: 6px 16px;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.75rem;
+            letter-spacing: 0.2em;
+            color: var(--red);
+            margin-bottom: 28px;
+        }
+
+        .hero-badge::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            background: var(--red);
+            border-radius: 50%;
+            animation: pulse-dot 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(0.6); }
+        }
+
+        .hero-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(3.5rem, 10vw, 8rem);
+            line-height: 0.9;
+            letter-spacing: 0.04em;
+            margin-bottom: 20px;
+        }
+
+        .hero-title .red { color: var(--red); }
+
+        .hero-subtitle {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: clamp(0.8rem, 1.5vw, 1rem);
+            letter-spacing: 0.25em;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            margin-bottom: 40px;
+        }
+
+        .hero-meta {
+            display: flex;
+            gap: 32px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .hero-meta-item {
+            text-align: center;
+        }
+
+        .hero-meta-item .label {
+            font-size: 0.7rem;
+            letter-spacing: 0.2em;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        .hero-meta-item .value {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.4rem;
+            letter-spacing: 0.1em;
+            color: var(--gold);
+        }
+
+        .hero-divider {
+            width: 1px;
+            height: 40px;
+            background: var(--border);
+            align-self: center;
+        }
+
+        /* ─── SECTIONS ─── */
+        .section {
+            padding: 80px 40px;
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+
+        .section-label {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 0.3em;
+            color: var(--red);
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .section-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            letter-spacing: 0.04em;
+            line-height: 1;
+            margin-bottom: 14px;
+        }
+
+        .section-desc {
+            color: var(--text-muted);
+            font-size: 1.05rem;
+            max-width: 580px;
+            line-height: 1.7;
+            font-weight: 500;
+        }
+
+        .sep {
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(196,30,58,0.5), transparent);
+            margin: 0 40px;
+        }
+
+        /* ─── FEATURES GRID ─── */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2px;
+            margin-top: 50px;
+            border: 1px solid var(--border);
+        }
+
+        @media (max-width: 1024px) { .features-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 640px) { .features-grid { grid-template-columns: 1fr; } }
+
+        .feature-item {
+            padding: 36px 32px;
+            background: var(--black-2);
+            border: 1px solid rgba(196,30,58,0.08);
+            transition: background 0.25s, border-color 0.25s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--red), transparent);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .feature-item:hover { background: var(--black-3); border-color: var(--border); }
+        .feature-item:hover::before { opacity: 1; }
+
+        .feature-icon {
+            font-size: 2rem;
+            margin-bottom: 16px;
+            display: block;
+        }
+
+        .feature-name {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.3rem;
+            letter-spacing: 0.08em;
+            color: var(--gold);
+            margin-bottom: 10px;
+        }
+
+        .feature-text {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.65;
+            font-weight: 500;
+        }
+
+        .feature-list {
+            list-style: none;
+            margin-top: 12px;
+        }
+
+        .feature-list li {
+            color: var(--text-muted);
+            font-size: 0.88rem;
+            padding: 4px 0;
+            padding-left: 14px;
+            position: relative;
+            font-weight: 500;
+        }
+
+        .feature-list li::before {
+            content: '▸';
+            position: absolute;
+            left: 0;
+            color: var(--red);
+            font-size: 0.7em;
+            top: 5px;
+        }
+
+        /* ─── BUTTONS SECTION ─── */
+        .buttons-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-top: 50px;
+        }
+
+        @media (max-width: 768px) { .buttons-row { grid-template-columns: 1fr; } }
+
+        .btn-card {
+            background: var(--black-2);
+            border: 1px solid var(--border);
+            padding: 32px 28px;
+            position: relative;
+            overflow: hidden;
+            transition: border-color 0.25s, background 0.25s;
+        }
+
+        .btn-card:hover {
+            border-color: var(--red);
+            background: var(--black-3);
+        }
+
+        .btn-card::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--red);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .btn-card:hover::after { transform: scaleX(1); }
+
+        .btn-key {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 48px;
+            height: 48px;
+            background: var(--red);
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.6rem;
+            letter-spacing: 0;
+            color: white;
+            margin-bottom: 18px;
+            box-shadow: 0 4px 20px rgba(196,30,58,0.4);
+        }
+
+        .btn-card-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.2rem;
+            letter-spacing: 0.08em;
+            color: var(--gold);
+            margin-bottom: 10px;
+        }
+
+        .btn-card-text {
+            color: var(--text-muted);
+            font-size: 0.92rem;
+            line-height: 1.6;
+            font-weight: 500;
+        }
+
+        /* ─── TIER SYSTEM ─── */
+        .tiers-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2px;
+            margin-top: 50px;
+        }
+
+        @media (max-width: 1024px) { .tiers-row { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 480px) { .tiers-row { grid-template-columns: 1fr; } }
+
+        .tier-item {
+            background: var(--black-2);
+            border: 1px solid rgba(196,30,58,0.1);
+            padding: 36px 28px;
+            text-align: center;
+            transition: all 0.25s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tier-item:hover {
+            background: var(--black-3);
+            transform: translateY(-4px);
+            box-shadow: 0 20px 60px rgba(196,30,58,0.15);
+        }
+
+        .tier-number {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 4rem;
+            line-height: 1;
+            color: rgba(196,30,58,0.15);
+            position: absolute;
+            top: 10px;
+            right: 16px;
+            letter-spacing: -0.02em;
+        }
+
+        .tier-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            background: rgba(196,30,58,0.15);
+            border: 1px solid rgba(196,30,58,0.3);
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 0.15em;
+            color: var(--red);
+            margin-bottom: 16px;
+        }
+
+        .tier-name {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.6rem;
+            letter-spacing: 0.06em;
+            color: var(--gold);
+            margin-bottom: 10px;
+        }
+
+        .tier-heal {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 1.1rem;
+            color: var(--red);
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .tier-desc {
+            color: var(--text-muted);
+            font-size: 0.88rem;
+            line-height: 1.6;
+            font-weight: 500;
+        }
+
+        /* ─── GALLERY ─── */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2px;
+            margin-top: 50px;
+        }
+
+        @media (max-width: 900px) { .gallery-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 560px) { .gallery-grid { grid-template-columns: 1fr; } }
+
+        .gallery-item {
+            position: relative;
+            overflow: hidden;
+            aspect-ratio: 16/10;
+            background: var(--black-2);
+            border: 1px solid rgba(196,30,58,0.1);
+            cursor: pointer;
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease, filter 0.3s;
+            filter: brightness(0.85) saturate(0.9);
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.06);
+            filter: brightness(1) saturate(1.1);
+        }
+
+        .gallery-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, transparent 40%, rgba(0,0,0,0.85) 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 20px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .gallery-item:hover .gallery-overlay { opacity: 1; }
+
+        .gallery-overlay h4 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.1rem;
+            letter-spacing: 0.08em;
+            color: var(--gold);
+            margin-bottom: 4px;
+        }
+
+        .gallery-overlay p {
+            color: rgba(255,255,255,0.7);
+            font-size: 0.82rem;
+            font-weight: 500;
+        }
+
+        /* ─── HOLOGRAM SECTION ─── */
+        .holo-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-top: 50px;
+        }
+
+        @media (max-width: 640px) { .holo-grid { grid-template-columns: 1fr; } }
+
+        .holo-card {
+            background: var(--black-2);
+            border: 1px solid var(--border);
+            padding: 32px;
+        }
+
+        .holo-card h3 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.3rem;
+            letter-spacing: 0.08em;
+            color: var(--gold);
+            margin-bottom: 18px;
+        }
+
+        .color-swatch {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .color-swatch .dot {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+        }
+
+        .holo-note {
+            background: rgba(196,30,58,0.08);
+            border: 1px solid rgba(196,30,58,0.2);
+            border-left: 3px solid var(--red);
+            padding: 16px 20px;
+            margin-top: 24px;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            font-weight: 500;
+            line-height: 1.6;
+        }
+
+        /* ─── MOD INFO BOX ─── */
+        .mod-info-box {
+            background: var(--black-2);
+            border: 1px solid var(--border);
+            padding: 50px;
+            margin-top: 60px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0;
+        }
+
+        @media (max-width: 900px) { .mod-info-box { grid-template-columns: repeat(2, 1fr); padding: 30px; } }
+        @media (max-width: 480px) { .mod-info-box { grid-template-columns: 1fr; } }
+
+        .mod-info-cell {
+            padding: 24px;
+            border-right: 1px solid var(--border);
+            text-align: center;
+        }
+
+        .mod-info-cell:last-child { border-right: none; }
+
+        .mod-info-cell .key {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 0.2em;
+            color: var(--red);
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .mod-info-cell .val {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.4rem;
+            letter-spacing: 0.06em;
+            color: var(--gold);
+        }
+
+        /* ─── FOOTER ─── */
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 40px;
+            text-align: center;
+            background: var(--black-2);
+        }
+
+        .footer-logo {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.6rem;
+            letter-spacing: 0.1em;
+            color: var(--red);
+            margin-bottom: 10px;
+        }
+
+        footer p {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        /* ─── LIGHTBOX ─── */
+        #lightbox {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.95);
+            z-index: 9000;
+            align-items: center;
+            justify-content: center;
+            cursor: zoom-out;
+        }
+
+        #lightbox.active { display: flex; }
+
+        #lightbox img {
+            max-width: 90vw;
+            max-height: 88vh;
+            object-fit: contain;
+            border: 1px solid var(--border);
+        }
+
+        #lightbox-close {
+            position: absolute;
+            top: 20px;
+            right: 28px;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.8rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            letter-spacing: 0.1em;
+        }
+
+        /* ─── ANIMATIONS ─── */
+        @keyframes fade-up {
+            from { opacity: 0; transform: translateY(24px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-up {
+            animation: fade-up 0.6s ease both;
+        }
+
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.2s; }
+        .delay-3 { animation-delay: 0.3s; }
+        .delay-4 { animation-delay: 0.4s; }
+
+        #main-content { display: none; }
+
+        /* ─── CORNER ACCENT ─── */
+        .corner-tl, .corner-br {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+        }
+        .corner-tl {
+            top: 0; left: 0;
+            border-top: 2px solid var(--red);
+            border-left: 2px solid var(--red);
+        }
+        .corner-br {
+            bottom: 0; right: 0;
+            border-bottom: 2px solid var(--red);
+            border-right: 2px solid var(--red);
+        }
+    </style>
 </head>
 <body>
 
-<!-- NAV -->
-<nav>
-  <a class="nav-logo" href="#">Craft<span>Born</span> RP</a>
-  <ul class="nav-links">
-    <li><a href="#about">Hakkımızda</a></li>
-    <li><a href="#detroworld">DetroWorld</a></li>
-    <li><a href="#founder">Kurucu</a></li>
-    <li><a href="#contact">İletişim</a></li>
-  </ul>
-</nav>
-
-<!-- FLOATING CUBES -->
-<div class="cubes-container" aria-hidden="true" id="cubes"></div>
-
-<!-- HERO -->
-<section id="hero" style="max-width:100%; padding-left:2rem; padding-right:2rem;">
-  <div class="hero-badge">⚔ Minecraft Roleplay Sunucusu ⚔</div>
-  <h1 class="hero-title">CraftBorn<br>Role Play</h1>
-  <p class="hero-subtitle">Hayatta Kal · Rol Yap · Efsane Ol</p>
-  <p class="hero-desc">
-    Gerçek bir roleplay deneyimi için inşa edilmiş Minecraft sunucusu.
-    Her blok bir hikâye, her karakter bir kader.
-  </p>
-  <div class="hero-buttons">
-    <a href="https://discord.gg/Yk49Rt6rTr" class="btn btn-discord" target="_blank">
-      🎮 Discord'a Katıl
-    </a>
-    <a href="#detroworld" class="btn btn-primary">
-      🧟 DetroWorld'ü Keşfet
-    </a>
-  </div>
-</section>
-
-<!-- ABOUT -->
-<section id="about">
-  <div class="section-header reveal">
-    <span class="section-tag">// kimiz biz //</span>
-    <h2 class="section-title">Hakkımızda — <em>Dünyamız</em></h2>
-    <div class="section-divider"></div>
-  </div>
-
-  <div class="about-grid reveal">
-    <div class="about-panel">
-      <span class="panel-icon">🗺️</span>
-      <h3>Roleplay Evreni</h3>
-      <p>CraftBorn Role Play, derinlikli karakter geliştirme ve özgün hikâye anlatıcılığı odaklı bir Minecraft RP sunucusudur. Her oyuncu kendi kaderini yazar.</p>
+<!-- LANGUAGE OVERLAY -->
+<div id="lang-overlay">
+    <div class="lang-overlay-bg"></div>
+    <div class="lang-logo fade-up">
+        REVIVE<span class="red">ME</span>BROTHER
+        <span>CRAFTBORN ROLEPLAY — SELECT LANGUAGE</span>
     </div>
-    <div class="about-panel">
-      <span class="panel-icon">⚙️</span>
-      <h3>Özel Mod Paketleri</h3>
-      <p>Sunucumuz, oyun deneyimini kökten dönüştüren özel mod paketleriyle çalışmaktadır. Hazır içerik yok — her şey sıfırdan tasarlandı.</p>
+    <p class="lang-prompt fade-up delay-1">// Choose your language</p>
+    <div class="lang-grid fade-up delay-2">
+        <button class="lang-btn" onclick="setLang('tr')">
+            <span class="flag">🇹🇷</span>
+            <span class="lang-name">Türkçe</span>
+        </button>
+        <button class="lang-btn" onclick="setLang('en')">
+            <span class="flag">🇬🇧</span>
+            <span class="lang-name">English</span>
+        </button>
+        <button class="lang-btn" onclick="setLang('ru')">
+            <span class="flag">🇷🇺</span>
+            <span class="lang-name">Русский</span>
+        </button>
+        <button class="lang-btn" onclick="setLang('fr')">
+            <span class="flag">🇫🇷</span>
+            <span class="lang-name">Français</span>
+        </button>
+        <button class="lang-btn" onclick="setLang('ja')">
+            <span class="flag">🇯🇵</span>
+            <span class="lang-name">日本語</span>
+        </button>
     </div>
-    <div class="about-panel">
-      <span class="panel-icon">🧩</span>
-      <h3>Topluluk Odaklı</h3>
-      <p>Kurallar oyuncularla birlikte şekillenir. Faksiyonlar, ekonomi, siyaset — hepsi gerçek RP mantığıyla işler. Senin kararların sunucuyu etkiler.</p>
-    </div>
-    <div class="about-panel">
-      <span class="panel-icon">🔧</span>
-      <h3>Aktif Geliştirme</h3>
-      <p>Sunucumuz sürekli güncellenir. Yeni içerikler, mod güncellemeleri ve etkinlikler düzenli aralıklarla eklenir. Projemiz büyümeye devam ediyor.</p>
-    </div>
-  </div>
-</section>
-
-<!-- DETROWORLD -->
-<div id="detroworld">
-  <div class="detroworld-wrapper">
-    <div class="detroworld-inner">
-
-      <div class="detroworld-content reveal">
-        <div class="project-tag"><span class="dot"></span> Aktif Proje</div>
-        <h2>
-          <span class="dw-sub">Zombie Mod Paketi</span>
-          <span class="dw-name">DetroWorld</span>
-        </h2>
-        <p>
-          DetroWorld, sunucumuzun şu an aktif olarak yayında olan özel zombie mod paketidir. 
-          Standart Minecraft deneyimini baştan aşağı yeniden tanımlayan bu paket, 
-          <strong style="color:var(--text-main)">zombie temalı bir hayatta kalma ve roleplay evreni</strong> sunar.
-        </p>
-        <p>
-          Bozulmuş şehirler, enfekte bölgeler, kaynak bulmaca mekanikleri ve 
-          çok katmanlı NPC etkileşimleriyle DetroWorld; her oturumu bir hayatta kalma 
-          mücadelesine dönüştürür.
-        </p>
-
-        <div class="zombie-features">
-          <div class="zombie-feature">
-            <span class="feat-icon">🧟</span>
-            Özel zombie AI davranışları ve enfeksiyon sistemi
-          </div>
-          <div class="zombie-feature">
-            <span class="feat-icon">🌆</span>
-            Harap şehir ortamları ve procedural hasar sistemi
-          </div>
-          <div class="zombie-feature">
-            <span class="feat-icon">🎭</span>
-            RP deneyimini derinleştiren karakter kıyafetleri & roller
-          </div>
-          <div class="zombie-feature">
-            <span class="feat-icon">⚗️</span>
-            Hayatta kalma için kaynak toplama & crafting ağacı
-          </div>
-          <div class="zombie-feature">
-            <span class="feat-icon">🔊</span>
-            Atmosferi tamamlayan özel ses ve parçacık efektleri
-          </div>
-        </div>
-      </div>
-
-      <div class="detroworld-visual reveal" style="transition-delay:0.15s;">
-        <div class="dw-card">
-          <div class="dw-card-label">// Proje Kartı //</div>
-          <h3>DetroWorld<br>Zombie Paketi</h3>
-          <div class="stat-rows">
-            <div class="stat-row">
-              <span class="label">Durum</span>
-              <span class="value active">⬤ Aktif / Yayında</span>
-            </div>
-            <div class="stat-row">
-              <span class="label">Tür</span>
-              <span class="value zombie">🧟 Zombie Mod Paketi</span>
-            </div>
-            <div class="stat-row">
-              <span class="label">Amaç</span>
-              <span class="value">RP Deneyimini Artırma</span>
-            </div>
-            <div class="stat-row">
-              <span class="label">Ortam</span>
-              <span class="value">Post-Apokaliptik</span>
-            </div>
-            <div class="stat-row">
-              <span class="label">Sahibi</span>
-              <span class="value" style="color:var(--gold);">Detroitov</span>
-            </div>
-            <div class="stat-row">
-              <span class="label">Platform</span>
-              <span class="value">Minecraft Java</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </div>
 </div>
 
-<!-- FOUNDER -->
-<section id="founder">
-  <div class="section-header reveal">
-    <span class="section-tag">// kimin eseri //</span>
-    <h2 class="section-title">Kurucu & <em>Yapımcı</em></h2>
-    <div class="section-divider"></div>
-  </div>
+<!-- MAIN CONTENT -->
+<div id="main-content">
 
-  <div class="founder-card reveal">
-    <div class="founder-avatar">
-      <div class="founder-avatar-bg">⛏️</div>
-    </div>
-    <div class="founder-info">
-      <h2 class="founder-name">Detroitov</h2>
-      <p class="founder-role">⚙ Kurucu · Baş Geliştirici · Tek Sahip</p>
-      <p class="founder-bio">
-        21 yaşındaki Detroitov, CraftBorn Role Play sunucusunun kurucu ve tek sahibidir. 
-        Sunucunun altyapısından mod paketlerine, hikâye evreninden kurallarına kadar 
-        her şey onun vizyonuyla şekillenmiştir. DetroWorld Zombie Mod Paketi, 
-        onun imzası olan amiral gemisi projesidir.
-      </p>
-      <div class="founder-tags">
-        <span class="tag highlight">21 Yaşında</span>
-        <span class="tag">Sunucu Kurucusu</span>
-        <span class="tag">Mod Paketi Geliştiricisi</span>
-        <span class="tag">DetroWorld Sahibi</span>
-        <span class="tag">RP Tasarımcısı</span>
-      </div>
-    </div>
-  </div>
-</section>
+    <!-- NAV -->
+    <nav>
+        <div class="nav-logo">ReviveMeBrother <em>// CraftBorn</em></div>
+        <ul class="nav-links">
+            <li><a href="#features" data-i18n="nav_features">Özellikler</a></li>
+            <li><a href="#controls" data-i18n="nav_controls">Kontroller</a></li>
+            <li><a href="#tiers" data-i18n="nav_tiers">Tier Sistemi</a></li>
+            <li><a href="#hologram" data-i18n="nav_hologram">Hologram</a></li>
+            <li><a href="#gallery" data-i18n="nav_gallery">Galeri</a></li>
+        </ul>
+        <button id="lang-switcher" onclick="showLangOverlay()">🌐 LANG</button>
+    </nav>
 
-<!-- CONTACT -->
-<div id="contact">
-  <div class="contact-wrapper">
+    <!-- HERO -->
+    <section id="hero">
+        <div class="hero-bg"></div>
+        <div class="hero-grid"></div>
+        <div class="hero-content fade-up">
+            <div class="hero-badge" data-i18n="hero_badge">MINECRAFT 1.20.1 FORGE — CRAFTBORN RP</div>
+            <h1 class="hero-title">
+                REVIVE<span class="red">ME</span><br>BROTHER
+            </h1>
+            <p class="hero-subtitle" data-i18n="hero_subtitle">Combat Revive & Wounded System Mod</p>
+            <div class="hero-meta">
+                <div class="hero-meta-item">
+                    <div class="label" data-i18n="meta_version">Versiyon</div>
+                    <div class="value">1.0.0</div>
+                </div>
+                <div class="hero-divider"></div>
+                <div class="hero-meta-item">
+                    <div class="label" data-i18n="meta_mc">Minecraft</div>
+                    <div class="value">1.20.1</div>
+                </div>
+                <div class="hero-divider"></div>
+                <div class="hero-meta-item">
+                    <div class="label" data-i18n="meta_loader">Loader</div>
+                    <div class="value">Forge</div>
+                </div>
+                <div class="hero-divider"></div>
+                <div class="hero-meta-item">
+                    <div class="label" data-i18n="meta_dev">Geliştirici</div>
+                    <div class="value">KCA</div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-    <div class="contact-left reveal">
-      <h2>Bize <em>Ulaşın</em></h2>
-      <p>
-        Sunucuya katılmak, hata bildirmek ya da ekiple iletişime geçmek için 
-        aşağıdaki kanalları kullanabilirsin. En hızlı yanıt Discord üzerinden gelir.
-      </p>
-      <div class="contact-items">
-        <a class="contact-item" href="mailto:detroitovv@gmail.com">
-          <span class="contact-item-icon">📧</span>
-          <div class="contact-item-text">
-            <div class="contact-item-label">E-Posta</div>
-            <div class="contact-item-value">detroitovv@gmail.com</div>
-          </div>
-        </a>
-        <a class="contact-item" href="https://discord.gg/Yk49Rt6rTr" target="_blank">
-          <span class="contact-item-icon discord">💬</span>
-          <div class="contact-item-text">
-            <div class="contact-item-label">Discord Sunucusu</div>
-            <div class="contact-item-value discord-val">discord.gg/Yk49Rt6rTr</div>
-          </div>
-        </a>
-        <a class="contact-item" href="https://discord.gg/Yk49Rt6rTr" target="_blank">
-          <span class="contact-item-icon">👤</span>
-          <div class="contact-item-text">
-            <div class="contact-item-label">Kurucu</div>
-            <div class="contact-item-value">Detroitov</div>
-          </div>
-        </a>
-      </div>
-    </div>
+    <div class="sep"></div>
 
-    <div class="discord-cta reveal" style="transition-delay:0.15s;">
-      <span class="dc-icon">🎮</span>
-      <h3>Discord Sunucumuza Katıl</h3>
-      <p>Duyurular, güncellemeler ve topluluk burada. DetroWorld'ün gidişatını takip et.</p>
-      <a href="https://discord.gg/Yk49Rt6rTr" class="btn btn-discord" target="_blank" style="display:inline-flex;">
-        Sunucuya Katıl →
-      </a>
-      <div class="online-indicator">
-        <span class="online-dot"></span>
-        Sunucu Aktif
-      </div>
-    </div>
+    <!-- FEATURES -->
+    <section class="section" id="features">
+        <div class="section-label" data-i18n="feat_label">// 01 — TEMEL ÖZELLİKLER</div>
+        <h2 class="section-title" data-i18n="feat_title">CORE FEATURES</h2>
+        <p class="section-desc" data-i18n="feat_desc">ReviveMeBrother, ölümcül hasarda oyuncuyu direkt öldürmez. Takım çalışmasını zorunlu kılan gerçekçi bir yaralanma sistemi.</p>
 
-  </div>
+        <div class="features-grid">
+            <div class="feature-item">
+                <span class="feature-icon">💔</span>
+                <div class="feature-name" data-i18n="f1_name">YARALI SİSTEMİ</div>
+                <p class="feature-text" data-i18n="f1_text">Ölümcül hasar aldığında oyuncu yaralı durumuna geçer, yere düşer ve hareket edemez.</p>
+                <ul class="feature-list">
+                    <li data-i18n="f1_l1">Slowness 10 efekti</li>
+                    <li data-i18n="f1_l2">Zıplayamaz, saldıramaz</li>
+                    <li data-i18n="f1_l3">Görüş kısıtlanır (Blindness)</li>
+                    <li data-i18n="f1_l4">Kalp atışı sesi</li>
+                </ul>
+            </div>
+            <div class="feature-item">
+                <span class="feature-icon">⏱️</span>
+                <div class="feature-name" data-i18n="f2_name">5 DAKİKA SAYAÇ</div>
+                <p class="feature-text" data-i18n="f2_text">Yaralı oyuncunun ekranında kırmızı HUD açılır ve 5 dakikalık sayaç başlar.</p>
+                <ul class="feature-list">
+                    <li data-i18n="f2_l1">Yaralanma sebebi gösterilir</li>
+                    <li data-i18n="f2_l2">3 aksiyon butonu (1/2/3)</li>
+                    <li data-i18n="f2_l3">Gerçek zamanlı geri sayım</li>
+                </ul>
+            </div>
+            <div class="feature-item">
+                <span class="feature-icon">🆘</span>
+                <div class="feature-name" data-i18n="f3_name">YARDIM ÇAĞRI</div>
+                <p class="feature-text" data-i18n="f3_text">50 blok yarıçapındaki tüm oyunculara yön ve mesafe bilgisi gönderilir.</p>
+                <ul class="feature-list">
+                    <li data-i18n="f3_l1">Konum bilgisi paylaşılır</li>
+                    <li data-i18n="f3_l2">15 saniye cooldown</li>
+                    <li data-i18n="f3_l3">Takım dayanışması</li>
+                </ul>
+            </div>
+            <div class="feature-item">
+                <span class="feature-icon">🤝</span>
+                <div class="feature-name" data-i18n="f4_name">KURTARMA</div>
+                <p class="feature-text" data-i18n="f4_text">Başka bir oyuncu 30 saniye boyunca sağ tıklayarak kurtarabilir.</p>
+                <ul class="feature-list">
+                    <li data-i18n="f4_l1">%25 canla ayağa kalkar</li>
+                    <li data-i18n="f4_l2">Kurtarıcı 50 XP kazanır</li>
+                    <li data-i18n="f4_l3">Hafif iyileşme efektleri</li>
+                </ul>
+            </div>
+            <div class="feature-item">
+                <span class="feature-icon">🏠</span>
+                <div class="feature-name" data-i18n="f5_name">DOĞUM YERİ BLOĞU</div>
+                <p class="feature-text" data-i18n="f5_text">Custom spawn noktası belirleme sistemi.</p>
+                <ul class="feature-list">
+                    <li data-i18n="f5_l1">7×7 alan kaplar</li>
+                    <li data-i18n="f5_l2">Turuncu hologram</li>
+                    <li data-i18n="f5_l3">Özelleştirilebilir metin</li>
+                </ul>
+            </div>
+            <div class="feature-item">
+                <span class="feature-icon">📦</span>
+                <div class="feature-name" data-i18n="f6_name">ACİL YARDIM ÇANTALARI</div>
+                <p class="feature-text" data-i18n="f6_text">4 farklı tier'da iyileşme kitleri. Maksimum 4 adet taşınabilir.</p>
+                <ul class="feature-list">
+                    <li data-i18n="f6_l1">T1–T4 arası seçenekler</li>
+                    <li data-i18n="f6_l2">Otomatik silinir</li>
+                    <li data-i18n="f6_l3">Seviye arttıkça daha güçlü</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <div class="sep"></div>
+
+    <!-- CONTROLS -->
+    <section class="section" id="controls">
+        <div class="section-label" data-i18n="ctrl_label">// 02 — KONTROLLER</div>
+        <h2 class="section-title" data-i18n="ctrl_title">YARALI EKRANI BUTONLARI</h2>
+        <p class="section-desc" data-i18n="ctrl_desc">Yaralı oyuncu ekranında 3 aksiyon butonu gösterilir. Tuş veya mouse ile kullanılabilir.</p>
+
+        <div class="buttons-row">
+            <div class="btn-card">
+                <div class="corner-tl"></div>
+                <div class="corner-br"></div>
+                <div class="btn-key">1</div>
+                <div class="btn-card-title" data-i18n="b1_title">⚰️ ÖLÜMÜ KABUL ET</div>
+                <p class="btn-card-text" data-i18n="b1_text">Oyuncu ölümü kabul eder. Ölüm ekranı açılmaz. Doğum noktasına anında ışınlanır ve can tam gelir.</p>
+            </div>
+            <div class="btn-card">
+                <div class="corner-tl"></div>
+                <div class="corner-br"></div>
+                <div class="btn-key">2</div>
+                <div class="btn-card-title" data-i18n="b2_title">🆘 YARDIM ÇAĞIR</div>
+                <p class="btn-card-text" data-i18n="b2_text">50 blok yarıçapındaki oyunculara yön + mesafe bilgisi gönderir. 15 saniye cooldown.</p>
+            </div>
+            <div class="btn-card">
+                <div class="corner-tl"></div>
+                <div class="corner-br"></div>
+                <div class="btn-key">3</div>
+                <div class="btn-card-title" data-i18n="b3_title">💊 ACİL YARDIM KULLAN</div>
+                <p class="btn-card-text" data-i18n="b3_text">Envanterdeki en yüksek tier yardım çantasını kullanır. Kit yoksa buton gri görünür.</p>
+            </div>
+        </div>
+    </section>
+
+    <div class="sep"></div>
+
+    <!-- TIERS -->
+    <section class="section" id="tiers">
+        <div class="section-label" data-i18n="tier_label">// 03 — TİER SİSTEMİ</div>
+        <h2 class="section-title" data-i18n="tier_title">ACİL YARDIM ÇANTALARI</h2>
+        <p class="section-desc" data-i18n="tier_desc">Yaralı durumda [3] butonu ile kullanılır. Maksimum 4 adet taşınabilir.</p>
+
+        <div class="tiers-row">
+            <div class="tier-item">
+                <div class="tier-number">T1</div>
+                <div class="tier-badge">TIER 1</div>
+                <div class="tier-name" data-i18n="t1_name">TEMEL</div>
+                <div class="tier-heal" data-i18n="t1_heal">%25 Can</div>
+                <p class="tier-desc" data-i18n="t1_desc">Temel bir yardım çantası. Küçük iyileşme sağlar.</p>
+            </div>
+            <div class="tier-item">
+                <div class="tier-number">T2</div>
+                <div class="tier-badge">TIER 2</div>
+                <div class="tier-name" data-i18n="t2_name">STANDART</div>
+                <div class="tier-heal" data-i18n="t2_heal">%50 Can</div>
+                <p class="tier-desc" data-i18n="t2_desc">Standart seviye yardım. Daha iyi sonuç verir.</p>
+            </div>
+            <div class="tier-item">
+                <div class="tier-number">T3</div>
+                <div class="tier-badge">TIER 3</div>
+                <div class="tier-name" data-i18n="t3_name">GELİŞMİŞ</div>
+                <div class="tier-heal" data-i18n="t3_heal">%75 Can + Regen II</div>
+                <p class="tier-desc" data-i18n="t3_desc">Gelişmiş versiyon. Ek iyileşme efekti içerir.</p>
+            </div>
+            <div class="tier-item">
+                <div class="tier-number">T4</div>
+                <div class="tier-badge">TIER 4</div>
+                <div class="tier-name" data-i18n="t4_name">ELİT</div>
+                <div class="tier-heal" data-i18n="t4_heal">%100 Can + Regen II + Abs</div>
+                <p class="tier-desc" data-i18n="t4_desc">En iyi koruma. Tam can ve ekstra dayanıklılık sağlar.</p>
+            </div>
+        </div>
+    </section>
+
+    <div class="sep"></div>
+
+    <!-- HOLOGRAM -->
+    <section class="section" id="hologram">
+        <div class="section-label" data-i18n="holo_label">// 04 — HOLOGRAM SİSTEMİ</div>
+        <h2 class="section-title" data-i18n="holo_title">HOLOGRAM SİSTEMİ</h2>
+        <p class="section-desc" data-i18n="holo_desc">Doğum Yeri Bloğunun üzerine yüzen 3D metin hologramı. DoğuşBlokKırıcı kazması ile sağ tıklayarak düzenleyin.</p>
+
+        <div class="holo-grid">
+            <div class="holo-card">
+                <h3 data-i18n="holo_edit_title">✏️ DÜZENLENEBİLECEKLER</h3>
+                <ul class="feature-list">
+                    <li data-i18n="holo_e1">Metin (max 64 karakter)</li>
+                    <li data-i18n="holo_e2">Renk (6 seçenek)</li>
+                    <li data-i18n="holo_e3">Görünürlük (Göster / Gizle)</li>
+                    <li data-i18n="holo_e4">Zıplama animasyonu</li>
+                    <li data-i18n="holo_e5">Yükseklik (0.5 – 8.0 blok)</li>
+                </ul>
+            </div>
+            <div class="holo-card">
+                <h3 data-i18n="holo_color_title">🎨 RENK SEÇENEKLERİ</h3>
+                <div class="color-swatch"><div class="dot" style="background:#ff8c00"></div><span style="color:#ff8c00" data-i18n="color_orange">🟠 Turuncu (Varsayılan)</span></div>
+                <div class="color-swatch"><div class="dot" style="background:#ffffff"></div><span style="color:#ddd" data-i18n="color_white">⚪ Beyaz</span></div>
+                <div class="color-swatch"><div class="dot" style="background:#ffeb3b"></div><span style="color:#ffeb3b" data-i18n="color_yellow">🟡 Sarı</span></div>
+                <div class="color-swatch"><div class="dot" style="background:#00ff88"></div><span style="color:#00ff88" data-i18n="color_green">🟢 Yeşil</span></div>
+                <div class="color-swatch"><div class="dot" style="background:#00cfff"></div><span style="color:#00cfff" data-i18n="color_cyan">🔵 Cyan</span></div>
+                <div class="color-swatch"><div class="dot" style="background:#ff2244"></div><span style="color:#ff2244" data-i18n="color_red">🔴 Kırmızı</span></div>
+            </div>
+        </div>
+        <div class="holo-note" data-i18n="holo_note">
+            ℹ️ Hologram 64 bloktan uzakta görünmez. Değişiklikler anında tüm oyunculara yayınlanır.
+        </div>
+    </section>
+
+    <div class="sep"></div>
+
+    <!-- GALLERY -->
+    <section class="section" id="gallery">
+        <div class="section-label" data-i18n="gal_label">// 05 — GALERİ</div>
+        <h2 class="section-title" data-i18n="gal_title">MOD GÖRSELLERİ</h2>
+        <p class="section-desc" data-i18n="gal_desc">ReviveMeBrother modunun en önemli bölümlerinin görselleri.</p>
+
+        <div class="gallery-grid">
+            <div class="gallery-item" onclick="openLightbox('ReviveMeBrother/gorsel1.png')">
+                <img src="ReviveMeBrother/gorsel1.png" alt="">
+                <div class="gallery-overlay">
+                    <h4 data-i18n="g1_title">Yaralı Sistemi HUD</h4>
+                    <p data-i18n="g1_desc">Yaralı oyuncunun ekranında görünen kırmızı HUD ve butonlar.</p>
+                </div>
+            </div>
+            <div class="gallery-item" onclick="openLightbox('ReviveMeBrother/gorsel2.png')">
+                <img src="ReviveMeBrother/gorsel2.png" alt="">
+                <div class="gallery-overlay">
+                    <h4 data-i18n="g2_title">Doğum Yeri Bloğu</h4>
+                    <p data-i18n="g2_desc">Spawn alanını belirten siyah yün ve turuncu hologram.</p>
+                </div>
+            </div>
+            <div class="gallery-item" onclick="openLightbox('ReviveMeBrother/gorsel3.png')">
+                <img src="ReviveMeBrother/gorsel3.png" alt="">
+                <div class="gallery-overlay">
+                    <h4 data-i18n="g3_title">Kurtarma Sistemi</h4>
+                    <p data-i18n="g3_desc">Başka oyuncunun yaralıyı kurtarması ve kurtarma barı.</p>
+                </div>
+            </div>
+            <div class="gallery-item" onclick="openLightbox('ReviveMeBrother/gorsel4.png')">
+                <img src="ReviveMeBrother/gorsel4.png" alt="">
+                <div class="gallery-overlay">
+                    <h4 data-i18n="g4_title">Yardım Çantaları</h4>
+                    <p data-i18n="g4_desc">4 farklı tier'daki acil yardım çantalarının görseli.</p>
+                </div>
+            </div>
+            <div class="gallery-item" onclick="openLightbox('ReviveMeBrother/gorsel5.png')">
+                <img src="ReviveMeBrother/gorsel5.png" alt="">
+                <div class="gallery-overlay">
+                    <h4 data-i18n="g5_title">Hologram Sistemi</h4>
+                    <p data-i18n="g5_desc">Doğum yeri bloğunun üzerindeki renkli hologram metni.</p>
+                </div>
+            </div>
+            <div class="gallery-item" onclick="openLightbox('ReviveMeBrother/gorsel6.png')">
+                <img src="ReviveMeBrother/gorsel6.png" alt="">
+                <div class="gallery-overlay">
+                    <h4 data-i18n="g6_title">Tier Sistemi</h4>
+                    <p data-i18n="g6_desc">4 farklı tier'daki yardım kitlerinin envanter görünümü.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="sep"></div>
+
+    <!-- MOD INFO -->
+    <section class="section">
+        <div class="mod-info-box">
+            <div class="mod-info-cell">
+                <div class="key" data-i18n="info_owner">Mod Sahibi</div>
+                <div class="val">Detroitov</div>
+            </div>
+            <div class="mod-info-cell">
+                <div class="key" data-i18n="info_dev">Yazılımcı</div>
+                <div class="val">KCA</div>
+            </div>
+            <div class="mod-info-cell">
+                <div class="key" data-i18n="info_ver">Sürüm</div>
+                <div class="val">1.0.0</div>
+            </div>
+            <div class="mod-info-cell">
+                <div class="key" data-i18n="info_server">Sunucu</div>
+                <div class="val">CraftBorn RP</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-logo">ReviveMeBrother</div>
+        <p>CraftBorn Roleplay — Minecraft 1.20.1 Forge</p>
+        <p style="margin-top:8px;font-size:0.75rem;opacity:0.4">© 2024 Detroitov / KCA</p>
+    </footer>
+
 </div>
 
-<!-- FOOTER -->
-<footer>
-  <div class="footer-logo">Craft<span>Born</span> RP</div>
-  <div class="footer-tagline">Hayatta Kal · Rol Yap · Efsane Ol</div>
-  <div class="pixel-bar" style="max-width:300px; margin:1.5rem auto;"></div>
-  <p class="footer-copy">© 2024 CraftBorn Role Play — Tüm hakları Detroitov'a aittir.</p>
-</footer>
+<!-- LIGHTBOX -->
+<div id="lightbox" onclick="closeLightbox()">
+    <div id="lightbox-close">✕ CLOSE</div>
+    <img id="lightbox-img" src="" alt="">
+</div>
 
 <script>
-  // ── Floating Cubes ──
-  const cubesContainer = document.getElementById('cubes');
-  const cubeCount = 18;
+/* ─── TRANSLATIONS ─── */
+const T = {
+    tr: {
+        nav_features: "Özellikler", nav_controls: "Kontroller", nav_tiers: "Tier Sistemi",
+        nav_hologram: "Hologram", nav_gallery: "Galeri",
+        hero_badge: "MINECRAFT 1.20.1 FORGE — CRAFTBORN RP",
+        hero_subtitle: "Savaş Kurtarma & Yaralanma Sistemi Modu",
+        meta_version: "Versiyon", meta_mc: "Minecraft", meta_loader: "Loader", meta_dev: "Geliştirici",
+        feat_label: "// 01 — TEMEL ÖZELLİKLER", feat_title: "TEMEL ÖZELLİKLER",
+        feat_desc: "ReviveMeBrother, ölümcül hasarda oyuncuyu direkt öldürmez. Takım çalışmasını zorunlu kılan gerçekçi bir yaralanma sistemi.",
+        f1_name: "YARALI SİSTEMİ", f1_text: "Ölümcül hasar aldığında oyuncu yaralı durumuna geçer, yere düşer ve hareket edemez.",
+        f1_l1: "Slowness 10 efekti", f1_l2: "Zıplayamaz, saldıramaz", f1_l3: "Görüş kısıtlanır (Blindness)", f1_l4: "Kalp atışı sesi",
+        f2_name: "5 DAKİKA SAYAÇ", f2_text: "Yaralı oyuncunun ekranında kırmızı HUD açılır ve 5 dakikalık sayaç başlar.",
+        f2_l1: "Yaralanma sebebi gösterilir", f2_l2: "3 aksiyon butonu (1/2/3)", f2_l3: "Gerçek zamanlı geri sayım",
+        f3_name: "YARDIM ÇAĞRI", f3_text: "50 blok yarıçapındaki tüm oyunculara yön ve mesafe bilgisi gönderilir.",
+        f3_l1: "Konum bilgisi paylaşılır", f3_l2: "15 saniye cooldown", f3_l3: "Takım dayanışması",
+        f4_name: "KURTARMA", f4_text: "Başka bir oyuncu 30 saniye boyunca sağ tıklayarak kurtarabilir.",
+        f4_l1: "%25 canla ayağa kalkar", f4_l2: "Kurtarıcı 50 XP kazanır", f4_l3: "Hafif iyileşme efektleri",
+        f5_name: "DOĞUM YERİ BLOĞU", f5_text: "Custom spawn noktası belirleme sistemi.",
+        f5_l1: "7×7 alan kaplar", f5_l2: "Turuncu hologram", f5_l3: "Özelleştirilebilir metin",
+        f6_name: "ACİL YARDIM ÇANTALARI", f6_text: "4 farklı tier'da iyileşme kitleri. Maksimum 4 adet taşınabilir.",
+        f6_l1: "T1–T4 arası seçenekler", f6_l2: "Otomatik silinir", f6_l3: "Seviye arttıkça daha güçlü",
+        ctrl_label: "// 02 — KONTROLLER", ctrl_title: "YARALI EKRANI BUTONLARI",
+        ctrl_desc: "Yaralı oyuncu ekranında 3 aksiyon butonu gösterilir. Tuş veya mouse ile kullanılabilir.",
+        b1_title: "⚰️ ÖLÜMÜ KABUL ET", b1_text: "Oyuncu ölümü kabul eder. Ölüm ekranı açılmaz. Doğum noktasına anında ışınlanır ve can tam gelir.",
+        b2_title: "🆘 YARDIM ÇAĞIR", b2_text: "50 blok yarıçapındaki oyunculara yön + mesafe bilgisi gönderir. 15 saniye cooldown.",
+        b3_title: "💊 ACİL YARDIM KULLAN", b3_text: "Envanterdeki en yüksek tier yardım çantasını kullanır. Kit yoksa buton gri görünür.",
+        tier_label: "// 03 — TİER SİSTEMİ", tier_title: "ACİL YARDIM ÇANTALARI",
+        tier_desc: "Yaralı durumda [3] butonu ile kullanılır. Maksimum 4 adet taşınabilir.",
+        t1_name: "TEMEL", t1_heal: "%25 Can", t1_desc: "Temel bir yardım çantası. Küçük iyileşme sağlar.",
+        t2_name: "STANDART", t2_heal: "%50 Can", t2_desc: "Standart seviye yardım. Daha iyi sonuç verir.",
+        t3_name: "GELİŞMİŞ", t3_heal: "%75 Can + Regen II", t3_desc: "Gelişmiş versiyon. Ek iyileşme efekti içerir.",
+        t4_name: "ELİT", t4_heal: "%100 Can + Regen II + Abs", t4_desc: "En iyi koruma. Tam can ve ekstra dayanıklılık sağlar.",
+        holo_label: "// 04 — HOLOGRAM SİSTEMİ", holo_title: "HOLOGRAM SİSTEMİ",
+        holo_desc: "Doğum Yeri Bloğunun üzerine yüzen 3D metin hologramı. DoğuşBlokKırıcı kazması ile sağ tıklayarak düzenleyin.",
+        holo_edit_title: "✏️ DÜZENLENEBİLECEKLER",
+        holo_e1: "Metin (max 64 karakter)", holo_e2: "Renk (6 seçenek)", holo_e3: "Görünürlük (Göster / Gizle)", holo_e4: "Zıplama animasyonu", holo_e5: "Yükseklik (0.5 – 8.0 blok)",
+        holo_color_title: "🎨 RENK SEÇENEKLERİ",
+        color_orange: "🟠 Turuncu (Varsayılan)", color_white: "⚪ Beyaz", color_yellow: "🟡 Sarı", color_green: "🟢 Yeşil", color_cyan: "🔵 Cyan", color_red: "🔴 Kırmızı",
+        holo_note: "ℹ️ Hologram 64 bloktan uzakta görünmez. Değişiklikler anında tüm oyunculara yayınlanır.",
+        gal_label: "// 05 — GALERİ", gal_title: "MOD GÖRSELLERİ",
+        gal_desc: "ReviveMeBrother modunun en önemli bölümlerinin görselleri.",
+        g1_title: "Yaralı Sistemi HUD", g1_desc: "Yaralı oyuncunun ekranında görünen kırmızı HUD ve butonlar.",
+        g2_title: "Doğum Yeri Bloğu", g2_desc: "Spawn alanını belirten siyah yün ve turuncu hologram.",
+        g3_title: "Kurtarma Sistemi", g3_desc: "Başka oyuncunun yaralıyı kurtarması ve kurtarma barı.",
+        g4_title: "Yardım Çantaları", g4_desc: "4 farklı tier'daki acil yardım çantalarının görseli.",
+        g5_title: "Hologram Sistemi", g5_desc: "Doğum yeri bloğunun üzerindeki renkli hologram metni.",
+        g6_title: "Tier Sistemi", g6_desc: "4 farklı tier'daki yardım kitlerinin envanter görünümü.",
+        info_owner: "Mod Sahibi", info_dev: "Yazılımcı", info_ver: "Sürüm", info_server: "Sunucu"
+    },
+    en: {
+        nav_features: "Features", nav_controls: "Controls", nav_tiers: "Tier System",
+        nav_hologram: "Hologram", nav_gallery: "Gallery",
+        hero_badge: "MINECRAFT 1.20.1 FORGE — CRAFTBORN RP",
+        hero_subtitle: "Combat Revive & Wounded System Mod",
+        meta_version: "Version", meta_mc: "Minecraft", meta_loader: "Loader", meta_dev: "Developer",
+        feat_label: "// 01 — CORE FEATURES", feat_title: "CORE FEATURES",
+        feat_desc: "ReviveMeBrother doesn't kill the player outright on fatal damage. A realistic injury system that enforces teamwork.",
+        f1_name: "WOUNDED SYSTEM", f1_text: "When taking fatal damage, the player enters a wounded state, falls down and cannot move.",
+        f1_l1: "Slowness 10 effect", f1_l2: "Cannot jump or attack", f1_l3: "Vision restricted (Blindness)", f1_l4: "Heartbeat sound",
+        f2_name: "5 MINUTE TIMER", f2_text: "A red HUD appears on screen with a 5-minute countdown timer.",
+        f2_l1: "Cause of injury shown", f2_l2: "3 action buttons (1/2/3)", f2_l3: "Real-time countdown",
+        f3_name: "CALL FOR HELP", f3_text: "Sends direction and distance info to all players within 50 blocks.",
+        f3_l1: "Location is shared", f3_l2: "15 second cooldown", f3_l3: "Team solidarity",
+        f4_name: "RESCUE", f4_text: "Another player can right-click for 30 seconds to rescue.",
+        f4_l1: "Revived with 25% health", f4_l2: "Rescuer earns 50 XP", f4_l3: "Minor healing effects",
+        f5_name: "SPAWN BLOCK", f5_text: "Custom spawn point setting system.",
+        f5_l1: "Covers 7×7 area", f5_l2: "Orange hologram", f5_l3: "Customizable text",
+        f6_name: "FIRST AID KITS", f6_text: "Healing kits in 4 different tiers. Max 4 can be carried.",
+        f6_l1: "T1–T4 options", f6_l2: "Auto-consumed", f6_l3: "Better effects per tier",
+        ctrl_label: "// 02 — CONTROLS", ctrl_title: "WOUNDED SCREEN BUTTONS",
+        ctrl_desc: "3 action buttons are shown on the wounded player's screen. Can be used with keys or mouse.",
+        b1_title: "⚰️ ACCEPT DEATH", b1_text: "Player accepts death. No death screen opens. Instantly teleported to spawn with full health.",
+        b2_title: "🆘 CALL FOR HELP", b2_text: "Sends direction + distance info to players within 50 blocks. 15 second cooldown.",
+        b3_title: "💊 USE FIRST AID", b3_text: "Uses the highest tier first aid kit in the inventory. Button appears grey if no kit available.",
+        tier_label: "// 03 — TIER SYSTEM", tier_title: "FIRST AID KITS",
+        tier_desc: "Used with the [3] button while wounded. Maximum 4 can be carried.",
+        t1_name: "BASIC", t1_heal: "25% Health", t1_desc: "A basic first aid kit. Provides small recovery.",
+        t2_name: "STANDARD", t2_heal: "50% Health", t2_desc: "Standard level aid. Provides better results.",
+        t3_name: "ADVANCED", t3_heal: "75% Health + Regen II", t3_desc: "Enhanced version. Includes additional healing effect.",
+        t4_name: "ELITE", t4_heal: "100% Health + Regen II + Abs", t4_desc: "Best protection. Full health and extra durability.",
+        holo_label: "// 04 — HOLOGRAM SYSTEM", holo_title: "HOLOGRAM SYSTEM",
+        holo_desc: "Floating 3D text hologram above the Spawn Block. Edit by right-clicking with the SpawnBlockBreaker pickaxe.",
+        holo_edit_title: "✏️ EDITABLE OPTIONS",
+        holo_e1: "Text (max 64 characters)", holo_e2: "Color (6 options)", holo_e3: "Visibility (Show / Hide)", holo_e4: "Bounce animation", holo_e5: "Height (0.5 – 8.0 blocks)",
+        holo_color_title: "🎨 COLOR OPTIONS",
+        color_orange: "🟠 Orange (Default)", color_white: "⚪ White", color_yellow: "🟡 Yellow", color_green: "🟢 Green", color_cyan: "🔵 Cyan", color_red: "🔴 Red",
+        holo_note: "ℹ️ Hologram is invisible beyond 64 blocks. Changes are broadcast to all players instantly.",
+        gal_label: "// 05 — GALLERY", gal_title: "MOD SCREENSHOTS",
+        gal_desc: "Screenshots of the most important parts of the ReviveMeBrother mod.",
+        g1_title: "Wounded System HUD", g1_desc: "Red HUD and buttons visible on the wounded player's screen.",
+        g2_title: "Spawn Block", g2_desc: "Black wool and orange hologram marking the spawn area.",
+        g3_title: "Rescue System", g3_desc: "Another player rescuing a wounded player with rescue bar.",
+        g4_title: "First Aid Kits", g4_desc: "Visual of the first aid kits across 4 different tiers.",
+        g5_title: "Hologram System", g5_desc: "Colorful hologram text above the spawn block.",
+        g6_title: "Tier System", g6_desc: "Inventory view of the aid kits across 4 different tiers.",
+        info_owner: "Mod Owner", info_dev: "Developer", info_ver: "Version", info_server: "Server"
+    },
+    ru: {
+        nav_features: "Функции", nav_controls: "Управление", nav_tiers: "Система тиров",
+        nav_hologram: "Голограмма", nav_gallery: "Галерея",
+        hero_badge: "MINECRAFT 1.20.1 FORGE — CRAFTBORN RP",
+        hero_subtitle: "Мод системы боевого возрождения и ранений",
+        meta_version: "Версия", meta_mc: "Minecraft", meta_loader: "Загрузчик", meta_dev: "Разработчик",
+        feat_label: "// 01 — ОСНОВНЫЕ ФУНКЦИИ", feat_title: "ОСНОВНЫЕ ФУНКЦИИ",
+        feat_desc: "ReviveMeBrother не убивает игрока мгновенно при смертельном уроне. Реалистичная система ранений, требующая командной работы.",
+        f1_name: "СИСТЕМА РАНЕНИЙ", f1_text: "При смертельном уроне игрок переходит в раненое состояние, падает и не может двигаться.",
+        f1_l1: "Эффект замедления 10", f1_l2: "Нельзя прыгать или атаковать", f1_l3: "Ограниченное зрение (Слепота)", f1_l4: "Звук сердцебиения",
+        f2_name: "ТАЙМЕР 5 МИНУТ", f2_text: "На экране раненого игрока появляется красный HUD с обратным отсчётом 5 минут.",
+        f2_l1: "Показывается причина ранения", f2_l2: "3 кнопки действий (1/2/3)", f2_l3: "Обратный отсчёт в реальном времени",
+        f3_name: "ВЫЗОВ ПОМОЩИ", f3_text: "Отправляет направление и расстояние всем игрокам в радиусе 50 блоков.",
+        f3_l1: "Местоположение передаётся", f3_l2: "Перезарядка 15 секунд", f3_l3: "Командная солидарность",
+        f4_name: "СПАСЕНИЕ", f4_text: "Другой игрок может нажимать ПКМ 30 секунд для спасения.",
+        f4_l1: "Воскрешается с 25% здоровья", f4_l2: "Спасатель получает 50 опыта", f4_l3: "Лёгкие эффекты лечения",
+        f5_name: "БЛОК СПАВНА", f5_text: "Система установки пользовательской точки появления.",
+        f5_l1: "Покрывает область 7×7", f5_l2: "Оранжевая голограмма", f5_l3: "Настраиваемый текст",
+        f6_name: "АПТЕЧКИ", f6_text: "Аптечки 4 разных уровней. Максимум 4 штуки.",
+        f6_l1: "Варианты Т1–Т4", f6_l2: "Автоматически удаляются", f6_l3: "Чем выше тир, тем лучше",
+        ctrl_label: "// 02 — УПРАВЛЕНИЕ", ctrl_title: "КНОПКИ ЭКРАНА РАНЕНОГО",
+        ctrl_desc: "На экране раненого игрока отображаются 3 кнопки действий. Можно использовать клавиши или мышь.",
+        b1_title: "⚰️ ПРИНЯТЬ СМЕРТЬ", b1_text: "Игрок принимает смерть. Экран смерти не открывается. Мгновенно телепортируется на спавн с полным здоровьем.",
+        b2_title: "🆘 ВЫЗВАТЬ ПОМОЩЬ", b2_text: "Отправляет направление + расстояние игрокам в радиусе 50 блоков. Перезарядка 15 секунд.",
+        b3_title: "💊 ИСПОЛЬЗОВАТЬ АПТЕЧКУ", b3_text: "Использует аптечку высшего уровня в инвентаре. Кнопка серая, если нет аптечки.",
+        tier_label: "// 03 — СИСТЕМА ТИРОВ", tier_title: "АПТЕЧКИ",
+        tier_desc: "Используется кнопкой [3] в раненом состоянии. Максимум 4 штуки.",
+        t1_name: "БАЗОВЫЙ", t1_heal: "25% Здоровья", t1_desc: "Базовая аптечка. Небольшое восстановление.",
+        t2_name: "СТАНДАРТ", t2_heal: "50% Здоровья", t2_desc: "Стандартный уровень помощи. Лучший результат.",
+        t3_name: "УЛУЧШЕННЫЙ", t3_heal: "75% Здоровья + Реген II", t3_desc: "Улучшенная версия с дополнительным эффектом лечения.",
+        t4_name: "ЭЛИТНЫЙ", t4_heal: "100% Здоровья + Реген II + Абс", t4_desc: "Лучшая защита. Полное здоровье и доп. выносливость.",
+        holo_label: "// 04 — СИСТЕМА ГОЛОГРАММЫ", holo_title: "СИСТЕМА ГОЛОГРАММЫ",
+        holo_desc: "Парящая 3D-текстовая голограмма над блоком спавна. Редактируйте ПКМ киркой SpawnBlockBreaker.",
+        holo_edit_title: "✏️ НАСТРОЙКИ",
+        holo_e1: "Текст (макс. 64 символа)", holo_e2: "Цвет (6 вариантов)", holo_e3: "Видимость (Показать / Скрыть)", holo_e4: "Анимация прыжка", holo_e5: "Высота (0.5 – 8.0 блоков)",
+        holo_color_title: "🎨 ВАРИАНТЫ ЦВЕТА",
+        color_orange: "🟠 Оранжевый (По умолчанию)", color_white: "⚪ Белый", color_yellow: "🟡 Жёлтый", color_green: "🟢 Зелёный", color_cyan: "🔵 Голубой", color_red: "🔴 Красный",
+        holo_note: "ℹ️ Голограмма не видна дальше 64 блоков. Изменения мгновенно транслируются всем игрокам.",
+        gal_label: "// 05 — ГАЛЕРЕЯ", gal_title: "СКРИНШОТЫ МОДА",
+        gal_desc: "Скриншоты наиболее важных частей мода ReviveMeBrother.",
+        g1_title: "HUD системы ранений", g1_desc: "Красный HUD и кнопки на экране раненого игрока.",
+        g2_title: "Блок спавна", g2_desc: "Чёрная шерсть и оранжевая голограмма обозначающая зону появления.",
+        g3_title: "Система спасения", g3_desc: "Игрок спасает раненого с полосой спасения.",
+        g4_title: "Аптечки", g4_desc: "Визуализация аптечек 4 разных уровней.",
+        g5_title: "Система голограммы", g5_desc: "Цветной голограммный текст над блоком спавна.",
+        g6_title: "Система тиров", g6_desc: "Вид аптечек 4 тиров в инвентаре.",
+        info_owner: "Владелец мода", info_dev: "Разработчик", info_ver: "Версия", info_server: "Сервер"
+    },
+    fr: {
+        nav_features: "Fonctionnalités", nav_controls: "Contrôles", nav_tiers: "Système de niveaux",
+        nav_hologram: "Hologramme", nav_gallery: "Galerie",
+        hero_badge: "MINECRAFT 1.20.1 FORGE — CRAFTBORN RP",
+        hero_subtitle: "Mod de système de résurrection et blessures au combat",
+        meta_version: "Version", meta_mc: "Minecraft", meta_loader: "Chargeur", meta_dev: "Développeur",
+        feat_label: "// 01 — FONCTIONNALITÉS", feat_title: "FONCTIONNALITÉS PRINCIPALES",
+        feat_desc: "ReviveMeBrother ne tue pas le joueur instantanément aux dégâts mortels. Un système de blessures réaliste qui impose le travail d'équipe.",
+        f1_name: "SYSTÈME DE BLESSURE", f1_text: "Lors de dégâts mortels, le joueur passe à l'état blessé, tombe et ne peut plus bouger.",
+        f1_l1: "Effet Lenteur 10", f1_l2: "Impossible de sauter ou attaquer", f1_l3: "Vision restreinte (Cécité)", f1_l4: "Son de battements de cœur",
+        f2_name: "MINUTERIE 5 MIN", f2_text: "Un HUD rouge apparaît sur l'écran du joueur blessé avec un compte à rebours de 5 minutes.",
+        f2_l1: "Cause des blessures affichée", f2_l2: "3 boutons d'action (1/2/3)", f2_l3: "Compte à rebours en temps réel",
+        f3_name: "APPEL À L'AIDE", f3_text: "Envoie direction et distance à tous les joueurs dans un rayon de 50 blocs.",
+        f3_l1: "Position partagée", f3_l2: "Temps de recharge 15 secondes", f3_l3: "Solidarité d'équipe",
+        f4_name: "SAUVETAGE", f4_text: "Un autre joueur peut faire un clic droit pendant 30 secondes pour sauver.",
+        f4_l1: "Relevé avec 25% de vie", f4_l2: "Sauveteur gagne 50 XP", f4_l3: "Effets de guérison légers",
+        f5_name: "BLOC D'APPARITION", f5_text: "Système de définition de point d'apparition personnalisé.",
+        f5_l1: "Couvre une zone 7×7", f5_l2: "Hologramme orange", f5_l3: "Texte personnalisable",
+        f6_name: "TROUSSES DE SECOURS", f6_text: "Kits de guérison en 4 niveaux différents. Maximum 4 transportables.",
+        f6_l1: "Options T1–T4", f6_l2: "Suppression automatique", f6_l3: "Effets meilleurs par niveau",
+        ctrl_label: "// 02 — CONTRÔLES", ctrl_title: "BOUTONS D'ÉCRAN BLESSÉ",
+        ctrl_desc: "3 boutons d'action apparaissent sur l'écran du joueur blessé. Utilisables avec touches ou souris.",
+        b1_title: "⚰️ ACCEPTER LA MORT", b1_text: "Le joueur accepte la mort. Pas d'écran de mort. Téléporté au point d'apparition avec la vie complète.",
+        b2_title: "🆘 APPELER À L'AIDE", b2_text: "Envoie direction + distance aux joueurs dans 50 blocs. Recharge 15 secondes.",
+        b3_title: "💊 UTILISER LES PREMIERS SOINS", b3_text: "Utilise la trousse de niveau le plus élevé dans l'inventaire. Grisée si aucune trousse.",
+        tier_label: "// 03 — SYSTÈME DE NIVEAUX", tier_title: "TROUSSES DE SECOURS",
+        tier_desc: "Utilisé avec le bouton [3] en état blessé. Maximum 4 transportables.",
+        t1_name: "BASIQUE", t1_heal: "25% Vie", t1_desc: "Une trousse de premiers soins basique. Petite guérison.",
+        t2_name: "STANDARD", t2_heal: "50% Vie", t2_desc: "Aide de niveau standard. Meilleur résultat.",
+        t3_name: "AVANCÉ", t3_heal: "75% Vie + Régen II", t3_desc: "Version améliorée avec effet de guérison supplémentaire.",
+        t4_name: "ÉLITE", t4_heal: "100% Vie + Régen II + Abs", t4_desc: "Meilleure protection. Vie complète et durabilité supplémentaire.",
+        holo_label: "// 04 — SYSTÈME D'HOLOGRAMME", holo_title: "SYSTÈME D'HOLOGRAMME",
+        holo_desc: "Hologramme de texte 3D flottant au-dessus du bloc d'apparition. Modifiez avec clic droit de la pioche SpawnBlockBreaker.",
+        holo_edit_title: "✏️ OPTIONS MODIFIABLES",
+        holo_e1: "Texte (max 64 caractères)", holo_e2: "Couleur (6 options)", holo_e3: "Visibilité (Afficher / Masquer)", holo_e4: "Animation de rebond", holo_e5: "Hauteur (0.5 – 8.0 blocs)",
+        holo_color_title: "🎨 OPTIONS DE COULEUR",
+        color_orange: "🟠 Orange (Défaut)", color_white: "⚪ Blanc", color_yellow: "🟡 Jaune", color_green: "🟢 Vert", color_cyan: "🔵 Cyan", color_red: "🔴 Rouge",
+        holo_note: "ℹ️ L'hologramme est invisible au-delà de 64 blocs. Les modifications sont diffusées instantanément à tous les joueurs.",
+        gal_label: "// 05 — GALERIE", gal_title: "CAPTURES D'ÉCRAN DU MOD",
+        gal_desc: "Captures d'écran des parties les plus importantes du mod ReviveMeBrother.",
+        g1_title: "HUD Système Blessure", g1_desc: "HUD rouge et boutons visibles sur l'écran du joueur blessé.",
+        g2_title: "Bloc d'Apparition", g2_desc: "Laine noire et hologramme orange marquant la zone d'apparition.",
+        g3_title: "Système de Sauvetage", g3_desc: "Joueur sauvant un blessé avec la barre de sauvetage.",
+        g4_title: "Trousses de Secours", g4_desc: "Visuel des trousses de premiers soins sur 4 niveaux.",
+        g5_title: "Système d'Hologramme", g5_desc: "Texte holographique coloré au-dessus du bloc d'apparition.",
+        g6_title: "Système de Niveaux", g6_desc: "Vue inventaire des trousses sur 4 niveaux différents.",
+        info_owner: "Propriétaire du Mod", info_dev: "Développeur", info_ver: "Version", info_server: "Serveur"
+    },
+    ja: {
+        nav_features: "機能", nav_controls: "操作", nav_tiers: "ティアシステム",
+        nav_hologram: "ホログラム", nav_gallery: "ギャラリー",
+        hero_badge: "MINECRAFT 1.20.1 FORGE — CRAFTBORN RP",
+        hero_subtitle: "戦闘蘇生＆負傷システムMod",
+        meta_version: "バージョン", meta_mc: "Minecraft", meta_loader: "ローダー", meta_dev: "開発者",
+        feat_label: "// 01 — 主要機能", feat_title: "主要機能",
+        feat_desc: "ReviveMeBrotherは致命的なダメージでプレイヤーを即死させません。チームワークを必要とするリアルな負傷システムです。",
+        f1_name: "負傷システム", f1_text: "致命的なダメージを受けると、プレイヤーは負傷状態になり倒れ込み動けなくなります。",
+        f1_l1: "鈍化10エフェクト", f1_l2: "ジャンプ・攻撃不可", f1_l3: "視界制限（暗闇）", f1_l4: "心拍音",
+        f2_name: "5分タイマー", f2_text: "負傷プレイヤーの画面に赤いHUDが表示され、5分のカウントダウンが始まります。",
+        f2_l1: "負傷原因の表示", f2_l2: "3つのアクションボタン（1/2/3）", f2_l3: "リアルタイムカウントダウン",
+        f3_name: "救助要請", f3_text: "半径50ブロック内の全プレイヤーに方向と距離情報を送信します。",
+        f3_l1: "位置情報を共有", f3_l2: "15秒クールダウン", f3_l3: "チーム連携",
+        f4_name: "救助", f4_text: "別のプレイヤーが30秒間右クリックして救助できます。",
+        f4_l1: "25%HPで復活", f4_l2: "救助者が50XP獲得", f4_l3: "軽い回復エフェクト",
+        f5_name: "スポーンブロック", f5_text: "カスタムスポーンポイント設定システム。",
+        f5_l1: "7×7エリアをカバー", f5_l2: "オレンジのホログラム", f5_l3: "カスタマイズ可能なテキスト",
+        f6_name: "応急処置キット", f6_text: "4種類のティアの回復キット。最大4個携帯可能。",
+        f6_l1: "T1〜T4の選択肢", f6_l2: "使用後自動削除", f6_l3: "ティアが上がるほど強力",
+        ctrl_label: "// 02 — 操作", ctrl_title: "負傷画面ボタン",
+        ctrl_desc: "負傷プレイヤーの画面に3つのアクションボタンが表示されます。キーまたはマウスで使用可能。",
+        b1_title: "⚰️ 死を受け入れる", b1_text: "プレイヤーは死を受け入れます。デスscreen不表示。スポーンに即テレポートし満HPで復活。",
+        b2_title: "🆘 救助を呼ぶ", b2_text: "50ブロック内のプレイヤーに方向＋距離情報を送信。15秒クールダウン。",
+        b3_title: "💊 応急処置を使用", b3_text: "インベントリ内の最高ティアのキットを使用。キットがない場合はグレー表示。",
+        tier_label: "// 03 — ティアシステム", tier_title: "応急処置キット",
+        tier_desc: "負傷中に[3]ボタンで使用。最大4個携帯可能。",
+        t1_name: "ベーシック", t1_heal: "HP25%回復", t1_desc: "基本的な応急処置キット。小さな回復。",
+        t2_name: "スタンダード", t2_heal: "HP50%回復", t2_desc: "標準レベルの援助。より良い結果。",
+        t3_name: "アドバンスド", t3_heal: "HP75%回復 + 再生II", t3_desc: "強化版。追加の回復エフェクト付き。",
+        t4_name: "エリート", t4_heal: "HP100%回復 + 再生II + 吸収", t4_desc: "最高の保護。満HP＋追加の耐久性。",
+        holo_label: "// 04 — ホログラムシステム", holo_title: "ホログラムシステム",
+        holo_desc: "スポーンブロックの上に浮かぶ3Dテキストホログラム。SpawnBlockBreakerのツルハシで右クリックして編集。",
+        holo_edit_title: "✏️ 編集可能な項目",
+        holo_e1: "テキスト（最大64文字）", holo_e2: "色（6種類）", holo_e3: "表示/非表示", holo_e4: "バウンスアニメーション", holo_e5: "高さ（0.5〜8.0ブロック）",
+        holo_color_title: "🎨 カラーオプション",
+        color_orange: "🟠 オレンジ（デフォルト）", color_white: "⚪ 白", color_yellow: "🟡 黄", color_green: "🟢 緑", color_cyan: "🔵 シアン", color_red: "🔴 赤",
+        holo_note: "ℹ️ ホログラムは64ブロック以上離れると見えません。変更は即座に全プレイヤーに配信されます。",
+        gal_label: "// 05 — ギャラリー", gal_title: "Modスクリーンショット",
+        gal_desc: "ReviveMeBrother Modの最も重要な部分のスクリーンショット。",
+        g1_title: "負傷システムHUD", g1_desc: "負傷プレイヤーの画面に表示される赤いHUDとボタン。",
+        g2_title: "スポーンブロック", g2_desc: "スポーンエリアを示す黒いウールとオレンジのホログラム。",
+        g3_title: "救助システム", g3_desc: "別プレイヤーが負傷者を救助している場面と救助バー。",
+        g4_title: "応急処置キット", g4_desc: "4種類のティアの応急処置キットのビジュアル。",
+        g5_title: "ホログラムシステム", g5_desc: "スポーンブロック上のカラフルなホログラムテキスト。",
+        g6_title: "ティアシステム", g6_desc: "4種類のティアのキットのインベントリ表示。",
+        info_owner: "Mod所有者", info_dev: "開発者", info_ver: "バージョン", info_server: "サーバー"
+    }
+};
 
-  for (let i = 0; i < cubeCount; i++) {
-    const cube = document.createElement('div');
-    cube.classList.add('cube');
-    if (Math.random() > 0.75) cube.classList.add('zombie');
+let currentLang = 'tr';
 
-    const size = Math.random() * 24 + 12;
-    const left = Math.random() * 100;
-    const delay = Math.random() * 15;
-    const duration = Math.random() * 20 + 18;
+function setLang(lang) {
+    currentLang = lang;
+    document.getElementById('lang-overlay').style.display = 'none';
+    document.getElementById('main-content').style.display = 'block';
+    applyTranslations(lang);
+    document.documentElement.lang = lang;
+}
 
-    cube.style.cssText = `
-      left: ${left}%;
-      animation-duration: ${duration}s;
-      animation-delay: -${delay}s;
-    `;
-
-    cube.innerHTML = `<div style="width:${size}px;height:${size}px;"></div>`;
-    cubesContainer.appendChild(cube);
-  }
-
-  // ── Scroll Reveal ──
-  const reveals = document.querySelectorAll('.reveal');
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('visible');
-        observer.unobserve(entry.target);
-      }
+function applyTranslations(lang) {
+    const dict = T[lang];
+    if (!dict) return;
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (dict[key] !== undefined) el.textContent = dict[key];
     });
-  }, { threshold: 0.12 });
+}
 
-  reveals.forEach(el => observer.observe(el));
+function showLangOverlay() {
+    document.getElementById('lang-overlay').style.display = 'flex';
+    document.getElementById('main-content').style.display = 'none';
+}
 
-  // ── Smooth nav active highlight ──
-  const sections = document.querySelectorAll('section[id], div[id]');
-  const navLinks = document.querySelectorAll('.nav-links a');
+function openLightbox(src) {
+    document.getElementById('lightbox-img').src = src;
+    document.getElementById('lightbox').classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
 
-  window.addEventListener('scroll', () => {
-    let current = '';
-    sections.forEach(section => {
-      const top = section.offsetTop - 100;
-      if (window.scrollY >= top) current = section.getAttribute('id');
+function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeLightbox();
+});
+
+// Smooth scroll for nav links
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+        e.preventDefault();
+        const target = document.querySelector(a.getAttribute('href'));
+        if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
-    navLinks.forEach(link => {
-      link.style.color = '';
-      if (link.getAttribute('href') === `#${current}`) {
-        link.style.color = 'var(--green-glow)';
-      }
-    });
-  });
+});
 </script>
+
 </body>
 </html>
