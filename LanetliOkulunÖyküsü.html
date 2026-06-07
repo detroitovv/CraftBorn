@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>İstenmeyenlerin Okulu — Beyaz Gelincik'in Laneti</title>
+<link href="https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Special+Elite&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --blood: #6b0f0f;
+    --blood-light: #9b1a1a;
+    --blood-pale: #c44444;
+    --ash: #d4c8b8;
+    --ash-dim: #8a7e70;
+    --ash-pale: #ede5d8;
+    --void: #03020a;
+    --void-mid: #090612;
+    --void-surface: rgba(9, 6, 18, 0.9);
+    --green-sick: #2a4a1a;
+    --green-glow: #4a7a2a;
+    --crack: rgba(180, 130, 80, 0.15);
+    --border-curse: rgba(107, 15, 15, 0.4);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background-color: var(--void);
+    color: var(--ash);
+    font-family: 'Crimson Pro', serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 70% 50% at 50% 0%, rgba(60, 5, 5, 0.35) 0%, transparent 65%),
+      radial-gradient(ellipse 40% 60% at 10% 100%, rgba(30, 50, 10, 0.15) 0%, transparent 55%),
+      radial-gradient(ellipse 50% 40% at 90% 60%, rgba(50, 5, 5, 0.2) 0%, transparent 55%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .fog {
+    position: fixed;
+    inset: 0;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.015' numOctaves='3' seed='5'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0.05 0 0 0 0 0 0 0 0 0 0 0 0 0 0.12 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23f)'/%3E%3C/svg%3E");
+    background-size: 400px 400px;
+    pointer-events: none;
+    z-index: 0;
+    animation: fogDrift 25s ease-in-out infinite alternate;
+    opacity: 0.8;
+  }
+
+  @keyframes fogDrift {
+    from { background-position: 0 0; }
+    to { background-position: 100px 60px; }
+  }
+
+  .cracks {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    overflow: hidden;
+  }
+
+  .crack-line {
+    position: absolute;
+    background: linear-gradient(var(--angle), transparent 0%, rgba(107, 15, 15, 0.35) 50%, transparent 100%);
+    transform-origin: top left;
+  }
+
+  header {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+    padding: clamp(50px, 10vw, 90px) 16px clamp(40px, 8vw, 70px);
+    border-bottom: 1px solid var(--border-curse);
+    overflow: hidden;
+  }
+
+  .header-eye {
+    display: block;
+    font-size: clamp(2rem, 8vw, 3.5rem);
+    margin-bottom: 16px;
+    animation: eyePulse 3s ease-in-out infinite;
+    filter: drop-shadow(0 0 16px rgba(107, 15, 15, 0.8));
+    color: var(--blood-pale);
+  }
+
+  @keyframes eyePulse {
+    0%, 100% { transform: scaleY(1); filter: drop-shadow(0 0 10px rgba(107,15,15,0.5)); }
+    45%, 55% { transform: scaleY(1); }
+    50% { transform: scaleY(0.08); filter: drop-shadow(0 0 4px rgba(107,15,15,0.3)); }
+  }
+
+  .site-title {
+    font-family: 'UnifrakturMaguntia', cursive;
+    font-size: clamp(1.8rem, 7vw, 4rem);
+    color: var(--ash-pale);
+    line-height: 1.1;
+    filter: drop-shadow(0 0 20px rgba(107, 15, 15, 0.6)) drop-shadow(2px 2px 0 rgba(0,0,0,0.8));
+    animation: titleFlicker 6s ease-in-out infinite;
+    letter-spacing: 0.03em;
+    padding: 0 8px;
+  }
+
+  @keyframes titleFlicker {
+    0%, 94%, 96%, 98%, 100% { opacity: 1; }
+    95%, 97% { opacity: 0.85; filter: drop-shadow(0 0 30px rgba(180,40,40,0.8)) drop-shadow(2px 2px 0 rgba(0,0,0,0.8)); }
+  }
+
+  .site-sub {
+    font-family: 'Special Elite', serif;
+    font-size: clamp(0.6rem, 2.2vw, 0.85rem);
+    color: var(--blood-pale);
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    margin-top: 12px;
+    opacity: 0.75;
+  }
+
+  .blood-divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 28px auto 0;
+    max-width: 320px;
+    padding: 0 20px;
+  }
+
+  .blood-divider-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--blood), transparent);
+  }
+
+  .blood-drip {
+    color: var(--blood-pale);
+    font-size: 1.1rem;
+    animation: drip 4s ease-in-out infinite;
+  }
+
+  @keyframes drip {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(3px); }
+  }
+
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(3, 2, 10, 0.95);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border-curse);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  nav::-webkit-scrollbar { display: none; }
+
+  nav ul {
+    list-style: none;
+    display: flex;
+    padding: 0 8px;
+    gap: 0;
+    min-width: max-content;
+    margin: 0 auto;
+    justify-content: center;
+  }
+
+  nav ul li a {
+    display: block;
+    padding: 13px 14px;
+    color: var(--ash-dim);
+    text-decoration: none;
+    font-family: 'Special Elite', serif;
+    font-size: clamp(0.6rem, 1.8vw, 0.7rem);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    transition: color 0.3s;
+    white-space: nowrap;
+  }
+
+  nav ul li a:hover { color: var(--blood-pale); }
+
+  main {
+    position: relative;
+    z-index: 5;
+    max-width: 760px;
+    margin: 0 auto;
+    padding: clamp(32px, 6vw, 60px) clamp(16px, 4vw, 28px) clamp(50px, 8vw, 80px);
+  }
+
+  .intro-banner {
+    background: rgba(40, 5, 5, 0.5);
+    border: 1px solid rgba(107, 15, 15, 0.5);
+    border-top: 2px solid var(--blood);
+    padding: clamp(16px, 4vw, 24px) clamp(18px, 4vw, 28px);
+    margin-bottom: clamp(40px, 8vw, 65px);
+    font-family: 'Special Elite', serif;
+    font-size: clamp(0.72rem, 2vw, 0.82rem);
+    color: var(--ash-dim);
+    letter-spacing: 0.06em;
+    line-height: 1.75;
+    text-align: center;
+    position: relative;
+  }
+
+  .intro-banner::before {
+    content: '⚠';
+    display: block;
+    font-size: 1.3rem;
+    color: var(--blood);
+    margin-bottom: 10px;
+    animation: warningPulse 2s ease-in-out infinite;
+  }
+
+  @keyframes warningPulse {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 1; color: var(--blood-pale); }
+  }
+
+  .chapter {
+    margin-bottom: clamp(50px, 10vw, 80px);
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+
+  .chapter.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .chapter-label {
+    font-family: 'Special Elite', serif;
+    font-size: clamp(0.6rem, 1.8vw, 0.68rem);
+    letter-spacing: 0.4em;
+    color: var(--blood);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .chapter-title {
+    font-family: 'UnifrakturMaguntia', cursive;
+    font-size: clamp(1.4rem, 5vw, 2.2rem);
+    color: var(--ash-pale);
+    line-height: 1.15;
+    margin-bottom: clamp(18px, 4vw, 26px);
+    filter: drop-shadow(0 0 8px rgba(107, 15, 15, 0.4));
+  }
+
+  .chapter-body {
+    background: var(--void-surface);
+    border: 1px solid var(--border-curse);
+    border-radius: 1px;
+    padding: clamp(24px, 5vw, 44px) clamp(20px, 5vw, 40px);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .chapter-body::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(to right, transparent, var(--blood), var(--blood-light), transparent);
+  }
+
+  .chapter-body::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; bottom: 0;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--blood), transparent 40%, transparent 60%, var(--blood));
+    opacity: 0.4;
+  }
+
+  .chapter-body p {
+    font-size: clamp(0.97rem, 2.2vw, 1.1rem);
+    line-height: 2;
+    color: var(--ash);
+    text-align: justify;
+    hyphens: auto;
+    margin-bottom: 20px;
+    font-weight: 300;
+  }
+
+  .chapter-body p:last-child { margin-bottom: 0; }
+
+  .chapter-body p:first-of-type::first-letter {
+    font-family: 'UnifrakturMaguntia', cursive;
+    font-size: clamp(3em, 8vw, 4.2em);
+    float: left;
+    line-height: 0.72;
+    margin: 0.06em 0.1em 0 0;
+    color: var(--blood-pale);
+    filter: drop-shadow(0 0 6px rgba(107, 15, 15, 0.6));
+  }
+
+  .curse-box {
+    background: rgba(15, 3, 3, 0.7);
+    border: 1px solid rgba(107, 15, 15, 0.4);
+    border-left: 3px solid var(--blood);
+    padding: clamp(14px, 3vw, 20px) clamp(16px, 3vw, 22px);
+    margin: clamp(18px, 4vw, 26px) 0;
+    font-style: italic;
+    color: rgba(212, 200, 184, 0.75);
+    font-size: clamp(0.88rem, 2vw, 0.98rem);
+    line-height: 1.9;
+    position: relative;
+  }
+
+  .curse-box::before {
+    content: '"';
+    position: absolute;
+    top: -12px;
+    left: 12px;
+    font-family: 'UnifrakturMaguntia', cursive;
+    font-size: 2.5rem;
+    color: var(--blood);
+    opacity: 0.5;
+    line-height: 1;
+  }
+
+  .incident-box {
+    background: rgba(5, 15, 3, 0.5);
+    border: 1px solid rgba(50, 80, 20, 0.3);
+    border-left: 3px solid var(--green-glow);
+    padding: clamp(14px, 3vw, 20px) clamp(16px, 3vw, 22px);
+    margin: clamp(18px, 4vw, 26px) 0;
+    color: rgba(180, 210, 160, 0.7);
+    font-size: clamp(0.85rem, 1.9vw, 0.93rem);
+    line-height: 1.85;
+  }
+
+  .incident-box .label {
+    font-family: 'Special Elite', serif;
+    font-size: 0.62rem;
+    letter-spacing: 0.3em;
+    color: var(--green-glow);
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 8px;
+    opacity: 0.8;
+  }
+
+  .name {
+    color: var(--ash-pale);
+    font-style: italic;
+  }
+
+  .cursed-word {
+    color: var(--blood-pale);
+    font-weight: 600;
+  }
+
+  .event-name {
+    color: var(--ash-pale);
+    font-style: italic;
+    font-weight: 600;
+  }
+
+  .section-sep {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: clamp(30px, 6vw, 50px) 0;
+    opacity: 0.5;
+  }
+
+  .section-sep span:first-child,
+  .section-sep span:last-child {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--blood), transparent);
+    display: block;
+  }
+
+  .section-sep .mid {
+    color: var(--blood);
+    font-size: 0.9rem;
+    flex-shrink: 0;
+  }
+
+  .chapter-end {
+    text-align: center;
+    margin-top: 24px;
+    color: var(--blood);
+    font-size: 1.2rem;
+    letter-spacing: 0.3em;
+    opacity: 0.6;
+  }
+
+  .closing-quote {
+    text-align: center;
+    font-family: 'Crimson Pro', serif;
+    font-style: italic;
+    font-size: clamp(0.95rem, 2.5vw, 1.15rem);
+    color: var(--ash-dim);
+    padding: clamp(30px, 6vw, 50px) 20px;
+    border-top: 1px solid var(--border-curse);
+    max-width: 500px;
+    margin: 0 auto;
+    line-height: 1.9;
+  }
+
+  footer {
+    position: relative;
+    z-index: 5;
+    text-align: center;
+    padding: clamp(36px, 7vw, 55px) 20px clamp(28px, 5vw, 40px);
+    border-top: 1px solid var(--border-curse);
+    background: rgba(3, 2, 10, 0.7);
+  }
+
+  .footer-title {
+    font-family: 'UnifrakturMaguntia', cursive;
+    font-size: clamp(1.2rem, 4vw, 1.7rem);
+    color: var(--ash-pale);
+    margin-bottom: 4px;
+    filter: drop-shadow(0 0 8px rgba(107, 15, 15, 0.4));
+  }
+
+  .footer-sub {
+    font-family: 'Special Elite', serif;
+    font-size: clamp(0.56rem, 1.5vw, 0.65rem);
+    letter-spacing: 0.3em;
+    color: var(--blood);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    opacity: 0.7;
+  }
+
+  .footer-owner {
+    font-family: 'Crimson Pro', serif;
+    font-size: clamp(0.78rem, 2vw, 0.88rem);
+    color: rgba(180, 160, 140, 0.5);
+    letter-spacing: 0.1em;
+    margin-bottom: clamp(20px, 4vw, 28px);
+  }
+
+  .footer-owner span { color: var(--ash-dim); }
+
+  .discord-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: linear-gradient(135deg, #0a050f, #160a20);
+    border: 1px solid var(--blood);
+    color: var(--ash);
+    text-decoration: none;
+    padding: clamp(12px, 3vw, 15px) clamp(22px, 5vw, 32px);
+    font-family: 'Special Elite', serif;
+    font-size: clamp(0.7rem, 2vw, 0.8rem);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    border-radius: 1px;
+    transition: all 0.35s;
+    box-shadow: 0 0 16px rgba(107, 15, 15, 0.15), inset 0 0 16px rgba(107, 15, 15, 0.04);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .discord-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(107, 15, 15, 0.15), transparent);
+    opacity: 0;
+    transition: opacity 0.35s;
+  }
+
+  .discord-btn:hover::before { opacity: 1; }
+
+  .discord-btn:hover {
+    border-color: var(--blood-pale);
+    color: var(--ash-pale);
+    box-shadow: 0 0 30px rgba(107, 15, 15, 0.3);
+    transform: translateY(-2px);
+  }
+
+  .discord-btn svg {
+    width: 17px; height: 17px;
+    fill: currentColor;
+    flex-shrink: 0;
+  }
+
+  .footer-copy {
+    margin-top: 22px;
+    font-size: clamp(0.6rem, 1.5vw, 0.67rem);
+    color: rgba(107, 15, 15, 0.35);
+    letter-spacing: 0.08em;
+  }
+
+  @media (max-width: 480px) {
+    .chapter-body p:first-of-type::first-letter {
+      font-size: 3em;
+    }
+    nav ul { justify-content: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<div class="fog"></div>
+
+<header>
+  <span class="header-eye">𓂀</span>
+  <h1 class="site-title">İstenmeyenlerin Okulu</h1>
+  <p class="site-sub">Beyaz Gelincik'in Laneti &amp; Quherys White'ın Mirası</p>
+  <div class="blood-divider">
+    <span class="blood-divider-line"></span>
+    <span class="blood-drip">✦</span>
+    <span class="blood-divider-line"></span>
+  </div>
+</header>
+
+<nav>
+  <ul>
+    <li><a href="#miras">White Mirası</a></li>
+    <li><a href="#ollen">Ollen'ın Keşfi</a></li>
+    <li><a href="#felaket">Köyün Sonu</a></li>
+    <li><a href="#lanet">Lanet</a></li>
+    <li><a href="#okul">Lanetli Okul</a></li>
+  </ul>
+</nav>
+
+<main>
+
+  <div class="intro-banner">
+    Bu kayıt, White Hanedanlığı'na mensup Beyaz Gelincik Akademisi'nin<br>
+    <span style="color: var(--ash-pale);">Violet White'tan sonra</span> yaşadığı<br>
+    talihsiz olayları ve bir lanet doğuran o tek anı aktarmaktadır.
+  </div>
+
+  <section class="chapter" id="miras">
+    <p class="chapter-label">— I. Kayıt —</p>
+    <h2 class="chapter-title">Quherys White'ın Mirası</h2>
+    <div class="chapter-body">
+      <p>
+        <span class="name">Violet White</span> koltuğunu oğluna ve en seçkin talebesine — <span class="name">Quherys White</span>'a — devrettiğinde <span class="cursed-word">Beyaz Gelincik Akademisi</span>, yıllar boyunca sürdürdüğü talebe eğitimine aynı düzen ve sessizlik içinde devam ediyordu. Günler birbirini kovalıyor, büyü dersleri işleniyor, yeni adaylar yetişiyordu. Her şey huzurluydu.
+      </p>
+      <p>
+        Ta ki Quherys'ın, bilmediği bir yoldan büyüye bulaşmış genç bir köylü kızıyla karşılaşmasına kadar.
+      </p>
+      <div class="chapter-end">✦</div>
+    </div>
+  </section>
+
+  <section class="chapter" id="ollen">
+    <p class="chapter-label">— II. Kayıt —</p>
+    <h2 class="chapter-title">Ollen — Meraklı Gözler</h2>
+    <div class="chapter-body">
+      <p>
+        <span class="name">Ollen</span>, küçük köyünde büyüye duyduğu derin merakıyla tanınan masum bir çocuktu. Kimliği belirsiz bir cadının düşürdüğü büyü rehberi kitabını şans eseri bulan Ollen için bu kitap, içindeki semboller ve çizimlerle yalnızca büyüleyici bir masal defterinden ibaretti. Semboller anlamsız gözükür, sayfalar büyülü bir yazı gibi parlar, ama hiçbiri ona gerçek olmayı ele vermezdi.
+      </p>
+      <p>
+        <span class="name">Quherys White</span>, Ollen'ın annesinin işlettiği handa bir gece konaklamak üzere o köye geldiğinde her şey değişmeye başladı. Sabah yola çıkacakken genç ve soylu bir kadının <span class="cursed-word">uçan arabasının tekeri</span> kırılmış, soğukkanlılığını yitiren leydi ısrarla yardım istiyordu. Quherys, bir cadı olarak sıradan insanlara yardım etme yükümlülüğüyle bu işi üstlendi. Ama büyü çizimlerini başkalarına göstermemek için hızla hanın arka atölyelerinden birine sığındı — izin almadan, aceleyle.
+      </p>
+
+      <div class="curse-box">
+        Hesaba katmadığı tek şey vardı: deliğinden sızan ışığa alışmış, meraklı bir çift göz.
+      </div>
+
+      <p>
+        <span class="name">Ollen</span>, bir fıçının arkasına saklanmış, nefesini tutmuş hâlde izliyordu. Quherys'ın elinin üzerinde büyü sembolleri oluştururken yayılan o müthiş ışığa — o pırıltıya — gözlerini kırpmadan baktı. Elindeki kitabın sayfalarındaki semboller ile Quherys'ın çizdiği şekiller arasındaki benzerliği o anda fark etti. Ve içinde bir şey kıpırdadı.
+      </p>
+
+      <div class="chapter-end">✦</div>
+    </div>
+  </section>
+
+  <section class="chapter" id="felaket">
+    <p class="chapter-label">— III. Kayıt —</p>
+    <h2 class="chapter-title">Köyün Sonu — Bir Sembolün Bedeli</h2>
+    <div class="chapter-body">
+      <p>
+        Quherys köyden ayrıldıktan sonra Ollen hemen odasına koştu. Aklından tek şey geçiyordu: cadının çantasından fırsatını bulup arakladığı mürekkep kabı. Ahşap kalemini o mürekkebe daldırdı, kitabını açtı ve rastgele bir sayfadaki sembolü — hiçbir şey bilmeden, hiçbir şey anlamadan — çizmeye başladı.
+      </p>
+
+      <div class="incident-box">
+        <span class="label">⚠ Kayıt — O An</span>
+        Ollen son noktayı koyduğu anda tüm köyü kaplayan, <span style="color: #c8e080;">muazzam sarı parlak bir alev</span> belirdi. Dakikalar içinde Ollen'ın köyü ve kendisi yok oldu. Geriye yalnızca kocaman, derin bir <span style="color: #c8e080;">çukur</span> kaldı.
+      </div>
+
+      <p>
+        Sonradan yapılan incelemelerde ve bizzat Quherys'ın günlüklerinde ortaya çıkan gerçek şuydu: Ollen, nasıl olduğu hâlâ bilinemeyen bir yoldan, <span class="cursed-word">yok oluş büyüsünü</span> yanlışlıkla gerçekleştirmişti. Büyünün ne olduğunu bilmeden. Ne istediğini anlamadan. Sadece taklit ederek.
+      </p>
+
+      <div class="curse-box">
+        Bir köy yok olmuştu. Ve bu felaketin nedeni yalnızca masum bir meraktan ibaretti.
+      </div>
+
+      <p>
+        O dönemde henüz bir <span class="event-name">Akademi Mahkemesi</span> kurulmamıştı. Quherys'ın ihmalinin bedeli yalnızca diğer akademilerin kınaması oldu. Basit bir kınama. Koca bir köy karşılığında.
+      </p>
+
+      <div class="chapter-end">✦</div>
+    </div>
+  </section>
+
+  <section class="chapter" id="lanet">
+    <p class="chapter-label">— IV. Kayıt —</p>
+    <h2 class="chapter-title">Laneti Başlatan An</h2>
+    <div class="chapter-body">
+      <p>
+        İşte bu olayın, <span class="cursed-word">lanetin başlangıcı</span> olduğu söylenir.
+      </p>
+      <p>
+        Çünkü Quherys'tan sonra akademiyi devralan her <span class="name">White soyu</span> cadı öğretmen, benzer bir felaketle yüzleşti. Sanki o kınama yetmezmiş gibi, sanki ödenmemiş bir hesap varmış gibi. Sanki köyün üzerine kapanan o çukur, White soyunu da içine almaya kararlıymış gibi.
+      </p>
+
+      <div class="incident-box">
+        <span class="label">Kayıtlı Olaylar</span>
+        Bazı öğretmenlerin talebeleri durduk yere ağır yaralanmalar yaşadı.<br>
+        Bazılarının öğrencileri amansız hastalıklara yakalanıp hayatını kaybetti.<br>
+        Bazı White soylu öğretmenler ise büyü kazaları sonucu bizzat ölümle tanıştı.
+      </div>
+
+      <p>
+        Bu olaylar yalnızca bir kez ya da iki kez yaşansaydı tesadüf denirdi. Ama her öğretmende, her nesilde, benzer bir gölge yeniden düşüyordu. Tekrar ve tekrar. Değişen yalnızca isimler, tarihler ve acının biçimiydi.
+      </p>
+
+      <div class="chapter-end">✦</div>
+    </div>
+  </section>
+
+  <section class="chapter" id="okul">
+    <p class="chapter-label">— V. Kayıt —</p>
+    <h2 class="chapter-title">İstenmeyenlerin Okulu</h2>
+    <div class="chapter-body">
+      <p>
+        Son günümüz çağına gelindiğinde artık kimse <span class="event-name">Beyaz Gelincik Akademisi</span>'ni eskisi gibi saygıyla anmıyordu. Yılların getirdiği trajedi üstüne trajedi, kayıp üstüne kayıp, o bir zamanlar gururla taşınan ismi ağırlaştırdı.
+      </p>
+      <p>
+        Akademi artık iki şeyle anılıyordu:
+      </p>
+
+      <div class="curse-box">
+        <strong style="color: var(--ash-pale);">Tabular dolu bir okul.</strong><br>
+        Kimsenin gönüllü gitmek istemediği, <span class="cursed-word">lanetli</span> olduğu fısıldanan, istenmeyenlerin, gidecek yeri olmayanların, başka akademilerin reddettiği adayların son durağı.
+      </div>
+
+      <p>
+        Belki lanet gerçekti. Belki yalnızca yılların biriktirdiği talihsizlikti. Belki bir köyün yok oluşuna karşılık verilemeyen hesap, White soyunu nesiller boyu takip etmeyi sürdürüyordu.
+      </p>
+      <p>
+        Ama şu da bir gerçekti: kapıları hâlâ açıktı. Ve içeri girenler, buradan çıkmayı her zaman başaramıyordu.
+      </p>
+
+      <div class="chapter-end">✦</div>
+    </div>
+  </section>
+
+  <div class="closing-quote">
+    "Bazı semboller çizilmek için değil,<br>
+    saklanmak için vardır."<br><br>
+    <span style="color: var(--blood); font-size: 0.85rem; letter-spacing: 0.15em;">— Beyaz Gelincik Arşivi, Gizli Kayıtlar —</span>
+  </div>
+
+</main>
+
+<footer>
+  <div class="footer-title">Beyaz Gelincik</div>
+  <div class="footer-sub">Lanetli Akademi Kayıtları</div>
+
+  <div class="footer-owner">
+    Bu site ve içerdiği hikaye <span>Detroitov ( Luxiov )</span>'a aittir.
+  </div>
+
+  <a href="https://discord.gg/pfE5z2N6yP" target="_blank" rel="noopener noreferrer" class="discord-btn">
+    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/>
+    </svg>
+    Sunucuya Katıl
+  </a>
+
+  <div class="footer-copy">© Detroitov (Luxiov) · Tüm hakları saklıdır.</div>
+</footer>
+
+<script>
+  const chapters = document.querySelectorAll('.chapter');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.08 });
+  chapters.forEach(c => observer.observe(c));
+</script>
+
+</body>
+</html>
