@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cadılığın Öyküsü</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;500;600&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #c9a84c;
+    --gold-light: #e8c96d;
+    --gold-pale: #f5e6b0;
+    --gold-dim: #7a5e1e;
+    --white: #f8f3e8;
+    --white-soft: #e8dfc8;
+    --bg-deep: #060408;
+    --bg-mid: #0d090f;
+    --bg-card: rgba(12, 8, 16, 0.85);
+    --border-glow: rgba(201, 168, 76, 0.3);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background-color: var(--bg-deep);
+    color: var(--white);
+    font-family: 'IM Fell English', serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+    cursor: default;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 50% 0%, rgba(90, 30, 120, 0.18) 0%, transparent 70%),
+      radial-gradient(ellipse 60% 40% at 20% 80%, rgba(201, 168, 76, 0.07) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 50% at 80% 50%, rgba(60, 10, 80, 0.12) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .noise {
+    position: fixed;
+    inset: 0;
+    opacity: 0.035;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    background-size: 200px 200px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .stars {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+  }
+
+  .star {
+    position: absolute;
+    background: var(--gold-pale);
+    border-radius: 50%;
+    animation: twinkle var(--dur) ease-in-out infinite;
+    opacity: 0;
+  }
+
+  @keyframes twinkle {
+    0%, 100% { opacity: 0; transform: scale(0.8); }
+    50% { opacity: var(--op); transform: scale(1.2); }
+  }
+
+  header {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+    padding: 80px 20px 60px;
+    border-bottom: 1px solid var(--border-glow);
+  }
+
+  .header-sigil {
+    font-size: 3rem;
+    margin-bottom: 20px;
+    animation: floatSigil 4s ease-in-out infinite;
+    filter: drop-shadow(0 0 20px rgba(201, 168, 76, 0.6));
+    display: block;
+    color: var(--gold);
+  }
+
+  @keyframes floatSigil {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-8px) rotate(3deg); }
+  }
+
+  .site-title {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: clamp(2rem, 6vw, 4.5rem);
+    font-weight: 900;
+    background: linear-gradient(135deg, var(--gold-dim) 0%, var(--gold) 40%, var(--gold-light) 60%, var(--gold-pale) 80%, var(--gold) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: 0.08em;
+    line-height: 1.1;
+    text-shadow: none;
+    filter: drop-shadow(0 0 30px rgba(201, 168, 76, 0.4));
+    animation: titleGlow 3s ease-in-out infinite alternate;
+  }
+
+  @keyframes titleGlow {
+    from { filter: drop-shadow(0 0 20px rgba(201, 168, 76, 0.3)); }
+    to { filter: drop-shadow(0 0 40px rgba(232, 201, 109, 0.6)); }
+  }
+
+  .site-subtitle {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(0.75rem, 2vw, 1rem);
+    color: var(--gold-dim);
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    margin-top: 14px;
+  }
+
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin: 40px auto;
+    max-width: 600px;
+    padding: 0 20px;
+  }
+
+  .divider-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--gold), transparent);
+  }
+
+  .divider-glyph {
+    color: var(--gold);
+    font-size: 1.4rem;
+    animation: spin 12s linear infinite;
+    display: block;
+  }
+
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(6, 4, 8, 0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border-glow);
+    padding: 0 20px;
+  }
+
+  nav ul {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 4px;
+    padding: 0;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  nav ul li a {
+    display: block;
+    padding: 14px 18px;
+    color: var(--gold-dim);
+    text-decoration: none;
+    font-family: 'Cinzel', serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    transition: color 0.3s, text-shadow 0.3s;
+    white-space: nowrap;
+  }
+
+  nav ul li a:hover {
+    color: var(--gold-light);
+    text-shadow: 0 0 12px rgba(232, 201, 109, 0.5);
+  }
+
+  main {
+    position: relative;
+    z-index: 5;
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 60px 24px 80px;
+  }
+
+  .chapter {
+    margin-bottom: 80px;
+    animation: fadeUp 0.8s ease both;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .chapter-number {
+    font-family: 'Cinzel', serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.4em;
+    color: var(--gold-dim);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  .chapter-title {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: clamp(1.3rem, 3.5vw, 2.1rem);
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--gold), var(--gold-light), var(--gold-pale));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.2;
+    margin-bottom: 28px;
+    filter: drop-shadow(0 0 14px rgba(201, 168, 76, 0.25));
+  }
+
+  .chapter-body {
+    background: var(--bg-card);
+    border: 1px solid var(--border-glow);
+    border-radius: 2px;
+    padding: 40px 44px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .chapter-body::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(to right, transparent, var(--gold), transparent);
+  }
+
+  .chapter-body::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--gold-dim), transparent);
+  }
+
+  .corner-ornament {
+    position: absolute;
+    font-size: 1.2rem;
+    color: var(--gold-dim);
+    opacity: 0.5;
+    line-height: 1;
+  }
+
+  .corner-ornament.tl { top: 8px; left: 10px; }
+  .corner-ornament.tr { top: 8px; right: 10px; }
+  .corner-ornament.bl { bottom: 8px; left: 10px; }
+  .corner-ornament.br { bottom: 8px; right: 10px; }
+
+  .chapter-body p {
+    font-size: clamp(1rem, 1.8vw, 1.12rem);
+    line-height: 1.95;
+    color: var(--white-soft);
+    text-align: justify;
+    hyphens: auto;
+    margin-bottom: 20px;
+  }
+
+  .chapter-body p:last-child { margin-bottom: 0; }
+
+  .chapter-body p:first-of-type::first-letter {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 4em;
+    font-weight: 900;
+    float: left;
+    line-height: 0.75;
+    margin: 0.08em 0.12em 0 0;
+    color: var(--gold);
+    filter: drop-shadow(0 0 8px rgba(201, 168, 76, 0.5));
+  }
+
+  .lore-box {
+    background: rgba(201, 168, 76, 0.06);
+    border: 1px solid rgba(201, 168, 76, 0.2);
+    border-left: 3px solid var(--gold);
+    padding: 20px 24px;
+    margin: 28px 0;
+    font-style: italic;
+    color: var(--gold-pale);
+    font-size: 0.97rem;
+    line-height: 1.85;
+  }
+
+  .secret-box {
+    background: rgba(80, 0, 0, 0.15);
+    border: 1px solid rgba(201, 168, 76, 0.15);
+    border-left: 3px solid #8b1a1a;
+    padding: 20px 24px;
+    margin: 28px 0;
+    color: rgba(248, 243, 232, 0.7);
+    font-size: 0.93rem;
+    line-height: 1.85;
+  }
+
+  .secret-box .secret-label {
+    font-family: 'Cinzel', serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.3em;
+    color: #8b1a1a;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    display: block;
+  }
+
+  .highlight {
+    color: var(--gold-light);
+    font-style: italic;
+  }
+
+  .book-name {
+    color: var(--gold);
+    font-style: italic;
+    font-weight: 600;
+  }
+
+  .person-name {
+    color: var(--gold-pale);
+    font-weight: 600;
+  }
+
+  .chapter-end {
+    text-align: center;
+    margin-top: 28px;
+    color: var(--gold-dim);
+    font-size: 1.4rem;
+    letter-spacing: 0.3em;
+  }
+
+  .ending-note {
+    text-align: center;
+    font-family: 'Cinzel', serif;
+    font-size: clamp(0.85rem, 1.5vw, 1.05rem);
+    color: var(--gold-dim);
+    letter-spacing: 0.1em;
+    line-height: 1.9;
+    padding: 40px 20px;
+    border-top: 1px solid var(--border-glow);
+    font-style: italic;
+    max-width: 620px;
+    margin: 0 auto;
+  }
+
+  .section-divider {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin: 50px 0;
+    opacity: 0.6;
+  }
+
+  .section-divider span:first-child,
+  .section-divider span:last-child {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--gold-dim), transparent);
+    display: block;
+  }
+
+  .section-divider .mid {
+    color: var(--gold-dim);
+    font-size: 1rem;
+    flex-shrink: 0;
+  }
+
+  footer {
+    position: relative;
+    z-index: 5;
+    text-align: center;
+    padding: 50px 20px 40px;
+    border-top: 1px solid var(--border-glow);
+    background: rgba(6, 4, 8, 0.6);
+  }
+
+  .footer-logo {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 1.5rem;
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 6px;
+    filter: drop-shadow(0 0 10px rgba(201, 168, 76, 0.3));
+  }
+
+  .footer-sub {
+    font-family: 'Cinzel', serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.35em;
+    color: var(--gold-dim);
+    text-transform: uppercase;
+    margin-bottom: 24px;
+  }
+
+  .footer-owner {
+    font-family: 'Cinzel', serif;
+    font-size: 0.8rem;
+    color: rgba(201, 168, 76, 0.55);
+    letter-spacing: 0.12em;
+    margin-bottom: 28px;
+  }
+
+  .footer-owner span {
+    color: var(--gold);
+  }
+
+  .discord-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: linear-gradient(135deg, #1a0d2e, #2a1040);
+    border: 1px solid var(--gold);
+    color: var(--gold-light);
+    text-decoration: none;
+    padding: 14px 32px;
+    font-family: 'Cinzel', serif;
+    font-size: 0.8rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    border-radius: 1px;
+    transition: all 0.35s;
+    box-shadow: 0 0 20px rgba(201, 168, 76, 0.1), inset 0 0 20px rgba(201, 168, 76, 0.03);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .discord-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(201, 168, 76, 0.12), transparent);
+    opacity: 0;
+    transition: opacity 0.35s;
+  }
+
+  .discord-btn:hover::before { opacity: 1; }
+
+  .discord-btn:hover {
+    border-color: var(--gold-light);
+    color: var(--gold-pale);
+    box-shadow: 0 0 40px rgba(201, 168, 76, 0.25), inset 0 0 20px rgba(201, 168, 76, 0.06);
+    transform: translateY(-2px);
+  }
+
+  .discord-btn svg {
+    width: 18px;
+    height: 18px;
+    fill: currentColor;
+    flex-shrink: 0;
+  }
+
+  .footer-copy {
+    margin-top: 26px;
+    font-size: 0.68rem;
+    color: rgba(201, 168, 76, 0.28);
+    letter-spacing: 0.08em;
+  }
+
+  @media (max-width: 600px) {
+    .chapter-body { padding: 28px 22px; }
+    .chapter-body p:first-of-type::first-letter { font-size: 3em; }
+    nav ul li a { padding: 10px 10px; font-size: 0.65rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="noise"></div>
+<div class="stars" id="stars"></div>
+
+<header>
+  <span class="header-sigil">⁕</span>
+  <h1 class="site-title">Cadılığın Öyküsü</h1>
+  <p class="site-subtitle">Kadim Büyünün Tarihi &amp; Gizli Yazıtlar</p>
+
+  <div class="divider">
+    <span class="divider-line"></span>
+    <span class="divider-glyph">✦</span>
+    <span class="divider-line"></span>
+  </div>
+</header>
+
+<nav>
+  <ul>
+    <li><a href="#baslangic">Kadim Başlangıç</a></li>
+    <li><a href="#bay-siyah">Bay Siyah</a></li>
+    <li><a href="#yukselis">Yükseliş</a></li>
+    <li><a href="#katliam">Katliam &amp; Düşüş</a></li>
+    <li><a href="#yeni-duzen">Yeni Düzen</a></li>
+    <li><a href="#gizli-tarih">Gizli Tarih</a></li>
+  </ul>
+</nav>
+
+<main>
+
+  <section class="chapter" id="baslangic">
+    <p class="chapter-number">— Bölüm I —</p>
+    <h2 class="chapter-title">Cadılığın Kadim Başlangıcı</h2>
+    <div class="chapter-body">
+      <span class="corner-ornament tl">⸸</span>
+      <span class="corner-ornament tr">⸸</span>
+      <span class="corner-ornament bl">⸸</span>
+      <span class="corner-ornament br">⸸</span>
+
+      <div class="lore-box">
+        Bu hususta net bir fikir birliği olmasa da Ulu Divan'ın Kütüphanesi'ndeki yazıtlara göre ilk Büyüyü keşfeden, Bilim Çağı'nın en felsefik adamlarından biri olan genç bir felsefeci tarafından gerçekleşmişti. Aristotelen, arkasında bıraktığı yazıtlardaki notları baz alınarak şöyle bir öykü ile başlıyordu...
+      </div>
+
+      <p>
+        Büyü'yü <span class="person-name">Aristotelen</span> — namıdiğer <span class="person-name">Aristo</span> — kadim dağlardan biri olan <span class="highlight">13 Parlak Alev</span> isimli dağın zirvesine yaptığı yolculukta keşfedecekti. Kendisinden yıllar önce yaşamış eski insanların bıraktığı mağara çizimlerini yorumlayarak bu büyük keşfe adım atacaktı. Bastıran soğuk ve rüzgardan korunmak için sığındığı mağaranın duvarlarında, büyünün temelini oluşturan dört büyük Kadim Sembol onu bekliyordu.
+      </p>
+
+      <p>
+        Ateşin dehşetini gösteren <span class="highlight">kızıl sembol</span>, suyun dinginliğini yansıtan <span class="highlight">gök mavisi sembol</span>, rüzgarın şiddetini taşıyan <span class="highlight">hırçın beyaz kil sembolü</span> ve her şeyin özü olan <span class="highlight">kahverengi toprak sembolü</span>. Aristoteles bu dört simgeyi, yanında taşıdığı keçi derisinden defterine gümüş bir ağaçtan elde ettiği koyu gri mürekkeple tek tek aktardı.
+      </p>
+
+      <p>
+        Mağaranın derinliklerine ilerlediğinde ise her sembolün yarım bırakılmış bir çember içine alındığını fark etti; hiçbir yuvarlak kapatılmamıştı, hepsi son anda terk edilmişti. Bu gizemli imge, onun keşif içgüdülerini adeta tavana fırlatacaktı. Aristoteles sembolleri defterine aktarırken o da aynı geleneği sürdürdü — daireleri kapatmadı, uçları yarım bıraktı.
+      </p>
+
+      <p>
+        Sonra talih — ya da kader — devreye girdi. Fırtına ve kar yüzünden mağaradan çıkamayan Aristoteles bir ateş yakıp sabahı beklemeye karar verdi. Ama rüzgarı hesap edememiş; ağzı açık bıraktığı kil mürekkep kabını duvar kenarına koymuştu. Uyuklamaya başladığı sırada rüzgar içeri doldu, kabı devirdi ve mürekkep duvara sıçradı. Duvarın olukları boyunca akan koyu sıvı, çatlakları bir bir kapladı ve yarım kalan daireleri birleştirerek tüm sembolleri tam bir çember hâline getirdi.
+      </p>
+
+      <p>
+        O anda mağara muhteşem bir ısı ve ışıkla doldu. Mürekkep yalnızca çemberleri kapatmakla kalmamış; binlerce yıllık uyku halindeki bir <span class="highlight">pentragram büyü çağrısını</span> da aktive etmişti. <span class="person-name">Aristoteles</span>, gayri ihtiyarî bir gözlem aracılığıyla mürekkep ile sembollerin birleşmesi gerektiğini anlamıştı. O gün insanlığın ilk büyü keşfi olan <span class="highlight">Duvar Aydınlatma Büyüsü</span> doğdu — ve onunla birlikte büyünün tüm incelikleri yavaş yavaş çözülmeye başladı...
+      </p>
+
+      <div class="section-divider"><span></span><span class="mid">✦</span><span></span></div>
+
+      <p>
+        Gel zaman git zaman kendini büyüye adayan Aristoteles yıllarını o mağarada geçirdi. Nihayetinde büyünün bilinen tüm sınırlarını denemiş, vahşetini ve güzelliğini tatmış bir insan olarak <span class="highlight">civar halkın ilgisini çekti</span> ve bir <span class="book-name">Cadı</span> olarak anılmaya başladı.
+      </p>
+
+      <p>
+        Ancak Aristoteles bilge bir adamdı; bu büyüyü insanlardan saklamak yerine onlara öğretmeyi seçti. Böylece yıllar önce sırları öğrendiği o mağara, tarihte <span class="highlight">İlk Cadıların Mabedi</span> olarak anılacak bir akademiye dönüştü. Yıllar içinde ömrünün sonuna gelindiğinde bin'den fazla talebe, bu talebeler aracılığıyla on binden fazla cadı adayı yetiştirilmişti.
+      </p>
+
+      <p>
+        Aristoteles vefat etmeden önce dört büyük kitap hazırladı: <span class="book-name">Cadılığın El Yazması</span>, <span class="book-name">Aristoteles'in Günlüğü</span> ve varlığı tartışmalı dört gizli rehber kitap. Bu dört büyük eser; <span class="book-name">Tanrıların Sırları</span>, <span class="book-name">İblislerin Fısıltıları</span>, <span class="book-name">Meleklerin İlahisi</span> ve <span class="book-name">Doğa'nın Kalbi</span> olarak bilinir. Dört sadık talebesi bu kitapları bilinen dünyanın en uç noktalarına sakladı — ve efsane dışında hiçbir izi kalmadı.
+      </p>
+
+      <div class="chapter-end">— ❧ —</div>
+    </div>
+  </section>
+
+  <section class="chapter" id="bay-siyah">
+    <p class="chapter-number">— Bölüm II —</p>
+    <h2 class="chapter-title">Bay Siyah — Solomon Solender</h2>
+    <div class="chapter-body">
+      <span class="corner-ornament tl">⸸</span>
+      <span class="corner-ornament tr">⸸</span>
+      <span class="corner-ornament bl">⸸</span>
+      <span class="corner-ornament br">⸸</span>
+
+      <p>
+        Bazıları için <span class="highlight">Sivri Şapka</span>, bazıları için özgürlüğü isteyen bir adam olan <span class="person-name">Bay Siyah</span>'ın öyküsü, Büyünün Altın Çağı'nın sonlarına, dünyanın çıkmaza girdiği bir vakte denk gelir. <span class="highlight">Mavi Ejder Gölü</span> kıyısındaki küçük bir kasabada doğan bu çocuğun adı <span class="person-name">Solomon Solender</span>'dı.
+      </p>
+
+      <p>
+        Solomon doğduğunda çoktan kendine özgüydü. Henüz köyündeki akademiye girmeden önce akranlarından kat kat üstün bir büyü hafızasına, çizim kabiliyetine ve düzenleri sarsacak bir vizyon içgüdüsüne sahipti. Onun gözünde Altın Cadı Çağı'nın kuralları birer zırvalıktan ibaretti; hiçbir cadı büyüyü kendi çıkarı için kullanamıyor, bu sınırı aşanlar kanun koyucuların şiddetiyle karşılaşıyordu. Solomon için bu, büyünün özgür ruhuna açık bir hakaretti.
+      </p>
+
+      <p>
+        On dört yaşında hocasının yasakladığı Ateş Elementi büyülerini çizmeye kalkışıyor, defalarca başı belaya giriyor ama her seferinde zekâsıyla bu bataklıklardan sıyrılıyordu. Masum merakı zamanla <span class="highlight">Sivri Şapkalar Akademisi</span>'nin kurucusu olduğunda biçim değiştirecekti. Bu akademi yalnızca büyüyü keşfetmek ve özgürleştirmek isteyen vizyona sahip, resmi olmayan bir yapıydı. İlk yıllarında küçük, ama büyünün giderek nüfuz aracına dönüştüğü bir çağda hırslı ve zayıf geçmişlerden gelenlerle dolup taşmaya başladı.
+      </p>
+
+      <p>
+        Böylece simsiyah, sivri şapkasıyla Solomon Solender, tarihin sayfalarına <span class="highlight">Bay Siyah</span> adıyla kazındı.
+      </p>
+
+      <div class="chapter-end">— ❧ —</div>
+    </div>
+  </section>
+
+  <section class="chapter" id="yukselis">
+    <p class="chapter-number">— Bölüm III —</p>
+    <h2 class="chapter-title">Bay Siyah'ın Yükselişi</h2>
+    <div class="chapter-body">
+      <span class="corner-ornament tl">⸸</span>
+      <span class="corner-ornament tr">⸸</span>
+      <span class="corner-ornament bl">⸸</span>
+      <span class="corner-ornament br">⸸</span>
+
+      <p>
+        Cadı şehirleri kaos ve düzensizlik içinde çalkalanırken <span class="person-name">Sivri Şapkalar</span>, zorla, saldırıyla ve gaspla pek çok eski cadı ailesinin elindeki kadim yazıtları ele geçirmiş; bu yazıtlardaki büyüleri talebelere öğretiyor hâle gelmişti. Ama Solomon için gerçek güç, kendi hocasının kim olduğunu öğrenmesiyle ortaya çıkacaktı.
+      </p>
+
+      <p>
+        Hocası <span class="person-name">Bay Warrons</span>'un, <span class="person-name">Aristoteles</span>'in en seçkin dört talebесинden biri olduğunu keşfeden Solomon bu sırrı araştırmak için tüm Sivri Şapka nüfuzunu seferber etti. Karanlık sanatların kapılarını aralayan büyülerle hocasının gizlediği sırları deşifre ederek ilerledi. Ve söylentilere göre bir yanardağın derinliklerinde — beklenen o kitabı buldu: <span class="book-name">İblislerin Fısıltısı</span>.
+      </p>
+
+      <p>
+        Bu kitabın içinde, iblislerin en büyüğü, düzenbazlığın tiranı <span class="highlight">İblis Natthyn</span>'i çağırmaya yarayan kadim bir büyü yatıyordu. Solomon tereddütsüz uyguladı. O çağrı sırasında yayılan muazzam enerjiden civar köylerde ani ölümler yaşandığı, yakın şehirlerde hiç sönmeyen yangınların çıktığı söylendi. Bilinmez bir yolla Natthyn'i dizginleyen Solomon, iblislerin gücünü ve engin büyü bilgisini kendi bünyesine katarak çocukluğundan bu yana hayal ettiği şeyi gerçekleştirmeye başladı:
+      </p>
+
+      <div class="lore-box">
+        <span class="highlight">Büyük Cadı Katliamı.</span> Aristoteles'ten bu yana inşa edilmiş tüm Altın Çağ düzenini yıkma ve büyüyü bütünüyle özgürleştirme arzusu. Solomon'un kafasındaki vizyon artık somut bir hedefe dönüşmüştü.
+      </div>
+
+      <div class="chapter-end">— ❧ —</div>
+    </div>
+  </section>
+
+  <section class="chapter" id="katliam">
+    <p class="chapter-number">— Bölüm IV —</p>
+    <h2 class="chapter-title">Solomon'un Katliamı Ve Düşüşü</h2>
+    <div class="chapter-body">
+      <span class="corner-ornament tl">⸸</span>
+      <span class="corner-ornament tr">⸸</span>
+      <span class="corner-ornament bl">⸸</span>
+      <span class="corner-ornament br">⸸</span>
+
+      <p>
+        <span class="person-name">Solomon</span> — Bay Siyah — ve Sivri Şapkalar örgütü, özgürlüğün ve büyünün yayılımını arttırmak adına önüne çıkan tüm eski cadı ailelerini, aristokratları, kralları, kraliçeleri ve kanun koyucuları bir bir katletti. Bazı söylentiler, katledilenlerin ruhlarının canlı canlı <span class="person-name">Natthyn</span>'e kurban edildiğini fısıldar.
+      </p>
+
+      <p>
+        Bu katliam, <span class="highlight">Cadılık Tarihinin en büyük savaşlarından birine</span> neden oldu: Cadıların Mabedi'nin yakınlarında yaşanan o toplu çarpışmada Sivri Şapkalar, karşılarındaki Cadılar Kardeşliği ve düzenin koruyucularını art arda sindirdi. Doğanın, İblislerin ve Meleklerin tüm kanunlarını alt üst eden büyüler çarpışırken o kadim Mabed ve mağara, çarpışmanın yarattığı yıkımla çölün ortasında yapayalnız kalan cılız bir dağa dönüştü.
+      </p>
+
+      <p>
+        Solomon'un sonunu ise güvendiği en yakın kişi getirdi: sevdiği kadın, <span class="person-name">Leydi Violet Vi</span>. Savaşın en kritik anında, akan kanın vahşetinden bunalan ve sevdiği adamın gerçekte bir iblise dönüştüğünü fark eden Violet, Solomon ile Natthyn'i birbirine bağlayan <span class="highlight">Kutsal Zincirleri</span> tek tek kopardı. Bu hareketle Solomon'un gücü zayıflamaya, o müthiş dehşet azalmaya başladı.
+      </p>
+
+      <p>
+        Öldürücü darbe ise Violet'e yardım eden efsanevi üç büyük cadı ailesinin fertlerinden geldi. Bu dört cadı, kullanmaktan nefret ettikleri <span class="highlight">ölüm büyülerini</span> Solomon'un ve Sivri Şapkaların üzerine savurdu. Zalimliğin vücut bulmuş tiranı, düzensizlik imparatorluğunu daha ilk aylarında Mabed'in önünde yakalanıp öldürülerek tarihe gömüldü.
+      </p>
+
+      <p>
+        Ele geçirilen Sivri Şapka üyelerinin bir kısmının hafızası silinerek uzak diyarlara sürgün edildi; bir kısmı ise Solomon'un muhafaza edilen cesedinin bekçileri olarak adeta akılsız varlıklara dönüştürüldü. <span class="highlight">Sivri Şapka ideolojisi o gün orada öldü.</span>
+      </p>
+
+      <div class="chapter-end">— ❧ —</div>
+    </div>
+  </section>
+
+  <section class="chapter" id="yeni-duzen">
+    <p class="chapter-number">— Bölüm V —</p>
+    <h2 class="chapter-title">Yeni Düzenin Kuruluşu</h2>
+    <div class="chapter-body">
+      <span class="corner-ornament tl">⸸</span>
+      <span class="corner-ornament tr">⸸</span>
+      <span class="corner-ornament bl">⸸</span>
+      <span class="corner-ornament br">⸸</span>
+
+      <p>
+        Solomon'un ölümünden sorumlu olan dört büyük cadı — aralarında <span class="person-name">Violet Vi</span> de bulunmak üzere — o savaşın enkazında otururken yeni bir düzenin mimarı olmaya karar verdiler. Aristoteles'ten bu yana geçen asırlarda insanlar büyünün özgürlüğünü bir fayda değil birer silah olarak kullanmış ve bu silahla dünyayı kaosa sürüklemişti.
+      </p>
+
+      <p>
+        O gün enkazların ortasında <span class="highlight">Cadılığın Altın Çağı</span>'nı bitiren olayı dünyadaki tüm insanların anısından silecek en büyük yasaklı büyülerden birini yaptılar. Ellerindeki dört kadim kitabı — <span class="book-name">İlahların Kitabı</span>, <span class="book-name">Tanrıların Kitabı</span>, <span class="book-name">Doğanın Kitabı</span> ve <span class="book-name">İblislerin Kitabı</span> — birleştirerek <span class="highlight">Büyük Tufan</span> adını verdikleri büyüyü gerçekleştirdiler. Bu büyü o denli dehşetliydi ki dört kitabı yok etti ve yaşayan tüm varlıkların anısındaki büyü sırlarını bir bir sildi. Artık ne Aristoteles'in öğretilerini ne de Solomon'un vahşetini kimse hatırlamıyordu.
+      </p>
+
+      <p>
+        Koca dünyada büyüyü ve nasıl yapıldığını bilen yalnızca dört insan kalmıştı:
+      </p>
+
+      <div class="lore-box">
+        <strong><span class="person-name">Violet White</span></strong> — Vi soyadından uğursuzluk geleceği korkusuyla soyadını White'a çeviren, Su Elementi'nin efendisi.<br><br>
+        <strong><span class="person-name">Elisha Lannifer</span></strong> — Tanrıların Kitabı'nın sırlarına hâkim, Ateş Elementi'nin ustası.<br><br>
+        <strong><span class="person-name">Edgar Stronner</span></strong> — Doğa'nın sırlarını bilen, Toprak Elementi'nin efendisi.<br><br>
+        <strong><span class="person-name">Jhon Merlin</span></strong> — Meleklerin İlahiliğini taşıyan, Rüzgar Elementi'nin efendisi.
+      </div>
+
+      <p>
+        Bu dört cadı, ömürlerinin sonlarına doğru yeni bir düzenin tohumlarını attılar. <span class="person-name">Edgar Stronner</span> ve <span class="person-name">Jhon Merlin</span>'in önerisiyle — <span class="person-name">Violet White</span>'ın katı muhalefetine karşın üç'e bir üstünlükle — kendi soylarına ve potansiyeli yüksek çocuklara büyüyü öğretmeye karar verdiler. Böylece dört büyük cadılık akademisinin temeli atıldı: <span class="highlight">Stronner Ailesi</span>, <span class="highlight">Merlin Ailesi</span>, <span class="highlight">Lannifer Ailesi</span> ve <span class="highlight">White Ailesi</span> sırasıyla Toprak, Rüzgar, Ateş ve Su Elementi temelli büyüleri aktardı.
+      </p>
+
+      <p>
+        Söylentilere göre bu dört yaşlı cadı, ömürlerinin sonunda kendilerini Solomon'un mezarını ve kutsal kitapların sırlarını korumak adına bilinen dünyanın dört köşesine defnettirdiler; yerleri ise hiç bozulmayacak kadim büyülerle mühürlendi.
+      </p>
+
+      <div class="lore-box" style="text-align:center; font-size: 1.05rem; color: var(--gold-pale);">
+        ✦ Böylelikle bilinen Cadılık Düzeni yavaş yavaş başlamıştı... ✦
+      </div>
+
+      <div class="chapter-end">— ❧ —</div>
+    </div>
+  </section>
+
+  <section class="chapter" id="gizli-tarih">
+    <p class="chapter-number">— Ek Bölüm —</p>
+    <h2 class="chapter-title">Tarihin Gizli Tutulmayan Kısmı</h2>
+    <div class="chapter-body">
+      <span class="corner-ornament tl">⸸</span>
+      <span class="corner-ornament tr">⸸</span>
+      <span class="corner-ornament bl">⸸</span>
+      <span class="corner-ornament br">⸸</span>
+
+      <div class="secret-box">
+        <span class="secret-label">⚠ Mevcut Cadılara Açık Bilgi</span>
+        Tarihin gizli tutulmayan kısımlarında — yani mevcut cadıların erişimine sunulan anlatıda — Bay Siyah ve Sivri Şapkaların öyküsü tamamen gizli tutulmaktaydı. Bu bilgiler dört büyük hanenin ve akademinin başları tarafından sır olarak saklanıyor, bilinmemesi sağlanıyordu.
+      </div>
+
+      <p>
+        Cadı talebeleri ve bu çağın insanları şunu biliyordu: Aristoteles'ten sonra yaşanan bir cadı savaşı ve büyünün kötüye kullanılması nedeniyle dört büyük cadı olan <span class="person-name">Violet White</span>, <span class="person-name">Elisha Lannifer</span>, <span class="person-name">Jhon Merlin</span> ve <span class="person-name">Edgar Stronner</span>, inisiyatif alarak büyünün sırlarını insanlardan sakladı ve yalnızca belirli bir kesimin öğrenebileceği şekilde hapsederek <span class="highlight">Dört Büyük Cadı'nın Düzeni</span>'ni kurdu.
+      </p>
+
+      <p>
+        Bu düzenin gereğince her cadı ya da cadı adayı, yoğun bir toplumsal baskıyla yetiştirildi; sıradan insanlardan büyünün nasıl yapıldığını ve cadılığı saklamak için eğitildi. Sıradan insanlar cadıların varlığından haberdardı; ama onlara göre cadılık kanda gelen kutsal bir şeydi. Ya bir cadı ailesinden gelmek gerekirdi ya da büyük cadı ailelerinden biri tarafından seçilmek. Sıradan bir köylünün birkaç sembol çizerek büyü yapabileceğini kimse bilmiyordu.
+      </p>
+
+      <p>
+        Cadılığı öğrenen sıradan insanlar ise <span class="highlight">Cadılık Muhafızları</span> — cadılık şövalyeleri — tarafından tek tek avlanıp anıları silindi. Bunun yanı sıra, fikirsel temeli <span class="person-name">Violet White</span>'tan çıkıp kaleme alınışı <span class="person-name">Elisha Lannifer</span>'e ait olan <span class="book-name">Beyaz Kuğu Kanunu</span> da tüm cadılar için yayınlandı. Bu kanunun detayları ilgili kaynaklarda yer almaktadır.
+      </p>
+
+      <div class="chapter-end">— ❧ —</div>
+    </div>
+  </section>
+
+  <div class="ending-note">
+    "Büyü bir silah değil, bir sanattır.<br>
+    Onu kim kavrarsa, evreni dinlemeyi öğrenir."<br><br>
+    <span style="color: var(--gold-dim); font-size: 0.85rem; letter-spacing: 0.2em;">— Aristotelen —</span>
+  </div>
+
+</main>
+
+<footer>
+  <div class="footer-logo">Cadılığın Öyküsü</div>
+  <div class="footer-sub">Kadim Büyü Tarihi Arşivi</div>
+
+  <div class="footer-owner">
+    Bu site ve içerdiği hikaye <span>Detroitov ( Luxiov )</span>'a aittir.
+  </div>
+
+  <a href="https://discord.gg/pfE5z2N6yP" target="_blank" rel="noopener noreferrer" class="discord-btn">
+    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/>
+    </svg>
+    Sunucuya Katıl
+  </a>
+
+  <div class="footer-copy">© Detroitov (Luxiov) · Tüm hakları saklıdır.</div>
+</footer>
+
+<script>
+  const starsContainer = document.getElementById('stars');
+  for (let i = 0; i < 80; i++) {
+    const star = document.createElement('div');
+    star.className = 'star';
+    const size = Math.random() * 2 + 0.5;
+    const dur = (Math.random() * 4 + 3).toFixed(1);
+    const op = (Math.random() * 0.5 + 0.1).toFixed(2);
+    star.style.cssText = `
+      width:${size}px;height:${size}px;
+      left:${Math.random()*100}%;
+      top:${Math.random()*100}%;
+      --dur:${dur}s;--op:${op};
+      animation-delay:${(Math.random()*5).toFixed(1)}s;
+    `;
+    starsContainer.appendChild(star);
+  }
+
+  const chapters = document.querySelectorAll('.chapter');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.style.animationPlayState = 'running';
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  chapters.forEach(c => {
+    c.style.animationPlayState = 'paused';
+    observer.observe(c);
+  });
+</script>
+
+</body>
+</html>
