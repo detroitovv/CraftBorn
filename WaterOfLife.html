@@ -1,712 +1,969 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Kılıçlar Ve Eşyalar</title>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet"/>
-  <style>
-    /* ===== ROOT VARIABLES ===== */
-    :root {
-      --bg-deep:       #04060a;
-      --bg-mid:        #080d14;
-      --card-bg:       #0b1120;
-      --card-border:   #1e2d45;
-      --neon-gold:     #f0c040;
-      --neon-gold-glow:#f0c04088;
-      --neon-cyan:     #00e5ff;
-      --neon-cyan-glow:#00e5ff55;
-      --neon-purple:   #cc44ff;
-      --neon-purple-glow:#cc44ff66;
-      --neon-red:      #ff3860;
-      --text-main:     #cdd6e8;
-      --text-dim:      #6a7a99;
-      --star-count:    200;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Water is Life — CraftBorn Bar Modu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#eef6f3;
+  --bg-alt:#dcede6;
+  --surface:#ffffff;
+  --surface-2:#f4faf7;
+  --text:#0c2b2a;
+  --text-muted:#3f6560;
+  --accent-water:#0e7c8c;
+  --accent-water-2:#13a2ac;
+  --accent-moss:#4c7a3f;
+  --accent-earth:#a9773f;
+  --danger:#b8443a;
+  --border:rgba(12,43,42,0.14);
+  --shadow:0 10px 30px rgba(9,42,40,0.08);
+  --radius-s:6px;
+  --radius-m:14px;
+  --wave-fill:#0e7c8c;
+  --font-display:"Fraunces", Georgia, serif;
+  --font-body:"Inter", -apple-system, sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#071f21;
+    --bg-alt:#0b2b2d;
+    --surface:#0f3335;
+    --surface-2:#0c2a2c;
+    --text:#eaf6f2;
+    --text-muted:#a9c9c3;
+    --accent-water:#3ecfd0;
+    --accent-water-2:#63e0d8;
+    --accent-moss:#8fbd6e;
+    --accent-earth:#d1a869;
+    --danger:#ef8177;
+    --border:rgba(234,246,242,0.14);
+    --shadow:0 10px 34px rgba(0,0,0,0.35);
+    --wave-fill:#0c3638;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#071f21;
+  --bg-alt:#0b2b2d;
+  --surface:#0f3335;
+  --surface-2:#0c2a2c;
+  --text:#eaf6f2;
+  --text-muted:#a9c9c3;
+  --accent-water:#3ecfd0;
+  --accent-water-2:#63e0d8;
+  --accent-moss:#8fbd6e;
+  --accent-earth:#d1a869;
+  --danger:#ef8177;
+  --border:rgba(234,246,242,0.14);
+  --shadow:0 10px 34px rgba(0,0,0,0.35);
+  --wave-fill:#0c3638;
+}
 
-    * { margin:0; padding:0; box-sizing:border-box; }
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--font-body);
+  line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+img,svg{max-width:100%;}
+.wrap{max-width:1080px;margin:0 auto;padding:0 28px;}
+@media (max-width:640px){.wrap{padding:0 20px;}}
 
-    /* ===== BACKGROUND ===== */
-    body {
-      min-height: 100vh;
-      background: var(--bg-deep);
-      font-family: 'Crimson Text', Georgia, serif;
-      color: var(--text-main);
-      overflow-x: hidden;
-      position: relative;
-    }
+h1,h2,h3{font-family:var(--font-display);font-weight:600;line-height:1.12;margin:0;color:var(--text);}
+h2{font-size:clamp(28px,4vw,40px);letter-spacing:-0.01em;}
+h3{font-size:20px;font-weight:600;}
+p{margin:0;color:var(--text-muted);}
+a{color:inherit;}
 
-    /* Starfield canvas behind everything */
-    #starfield {
-      position: fixed; inset: 0;
-      pointer-events: none;
-      z-index: 0;
-    }
+::selection{background:var(--accent-water);color:#fff;}
+:focus-visible{outline:2px solid var(--accent-water);outline-offset:3px;}
+@media (prefers-reduced-motion: reduce){
+  *{animation-duration:0.001ms !important;animation-iteration-count:1 !important;transition-duration:0.001ms !important;}
+}
 
-    /* Radial fog */
-    body::before {
-      content: '';
-      position: fixed; inset: 0;
-      background: radial-gradient(ellipse 80% 60% at 50% 0%, #0d2040 0%, transparent 70%),
-                  radial-gradient(ellipse 60% 40% at 20% 100%, #1a0d30 0%, transparent 60%),
-                  radial-gradient(ellipse 60% 40% at 80% 100%, #0d2040 0%, transparent 60%);
-      z-index: 0;
-      pointer-events: none;
-    }
+/* ---------- Header ---------- */
+header.site{
+  position:sticky;top:0;z-index:40;
+  backdrop-filter:blur(10px);
+  background:color-mix(in srgb, var(--bg) 82%, transparent);
+  border-bottom:1px solid var(--border);
+}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;padding:16px 0;}
+.brand{display:flex;align-items:center;gap:10px;font-family:var(--font-display);font-weight:600;font-size:19px;}
+.brand .drop{color:var(--accent-water);font-size:20px;line-height:1;}
+.brand .tag{font-family:var(--font-body);font-weight:500;font-size:12px;color:var(--text-muted);display:block;margin-top:1px;}
+.brand-col{display:flex;flex-direction:column;}
+.lang-btn{
+  display:flex;align-items:center;gap:8px;
+  background:var(--surface);border:1px solid var(--border);
+  color:var(--text);border-radius:999px;padding:9px 16px;
+  font-family:var(--font-body);font-size:13.5px;font-weight:600;cursor:pointer;
+  box-shadow:var(--shadow);
+}
+.lang-btn:hover{border-color:var(--accent-water);}
 
-    /* ===== LAYOUT ===== */
-    .page-wrap {
-      position: relative; z-index: 1;
-      display: flex; flex-direction: column;
-      align-items: center;
-      min-height: 100vh;
-      padding: 40px 20px 80px;
-    }
+/* ---------- Hero ---------- */
+.hero{
+  position:relative;overflow:hidden;
+  padding:96px 0 0;
+  background:linear-gradient(180deg, var(--bg-alt), var(--bg) 70%);
+}
+.hero-inner{position:relative;z-index:2;text-align:left;max-width:680px;}
+.badges{display:flex;flex-wrap:wrap;gap:9px;margin-bottom:26px;}
+.badge{
+  font-size:12.5px;font-weight:600;color:var(--accent-water);
+  border:1px solid var(--border);padding:6px 12px;border-radius:999px;
+  background:var(--surface);
+}
+.hero h1{font-size:clamp(46px,8vw,84px);letter-spacing:-0.02em;}
+.hero .subtitle{font-family:var(--font-display);font-style:italic;font-weight:500;font-size:clamp(19px,2.6vw,25px);color:var(--accent-water);margin-top:14px;}
+.hero .desc{font-size:17px;max-width:520px;margin-top:20px;}
+.hero .cta{
+  display:inline-flex;align-items:center;gap:8px;margin-top:34px;
+  background:var(--accent-water);color:#fff;border:none;border-radius:999px;
+  padding:14px 26px;font-size:15px;font-weight:600;cursor:pointer;font-family:var(--font-body);
+  box-shadow:0 12px 24px -8px color-mix(in srgb, var(--accent-water) 60%, transparent);
+}
+.hero .cta:hover{background:var(--accent-water-2);}
 
-    /* ===== TITLE ===== */
-    .main-title {
-      text-align: center;
-      margin-bottom: 8px;
-      animation: titleReveal 1.2s ease both;
-    }
+.waves{position:relative;height:120px;margin-top:70px;}
+.waves svg{position:absolute;width:200%;height:100%;animation:drift 22s linear infinite;}
+.waves svg.w2{opacity:0.55;animation-duration:34s;animation-direction:reverse;}
+@keyframes drift{from{transform:translateX(0);}to{transform:translateX(-50%);}}
 
-    .main-title h1 {
-      font-family: 'Cinzel Decorative', serif;
-      font-size: clamp(1.8rem, 5vw, 3.6rem);
-      font-weight: 900;
-      letter-spacing: 0.08em;
-      color: var(--neon-gold);
-      text-shadow:
-        0 0 10px var(--neon-gold-glow),
-        0 0 30px var(--neon-gold-glow),
-        0 0 70px #f0c04044,
-        0 2px 4px #000a;
-      line-height: 1.15;
-    }
+/* ---------- Section generic ---------- */
+section{padding:78px 0;border-bottom:1px solid var(--border);}
+section:last-of-type{border-bottom:none;}
+.eyebrow-icon{font-size:26px;display:block;margin-bottom:14px;}
+.section-head{max-width:640px;margin-bottom:44px;}
+.section-head p{margin-top:14px;font-size:16.5px;max-width:580px;}
 
-    .title-divider {
-      display: flex; align-items: center; gap: 14px;
-      margin: 14px auto 0;
-      width: fit-content;
-    }
-    .title-divider span {
-      display: block;
-      height: 1px; width: 120px;
-      background: linear-gradient(90deg, transparent, var(--neon-gold), transparent);
-    }
-    .title-divider i {
-      color: var(--neon-gold);
-      font-size: 1.2rem;
-      font-style: normal;
-      text-shadow: 0 0 12px var(--neon-gold-glow);
-      animation: pulse 2.5s ease-in-out infinite;
-    }
+/* ---------- About ---------- */
+.about-grid{display:grid;grid-template-columns:0.9fr 1.1fr;gap:56px;align-items:start;}
+@media (max-width:820px){.about-grid{grid-template-columns:1fr;gap:32px;}}
+.about-points{display:flex;flex-direction:column;gap:0;}
+.about-point{display:flex;gap:16px;padding:18px 0;border-top:1px solid var(--border);}
+.about-point:last-child{border-bottom:1px solid var(--border);}
+.about-point .mark{color:var(--accent-water);font-size:18px;flex:none;margin-top:2px;}
+.about-point p{color:var(--text);font-size:15.5px;}
 
-    /* ===== COUNTER ===== */
-    .card-counter {
-      font-family: 'Cinzel', serif;
-      font-size: 0.78rem;
-      color: var(--text-dim);
-      letter-spacing: 0.2em;
-      margin-top: 10px;
-      text-transform: uppercase;
-    }
-    .card-counter span {
-      color: var(--neon-cyan);
-      text-shadow: 0 0 8px var(--neon-cyan-glow);
-    }
+/* ---------- Features ---------- */
+.feature-grid{
+  display:grid;grid-template-columns:repeat(6,1fr);gap:18px;
+}
+@media (max-width:900px){.feature-grid{grid-template-columns:repeat(2,1fr);}}
+@media (max-width:560px){.feature-grid{grid-template-columns:1fr;}}
+.feature-card{
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-m);
+  padding:26px 24px;grid-column:span 3;
+  transition:transform .25s ease, box-shadow .25s ease;
+}
+.feature-card:hover{transform:translateY(-3px);box-shadow:var(--shadow);}
+.feature-card.big{grid-column:span 4;}
+.feature-card.small{grid-column:span 2;}
+@media (max-width:900px){.feature-card,.feature-card.big,.feature-card.small{grid-column:span 1;}}
+.feature-card .fi{font-size:26px;display:block;margin-bottom:14px;}
+.feature-card h3{margin-bottom:8px;}
+.feature-card p{font-size:14.5px;}
 
-    /* ===== CAROUSEL WRAPPER ===== */
-    .carousel-area {
-      position: relative;
-      width: 100%;
-      max-width: 780px;
-      margin-top: 40px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0;
-    }
+/* ---------- Thirst scale ---------- */
+.gauge-wrap{
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-m);
+  padding:30px 28px;margin-bottom:44px;
+}
+.gauge-title{font-weight:600;font-size:14px;color:var(--text-muted);margin-bottom:18px;text-transform:none;}
+.gauge-bar{position:relative;height:26px;border-radius:999px;overflow:hidden;display:flex;border:1px solid var(--border);}
+.gauge-seg{height:100%;}
+.gauge-seg.s1{width:70%;background:linear-gradient(90deg, var(--accent-water), var(--accent-water-2));}
+.gauge-seg.s2{width:10%;background:#e2b23c;}
+.gauge-seg.s3{width:10%;background:#e08a3c;}
+.gauge-seg.s4{width:10%;background:var(--danger);}
+.gauge-labels{display:flex;justify-content:space-between;margin-top:10px;font-size:12px;color:var(--text-muted);}
+.threshold-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:26px;}
+@media (max-width:700px){.threshold-grid{grid-template-columns:1fr 1fr;}}
+.threshold-card{border-left:3px solid var(--accent-water);padding-left:12px;}
+.threshold-card .val{font-family:var(--font-display);font-size:20px;font-weight:600;}
+.threshold-card p{font-size:13.5px;margin-top:2px;}
 
-    /* Nav Arrows */
-    .nav-btn {
-      position: relative; z-index: 10;
-      background: none; border: none;
-      cursor: pointer;
-      width: 52px; height: 52px;
-      flex-shrink: 0;
-      display: flex; align-items: center; justify-content: center;
-      transition: transform 0.2s;
-    }
-    .nav-btn svg {
-      width: 36px; height: 36px;
-      stroke: var(--neon-cyan);
-      filter: drop-shadow(0 0 6px var(--neon-cyan-glow));
-      transition: filter 0.3s, stroke 0.3s;
-    }
-    .nav-btn:hover svg {
-      stroke: var(--neon-gold);
-      filter: drop-shadow(0 0 12px var(--neon-gold-glow));
-    }
-    .nav-btn:hover { transform: scale(1.15); }
-    .nav-btn:disabled { opacity: 0.2; cursor: default; }
-    .nav-btn:disabled:hover { transform: none; }
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:40px;margin-top:44px;}
+@media (max-width:760px){.two-col{grid-template-columns:1fr;}}
+.mini-title{font-family:var(--font-display);font-size:18px;font-weight:600;margin-bottom:16px;}
+ul.plain{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:11px;}
+ul.plain li{position:relative;padding-left:20px;font-size:14.5px;color:var(--text-muted);}
+ul.plain li::before{content:"";position:absolute;left:0;top:8px;width:6px;height:6px;border-radius:50%;background:var(--accent-water);}
 
-    /* Viewport for slide animation */
-    .carousel-viewport {
-      flex: 1;
-      overflow: hidden;
-      position: relative;
-    }
+.biome-list{display:flex;flex-direction:column;gap:0;}
+.biome-row{display:flex;justify-content:space-between;align-items:center;padding:13px 0;border-top:1px solid var(--border);font-size:14.5px;}
+.biome-row:last-child{border-bottom:1px solid var(--border);}
+.biome-row .mult{font-weight:700;color:var(--accent-water);font-family:var(--font-display);}
 
-    .carousel-track {
-      display: flex;
-      transition: transform 0.55s cubic-bezier(0.77, 0, 0.175, 1);
-      will-change: transform;
-    }
+table.data{width:100%;border-collapse:collapse;margin-top:8px;}
+table.data th{text-align:left;font-size:12.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--text-muted);font-weight:600;padding:0 0 10px;border-bottom:1px solid var(--border);}
+table.data td{padding:13px 0;border-bottom:1px solid var(--border);font-size:14.5px;vertical-align:top;}
+table.data td:first-child{color:var(--text);font-weight:600;padding-right:18px;}
+table.data code{
+  background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius-s);
+  padding:2px 7px;font-size:13px;font-family:ui-monospace,Menlo,Consolas,monospace;color:var(--accent-water);
+}
+.table-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-m);padding:26px 28px;margin-top:18px;}
 
-    /* ===== CARD ===== */
-    .item-card {
-      flex: 0 0 100%;
-      padding: 6px;
-    }
+.death-note{
+  margin-top:36px;display:flex;gap:16px;align-items:flex-start;
+  background:color-mix(in srgb, var(--danger) 10%, var(--surface));
+  border:1px solid color-mix(in srgb, var(--danger) 35%, var(--border));
+  border-radius:var(--radius-m);padding:20px 22px;
+}
+.death-note .di{font-size:22px;flex:none;}
+.death-note h3{font-size:15.5px;margin-bottom:4px;color:var(--danger);}
+.death-note p{font-size:14px;}
 
-    .card-inner {
-      background: linear-gradient(160deg, #0e1a2e 0%, #080e1a 60%, #0b1525 100%);
-      border: 1px solid var(--card-border);
-      border-radius: 16px;
-      padding: 28px 28px 24px;
-      position: relative;
-      overflow: hidden;
-      box-shadow:
-        0 0 0 1px #ffffff08,
-        0 8px 40px #00000099,
-        inset 0 1px 0 #ffffff0a;
-      transition: box-shadow 0.4s;
-    }
-    .card-inner:hover {
-      box-shadow:
-        0 0 0 1px #ffffff0f,
-        0 12px 60px #000000cc,
-        0 0 30px #f0c04014,
-        inset 0 1px 0 #ffffff12;
-    }
+/* ---------- HUD ---------- */
+.hud-mock{
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-m);
+  padding:26px 26px 22px;margin-bottom:16px;
+}
+.hud-el-list{display:grid;grid-template-columns:repeat(2,1fr);gap:10px 22px;}
+@media (max-width:560px){.hud-el-list{grid-template-columns:1fr;}}
+.hud-el{display:flex;align-items:center;gap:10px;font-size:14.5px;padding:9px 0;border-bottom:1px dashed var(--border);}
+.toggle-dot{width:34px;height:19px;border-radius:999px;background:var(--accent-water);position:relative;flex:none;}
+.toggle-dot::after{content:"";position:absolute;right:2px;top:2px;width:15px;height:15px;border-radius:50%;background:#fff;}
 
-    /* Corner ornaments */
-    .card-inner::before,
-    .card-inner::after {
-      content: '';
-      position: absolute;
-      width: 60px; height: 60px;
-      border-color: var(--neon-gold);
-      border-style: solid;
-      opacity: 0.35;
-    }
-    .card-inner::before {
-      top: 10px; left: 10px;
-      border-width: 2px 0 0 2px;
-      border-radius: 4px 0 0 0;
-    }
-    .card-inner::after {
-      bottom: 10px; right: 10px;
-      border-width: 0 2px 2px 0;
-      border-radius: 0 0 4px 0;
-    }
+.pos-list{display:flex;flex-direction:column;gap:0;margin-top:8px;}
+.pos-row{display:grid;grid-template-columns:150px 1fr;gap:16px;padding:13px 0;border-top:1px solid var(--border);font-size:14.5px;}
+.pos-row:last-child{border-bottom:1px solid var(--border);}
+.pos-row .name{font-weight:600;color:var(--accent-water);}
+@media (max-width:560px){.pos-row{grid-template-columns:1fr;gap:2px;}}
 
-    /* Inner glow shimmer line */
-    .card-shine {
-      position: absolute;
-      top: 0; left: -100%;
-      width: 60%; height: 100%;
-      background: linear-gradient(90deg, transparent, #ffffff06, transparent);
-      transform: skewX(-20deg);
-      animation: shineMove 6s ease-in-out infinite;
-      pointer-events: none;
-    }
+/* ---------- Items & blocks ---------- */
+.item-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+@media (max-width:820px){.item-grid{grid-template-columns:repeat(2,1fr);}}
+@media (max-width:560px){.item-grid{grid-template-columns:1fr;}}
+.item-card{
+  border:1px solid var(--border);border-radius:var(--radius-m);padding:18px 20px;background:var(--surface);
+}
+.item-card .iname{font-weight:600;font-size:14.5px;margin-bottom:4px;}
+.item-card .idesc{font-size:13.5px;color:var(--text-muted);}
+.subhead{font-family:var(--font-display);font-size:19px;font-weight:600;margin:40px 0 18px;}
+.subhead:first-child{margin-top:0;}
 
-    /* ===== CARD HEADER ROW ===== */
-    .card-header-row {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 4px;
-    }
+.effect-row{display:flex;gap:16px;align-items:flex-start;padding:16px 0;border-top:1px solid var(--border);}
+.effect-row:last-child{border-bottom:1px solid var(--border);}
+.effect-row .ei{font-size:20px;flex:none;color:var(--danger);}
+.effect-row h3{font-size:15px;margin-bottom:2px;}
+.effect-row p{font-size:14px;}
 
-    .card-owner {
-      font-family: 'Cinzel', serif;
-      font-size: 0.72rem;
-      font-weight: 600;
-      color: var(--text-dim);
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      line-height: 1.4;
-      max-width: 180px;
-    }
-    .card-owner strong {
-      display: block;
-      color: #8ab0d4;
-      font-size: 0.82rem;
-    }
+/* ---------- Config groups ---------- */
+.config-intro{
+  font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13.5px;
+  background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius-s);
+  padding:12px 16px;display:inline-block;margin-top:6px;color:var(--accent-water);
+}
+.config-group{margin-top:32px;}
+.config-group h3{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:15px;color:var(--accent-moss);margin-bottom:12px;}
 
-    .card-type-badge {
-      font-family: 'Cinzel', serif;
-      font-size: 0.7rem;
-      font-weight: 700;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--neon-purple);
-      text-shadow: 0 0 10px var(--neon-purple-glow), 0 0 20px var(--neon-purple-glow);
-      border: 1px solid var(--neon-purple);
-      box-shadow: 0 0 10px var(--neon-purple-glow), inset 0 0 8px #cc44ff18;
-      padding: 4px 12px;
-      border-radius: 4px;
-      white-space: nowrap;
-      animation: badgePulse 3s ease-in-out infinite;
-    }
+/* ---------- Install ---------- */
+.install-grid{display:grid;grid-template-columns:0.85fr 1.15fr;gap:48px;}
+@media (max-width:820px){.install-grid{grid-template-columns:1fr;gap:32px;}}
+.req-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-m);padding:22px 24px;}
+.req-card ul{list-style:none;margin:12px 0 0;padding:0;display:flex;flex-direction:column;gap:9px;}
+.req-card li{font-size:14.5px;padding-left:18px;position:relative;}
+.req-card li::before{content:"";position:absolute;left:0;top:8px;width:5px;height:5px;border-radius:50%;background:var(--accent-moss);}
+.steps{counter-reset:step;display:flex;flex-direction:column;gap:0;}
+.step{display:flex;gap:16px;padding:16px 0;border-top:1px solid var(--border);}
+.step:last-child{border-bottom:1px solid var(--border);}
+.step .num{
+  counter-increment:step;flex:none;width:30px;height:30px;border-radius:50%;
+  background:var(--accent-water);color:#fff;display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-display);font-weight:600;font-size:14px;
+}
+.step .num::before{content:counter(step);}
+.step p{color:var(--text);font-size:14.5px;padding-top:4px;}
+.mp-note{margin-top:20px;padding:18px 20px;border-radius:var(--radius-m);background:var(--surface-2);border:1px solid var(--border);}
+.mp-note h3{font-size:14.5px;margin-bottom:4px;color:var(--accent-moss);}
+.mp-note p{font-size:13.5px;}
 
-    /* ===== CARD TITLE ===== */
-    .card-title {
-      text-align: center;
-      margin: 14px 0 6px;
-    }
-    .card-title h2 {
-      font-family: 'Cinzel Decorative', serif;
-      font-size: clamp(1.1rem, 3vw, 1.7rem);
-      font-weight: 700;
-      color: var(--neon-cyan);
-      text-shadow:
-        0 0 8px var(--neon-cyan-glow),
-        0 0 24px var(--neon-cyan-glow),
-        0 0 50px #00e5ff33;
-      line-height: 1.3;
-      letter-spacing: 0.04em;
-    }
+/* ---------- Footer ---------- */
+footer.site{padding:40px 0 60px;text-align:center;}
+footer.site p{font-size:13px;}
 
-    /* thin divider under title */
-    .card-title-line {
-      margin: 8px auto 0;
-      height: 1px;
-      width: 70%;
-      background: linear-gradient(90deg, transparent, var(--neon-cyan), transparent);
-      opacity: 0.4;
-    }
-
-    /* ===== CARD DESCRIPTION ===== */
-    .card-desc {
-      font-family: 'Crimson Text', serif;
-      font-size: 1.02rem;
-      line-height: 1.75;
-      color: #b0bdd4;
-      margin: 14px 0 18px;
-      max-height: 220px;
-      overflow-y: auto;
-      padding-right: 6px;
-    }
-    .card-desc::-webkit-scrollbar { width: 4px; }
-    .card-desc::-webkit-scrollbar-track { background: #ffffff08; border-radius: 4px; }
-    .card-desc::-webkit-scrollbar-thumb { background: var(--neon-gold); border-radius: 4px; opacity: 0.5; }
-
-    /* Color code spans injected by JS */
-    .colored-text { font-weight: 600; }
-
-    /* ===== CARD IMAGE ===== */
-    .card-image-wrap {
-      margin-top: 10px;
-      border-radius: 10px;
-      overflow: hidden;
-      border: 1px solid #1e2d45;
-      position: relative;
-      box-shadow: 0 0 24px #000000aa, 0 0 6px var(--neon-gold-glow);
-      aspect-ratio: 16 / 9;
-      background: #040810;
-    }
-    .card-image-wrap img {
-      width: 100%; height: 100%;
-      object-fit: cover;
-      display: block;
-      filter: brightness(0.88) contrast(1.08) saturate(0.9);
-      transition: filter 0.4s, transform 0.6s;
-    }
-    .card-inner:hover .card-image-wrap img {
-      filter: brightness(1) contrast(1.05) saturate(1.05);
-      transform: scale(1.02);
-    }
-
-    /* Image overlay vignette */
-    .card-image-wrap::after {
-      content: '';
-      position: absolute; inset: 0;
-      background: linear-gradient(to top, #04060aaa 0%, transparent 50%);
-      pointer-events: none;
-    }
-
-    /* ===== DOTS ===== */
-    .dots {
-      display: flex; gap: 8px;
-      justify-content: center;
-      margin-top: 28px;
-    }
-    .dot {
-      width: 8px; height: 8px;
-      border-radius: 50%;
-      background: #1e2d45;
-      border: 1px solid #2a3d5a;
-      cursor: pointer;
-      transition: background 0.3s, box-shadow 0.3s, transform 0.3s;
-    }
-    .dot.active {
-      background: var(--neon-gold);
-      box-shadow: 0 0 8px var(--neon-gold-glow), 0 0 16px var(--neon-gold-glow);
-      transform: scale(1.3);
-    }
-
-    /* ===== EMPTY STATE ===== */
-    .empty-state {
-      text-align: center;
-      padding: 60px 20px;
-      color: var(--text-dim);
-      font-family: 'Cinzel', serif;
-      font-size: 0.9rem;
-      letter-spacing: 0.1em;
-    }
-
-    /* ===== HOW TO ADD ===== */
-    .howto {
-      margin-top: 48px;
-      max-width: 680px;
-      width: 100%;
-      background: #0a1020;
-      border: 1px solid #1a2840;
-      border-radius: 10px;
-      padding: 20px 24px;
-      font-size: 0.85rem;
-      color: var(--text-dim);
-      line-height: 1.8;
-    }
-    .howto h3 {
-      font-family: 'Cinzel', serif;
-      font-size: 0.78rem;
-      letter-spacing: 0.2em;
-      color: var(--neon-gold);
-      text-transform: uppercase;
-      margin-bottom: 10px;
-      text-shadow: 0 0 8px var(--neon-gold-glow);
-    }
-    .howto code {
-      background: #ffffff0d;
-      color: var(--neon-cyan);
-      padding: 1px 6px;
-      border-radius: 3px;
-      font-size: 0.82rem;
-    }
-
-    /* ===== ANIMATIONS ===== */
-    @keyframes titleReveal {
-      from { opacity:0; transform: translateY(-24px); }
-      to   { opacity:1; transform: translateY(0); }
-    }
-    @keyframes pulse {
-      0%,100% { opacity:1; text-shadow: 0 0 12px var(--neon-gold-glow); }
-      50%      { opacity:0.6; text-shadow: 0 0 4px var(--neon-gold-glow); }
-    }
-    @keyframes shineMove {
-      0%   { left: -100%; }
-      40%  { left: 150%; }
-      100% { left: 150%; }
-    }
-    @keyframes badgePulse {
-      0%,100% { box-shadow: 0 0 10px var(--neon-purple-glow), inset 0 0 8px #cc44ff18; }
-      50%      { box-shadow: 0 0 18px var(--neon-purple-glow), inset 0 0 14px #cc44ff28; }
-    }
-    @keyframes cardEntrance {
-      from { opacity:0; transform: scale(0.94) translateY(30px); }
-      to   { opacity:1; transform: scale(1) translateY(0); }
-    }
-
-    .carousel-area { animation: cardEntrance 0.8s 0.3s ease both; }
-
-    /* Responsive */
-    @media (max-width: 520px) {
-      .card-inner { padding: 20px 16px 18px; }
-      .nav-btn { width: 36px; }
-      .nav-btn svg { width: 26px; height: 26px; }
-    }
-  </style>
+/* ---------- Language modal ---------- */
+.modal-overlay{
+  position:fixed;inset:0;z-index:100;
+  background:color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter:blur(6px);
+  display:flex;align-items:center;justify-content:center;
+  padding:24px;
+}
+.modal-overlay[hidden]{display:none;}
+.modal-card{
+  background:var(--surface);border:1px solid var(--border);border-radius:20px;
+  max-width:440px;width:100%;padding:38px 34px;box-shadow:0 30px 70px -20px rgba(0,0,0,0.35);
+  text-align:center;
+}
+.modal-card .drip{font-size:34px;margin-bottom:14px;}
+.modal-card h2{font-size:23px;}
+.modal-card .sub{font-size:13px;margin-top:10px;color:var(--text-muted);line-height:1.7;}
+.lang-list{display:flex;flex-direction:column;gap:10px;margin-top:26px;}
+.lang-opt{
+  display:flex;align-items:center;gap:12px;width:100%;
+  background:var(--surface-2);border:1px solid var(--border);border-radius:12px;
+  padding:13px 18px;font-family:var(--font-body);font-size:15px;font-weight:600;color:var(--text);
+  cursor:pointer;text-align:left;
+}
+.lang-opt:hover{border-color:var(--accent-water);background:color-mix(in srgb, var(--accent-water) 8%, var(--surface-2));}
+.lang-opt .flag{font-size:19px;}
+.lang-opt .native{margin-left:auto;font-weight:500;color:var(--text-muted);font-size:13px;}
+</style>
 </head>
 <body>
 
-<!-- Starfield -->
-<canvas id="starfield"></canvas>
-
-<div class="page-wrap">
-
-  <!-- ===== TITLE ===== -->
-  <div class="main-title">
-    <h1>Kılıçlar Ve Eşyalar</h1>
-  </div>
-  <div class="title-divider">
-    <span></span>
-    <i>⚔</i>
-    <span></span>
-  </div>
-  <div class="card-counter">
-    Toplam <span id="total-count">0</span> Eşya Kayıtlı
-  </div>
-
-  <!-- ===== CAROUSEL ===== -->
-  <div class="carousel-area">
-    <button class="nav-btn" id="btn-prev" aria-label="Önceki">
-      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <polyline points="15 18 9 12 15 6"/>
-      </svg>
-    </button>
-
-    <div class="carousel-viewport">
-      <div class="carousel-track" id="carousel-track">
-        <!-- Cards injected here -->
-      </div>
+<div class="modal-overlay" id="langModal">
+  <div class="modal-card">
+    <span class="drip">💧</span>
+    <h2 id="lm-title">Dil Seçin</h2>
+    <p class="sub" id="lm-sub">Choose your language / Выберите язык / Choisissez votre langue / 言語を選択してください</p>
+    <div class="lang-list">
+      <button class="lang-opt" data-lang="tr"><span class="flag">🇹🇷</span> Türkçe <span class="native">TR</span></button>
+      <button class="lang-opt" data-lang="en"><span class="flag">🇬🇧</span> English <span class="native">EN</span></button>
+      <button class="lang-opt" data-lang="ru"><span class="flag">🇷🇺</span> Русский <span class="native">RU</span></button>
+      <button class="lang-opt" data-lang="fr"><span class="flag">🇫🇷</span> Français <span class="native">FR</span></button>
+      <button class="lang-opt" data-lang="ja"><span class="flag">🇯🇵</span> 日本語 <span class="native">JA</span></button>
     </div>
-
-    <button class="nav-btn" id="btn-next" aria-label="Sonraki">
-      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <polyline points="9 18 15 12 9 6"/>
-      </svg>
-    </button>
   </div>
-
-  <!-- Dots -->
-  <div class="dots" id="dots"></div>
-
-  <!-- How-to -->
-  <div class="howto">
-    <h3>📜 Yeni Kart Nasıl Eklenir?</h3>
-    Yeni bir eşya kartı eklemek için <code>Kartlar/</code> klasörüne <code>Kart002.txt</code>, <code>Kart003.txt</code>... şeklinde dosya oluşturun.<br/>
-    Görselini de <code>Objegörsel/</code> klasörüne aynı numarayla koyun.<br/>
-    <br/>
-    <strong>TXT Format:</strong><br/>
-    <code>BASLIK: Eşyanın Adı</code><br/>
-    <code>SAHIP: Sahibinin Adı</code><br/>
-    <code>TUR: Kılıç / Zırh / Yüzük vb.</code><br/>
-    <code>GORSEL: Kart002.jpg</code><br/>
-    <code>ACIKLAMA: Açıklama metni... Renk koymak için Color#ff0000 yazabilirsin.</code><br/>
-    <br/>
-    Ardından aşağıdaki <code>KART_VERİLERİ</code> dizisine yeni kartı ekleyin ve sayfayı yenileyin.
-  </div>
-
 </div>
 
-<script>
-// =====================================================
-//   KART VERİLERİ — Yeni kart buraya eklenir
-// =====================================================
-const KARTLAR = [
-  {
-    baslik:  "Şafağın Kılıcı (Dawn)",
-    sahip:   "Leo Oliver Dayne",
-    tur:     "Kılıç",
-    gorsel:  "Objegörsel/Kart001.jpg",
-    aciklama: `Şafak Kılıcı, Düşen Bir Kayma Yıldızın kalbinden yapılmıştır. Kılıç Parlak bir ışığı yansıtmaktadır. Hatta parlaklığı geceleri bile çevresini ufak aydınlatması ile bilinir. Color#f0c040Dayne hanesine aittirColor#b0bdd4. Şafağın kılıcı Color#00e5ffMeteor metalindenColor#b0bdd4 yapıldığından 1. Seviye olarak adlandırılan Öteki seviyeleri dahil olmak üzere tüm ötekileri ve varlıkları kesebilecek kudrettedir. Dawn aynı zamanda Color#cc44ffValeria ÇeliğineColor#b0bdd4 kafa tutan bir çelik yapısına sahiptir. Dawnın kestiği yaralar güneş yanığı benzeri yaralara neden olabildiği bilinir.`,
-  },
-
-  // — Örnek 2. kart (yorum satırını kaldırıp düzenleyin) —
-  // {
-  //   baslik:  "İkinci Eşya Adı",
-  //   sahip:   "Sahibinin Adı",
-  //   tur:     "Zırh",
-  //   gorsel:  "Objegörsel/Kart002.jpg",
-  //   aciklama: "Açıklama buraya...",
-  // },
-];
-
-// =====================================================
-//   COLOR# PARSER
-// =====================================================
-function parseColorText(raw) {
-  // Color#RRGGBB ile başlayan kısmı, sonraki Color# veya metin sonuna kadar renklendir
-  let result = '';
-  let i = 0;
-  const re = /Color#([0-9a-fA-F]{6})/g;
-  let segments = [];
-  let lastIdx = 0;
-  let m;
-
-  // Renkli segmentleri bul
-  re.lastIndex = 0;
-  while ((m = re.exec(raw)) !== null) {
-    segments.push({ start: m.index, end: m.index + m[0].length, color: '#' + m[1] });
-  }
-
-  if (segments.length === 0) return escHtml(raw);
-
-  let out = '';
-  let cursor = 0;
-  for (let s = 0; s < segments.length; s++) {
-    const seg = segments[s];
-    // Plain text before this marker
-    out += escHtml(raw.slice(cursor, seg.start));
-    cursor = seg.end;
-
-    // Text until next marker or end
-    const nextStart = s + 1 < segments.length ? segments[s + 1].start : raw.length;
-    const coloredText = raw.slice(cursor, nextStart);
-    out += `<span class="colored-text" style="color:${seg.color};text-shadow:0 0 8px ${seg.color}88">${escHtml(coloredText)}</span>`;
-    cursor = nextStart;
-  }
-  // Remaining plain text
-  if (cursor < raw.length) out += escHtml(raw.slice(cursor));
-  return out;
-}
-
-function escHtml(str) {
-  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-}
-
-// =====================================================
-//   RENDER CARDS
-// =====================================================
-const track   = document.getElementById('carousel-track');
-const dotsEl  = document.getElementById('dots');
-const btnPrev = document.getElementById('btn-prev');
-const btnNext = document.getElementById('btn-next');
-const totalEl = document.getElementById('total-count');
-
-let current = 0;
-
-function buildCards() {
-  totalEl.textContent = KARTLAR.length;
-
-  if (KARTLAR.length === 0) {
-    track.innerHTML = `<div class="item-card"><div class="empty-state">Henüz hiç eşya kaydedilmemiş.</div></div>`;
-    return;
-  }
-
-  track.innerHTML = '';
-  dotsEl.innerHTML = '';
-
-  KARTLAR.forEach((k, idx) => {
-    // Card
-    const card = document.createElement('div');
-    card.className = 'item-card';
-    card.innerHTML = `
-      <div class="card-inner">
-        <div class="card-shine"></div>
-
-        <!-- Header: owner left, type badge right -->
-        <div class="card-header-row">
-          <div class="card-owner">
-            SAHİBİ
-            <strong>${escHtml(k.sahip)}</strong>
-          </div>
-          <div class="card-type-badge">${escHtml(k.tur)}</div>
-        </div>
-
-        <!-- Title -->
-        <div class="card-title">
-          <h2>${escHtml(k.baslik)}</h2>
-          <div class="card-title-line"></div>
-        </div>
-
-        <!-- Description -->
-        <div class="card-desc">${parseColorText(k.aciklama)}</div>
-
-        <!-- Image -->
-        <div class="card-image-wrap">
-          <img src="${escHtml(k.gorsel)}" alt="${escHtml(k.baslik)}" loading="lazy"
-               onerror="this.style.display='none'"/>
-        </div>
+<header class="site">
+  <div class="wrap nav-inner">
+    <div class="brand">
+      <span class="drop">💧</span>
+      <div class="brand-col">
+        <span id="nav-brand">Water is Life</span>
+        <span class="tag" id="nav-tag">CraftBorn Bar Modu</span>
       </div>
-    `;
-    track.appendChild(card);
+    </div>
+    <button class="lang-btn" id="openLangBtn">🌐 <span id="lang-btn-label">Dil</span></button>
+  </div>
+</header>
 
-    // Dot
-    const dot = document.createElement('div');
-    dot.className = 'dot' + (idx === 0 ? ' active' : '');
-    dot.addEventListener('click', () => goTo(idx));
-    dotsEl.appendChild(dot);
+<section class="hero">
+  <div class="wrap hero-inner">
+    <div class="badges" id="hero-badges"></div>
+    <h1 id="hero-title">Water is Life</h1>
+    <p class="subtitle" id="hero-subtitle">Hayatta kalmak sadece savaşmaktan ibaret değil.</p>
+    <p class="desc" id="hero-desc"></p>
+    <button class="cta" id="hero-cta">Özellikleri Keşfet ↓</button>
+  </div>
+  <div class="waves" aria-hidden="true">
+    <svg class="w1" viewBox="0 0 1600 140" preserveAspectRatio="none"><path d="M0,70 C200,140 400,0 600,70 C800,140 1000,0 1200,70 C1300,105 1500,105 1600,70 L1600,140 L0,140 Z" fill="var(--wave-fill)" opacity="0.35"/><path d="M1600,70 C1800,140 2000,0 2200,70 C2400,140 2600,0 2800,70 C2900,105 3100,105 3200,70 L3200,140 L1600,140 Z" fill="var(--wave-fill)" opacity="0.35"/></svg>
+    <svg class="w2" viewBox="0 0 1600 140" preserveAspectRatio="none"><path d="M0,90 C250,20 450,130 700,60 C900,10 1100,110 1350,60 C1450,40 1550,80 1600,90 L1600,140 L0,140 Z" fill="var(--accent-water)" opacity="0.5"/><path d="M1600,90 C1850,20 2050,130 2300,60 C2500,10 2700,110 2950,60 C3050,40 3150,80 3200,90 L3200,140 L1600,140 Z" fill="var(--accent-water)" opacity="0.5"/></svg>
+  </div>
+</section>
+
+<section id="about">
+  <div class="wrap about-grid">
+    <div class="section-head" style="margin-bottom:0;">
+      <span class="eyebrow-icon">🌊</span>
+      <h2 id="about-title">Mod Nedir?</h2>
+      <p id="about-lead"></p>
+    </div>
+    <div class="about-points" id="about-points"></div>
+  </div>
+</section>
+
+<section id="features">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow-icon">🧭</span>
+      <h2 id="features-title">Özellikler</h2>
+    </div>
+    <div class="feature-grid" id="feature-grid"></div>
+  </div>
+</section>
+
+<section id="thirst">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow-icon">💧</span>
+      <h2 id="thirst-title">Susuzluk Sistemi — Detaylı</h2>
+    </div>
+    <div class="gauge-wrap">
+      <div class="gauge-title" id="thirst-scale-title">Susuzluk Ölçeği (Maksimum: 100)</div>
+      <div class="gauge-bar">
+        <div class="gauge-seg s1"></div><div class="gauge-seg s2"></div><div class="gauge-seg s3"></div><div class="gauge-seg s4"></div>
+      </div>
+      <div class="gauge-labels"><span>100</span><span>0</span></div>
+      <div class="threshold-grid" id="threshold-grid"></div>
+    </div>
+    <div class="two-col">
+      <div>
+        <div class="mini-title" id="causes-title">Susuzluk Azalma Nedenleri</div>
+        <ul class="plain" id="causes-list"></ul>
+      </div>
+      <div>
+        <div class="mini-title" id="biome-title">Biyom Etkisi</div>
+        <div class="biome-list" id="biome-list"></div>
+      </div>
+    </div>
+    <div class="table-card">
+      <div class="mini-title" id="sources-title">Su Kaynakları ve Kazanç</div>
+      <table class="data" id="sources-table"><tbody></tbody></table>
+    </div>
+    <div class="death-note">
+      <span class="di">☠️</span>
+      <div>
+        <h3 id="death-title">Ölüm Sonrası</h3>
+        <p id="death-text"></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="hud">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow-icon">🖥️</span>
+      <h2 id="hud-title">HUD Sistemi</h2>
+    </div>
+    <div class="hud-mock">
+      <div class="mini-title" id="hud-edit-title">HUD'u Özelleştirme</div>
+      <p id="hud-edit-text" style="margin-bottom:20px;font-size:14.5px;"></p>
+      <div class="hud-el-list" id="hud-el-list"></div>
+    </div>
+    <div class="mini-title" id="hud-pos-title" style="margin-top:36px;">HUD Konumları</div>
+    <div class="pos-list" id="pos-list"></div>
+  </div>
+</section>
+
+<section id="items">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow-icon">🎒</span>
+      <h2 id="items-title">Eşyalar ve Bloklar</h2>
+    </div>
+    <div class="subhead" id="items-sub-title">Eşyalar</div>
+    <div class="item-grid" id="item-grid"></div>
+    <div class="subhead" id="blocks-sub-title">Bloklar</div>
+    <div class="item-grid" id="block-grid"></div>
+    <div class="subhead" id="effects-sub-title">Özel Efektler</div>
+    <div id="effect-list"></div>
+  </div>
+</section>
+
+<section id="commands">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow-icon">⌨️</span>
+      <h2 id="commands-title">Komutlar</h2>
+    </div>
+    <div class="table-card">
+      <table class="data" id="commands-table"><tbody></tbody></table>
+    </div>
+    <p style="margin-top:16px;font-size:13.5px;" id="commands-note"></p>
+
+    <div class="mini-title" id="keys-title" style="margin-top:48px;">Klavye Kısayolları</div>
+    <div class="table-card" style="margin-top:16px;">
+      <table class="data" id="keys-table"><tbody></tbody></table>
+    </div>
+    <p style="margin-top:16px;font-size:13.5px;" id="keys-note"></p>
+  </div>
+</section>
+
+<section id="config">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow-icon">⚙️</span>
+      <h2 id="config-title">Config Ayarları</h2>
+      <p id="config-intro-text"></p>
+      <span class="config-intro">config/craftbornbar-server.toml</span>
+    </div>
+    <div id="config-groups"></div>
+  </div>
+</section>
+
+<section id="install">
+  <div class="wrap install-grid">
+    <div>
+      <span class="eyebrow-icon">🌱</span>
+      <h2 id="install-title" style="margin-bottom:22px;">Kurulum</h2>
+      <div class="req-card">
+        <div class="mini-title" id="req-title" style="margin-bottom:0;">Gereksinimler</div>
+        <ul id="req-list"></ul>
+      </div>
+      <div class="mp-note">
+        <h3 id="mp-title">Çok Oyunculu Sunucularda</h3>
+        <p id="mp-text"></p>
+      </div>
+    </div>
+    <div>
+      <div class="mini-title" id="steps-title">Adımlar</div>
+      <div class="steps" id="steps-list"></div>
+    </div>
+  </div>
+</section>
+
+<footer class="site">
+  <div class="wrap"><p id="footer-text"></p></div>
+</footer>
+
+<script>
+const translations = {
+tr: {
+  nav:{brand:"Water is Life",tag:"CraftBorn Bar Modu",switchLabel:"Dil"},
+  hero:{title:"Water is Life",subtitle:"Hayatta kalmak sadece savaşmaktan ibaret değil.",desc:"CraftBorn Bar Modu; Minecraft 1.20.1 için geliştirilmiş, susuzluk, HUD özelleştirme, oturma/uzanma ve gelişmiş hayatta kalma mekaniği sunan bir Forge modudur.",badges:["Minecraft 1.20.1","Forge 47.x","5 Dil Desteği"],cta:"Özellikleri Keşfet"},
+  about:{title:"Mod Nedir?",lead:"Water is Life (CraftBorn Bar Modu), vanilla Minecraft'ın hayatta kalma deneyimini derinleştirmek için tasarlanmış bir Forge modudur.",points:[
+    "Susuzluk sistemi: Su içmek zorunludur; ihmal edilirse zayıflık, yavaşlama, baş dönmesi ve dehidrasyon sırasıyla devreye girer.",
+    "Su kaynakları: Doğal sular risklidir. Temiz su için kazan, yağmur toplayıcı veya arıtma gerekir.",
+    "Gelişmiş HUD: Can, açlık, susuzluk barları ve oyuncu modeli yeniden tasarlandı, açılıp kapatılabilir.",
+    "Oturma / uzanma: Oyuncular istedikleri yerde oturabilir veya sırt üstü uzanabilir.",
+    "Çok dilli destek: Türkçe, İngilizce, Rusça, Fransızca ve Japonca."]},
+  features:{title:"Özellikler",items:[
+    {icon:"💧",title:"Susuzluk Sistemi",desc:"Gerçekçi bir susuzluk mekaniği. Yürürken, koşarken, zıplarken ve hasar alırken susuzluk azalır. Biyom sıcaklığı ve hava koşulları etkileri değiştirir."},
+    {icon:"🧪",title:"Su Kalitesi",desc:"Doğal nehir/göl suları %80 ihtimalle zehirlenme riski taşır. Güvenli içme suyu için kazan, yağmur toplayıcı, temiz su kaynağı veya arıtılmış su kesesi kullanılmalıdır."},
+    {icon:"🖥️",title:"Özel HUD",desc:"Vanilla HUD devre dışı. Yerine can, açlık, susuzluk barları, özel hotbar, zırh göstergesi, karakter modeli ve oyun modu göstergesi gelir. /bardüzenle ile özelleştirilir."},
+    {icon:"🎒",title:"Su Keseleri",desc:"5 farklı kapasitede su kesesi bulunur. Su kaynağının yanında Shift + X ile doldurulur, C tuşu ile içilir. Kirli su fırında arıtılabilir."},
+    {icon:"🪑",title:"Oturma / Uzanma",desc:"/otur ile oturulur, /kalk ile kalkılır. /sirtustuuzan ile sırt üstü uzanılır. Shift ile her iki pozisyondan çıkılabilir."},
+    {icon:"🧱",title:"Bloklar",desc:"Temiz Su Kaynağı yakınındaki suyu arıtır. Kirli Su Kaynağı zehirli bölge oluşturur. Yağmur Toplayıcı yağmur sırasında su biriktirir. Sönük Meşale yakıt gerektirir."},
+    {icon:"⚠️",title:"Efektler",desc:"Dehidrasyon: susuzluk 0'a düştüğünde kalıcı hasar. İshal: kirli su sonucu, su kazanımı yarıya iner ve susuzluk hızlanır."}]},
+  thirst:{title:"Susuzluk Sistemi — Detaylı",scaleTitle:"Susuzluk Ölçeği (Maksimum: 100)",
+    thresholds:[{value:"≤ 30",label:"Zayıflık efekti"},{value:"≤ 20",label:"Yavaşlama efekti"},{value:"≤ 10",label:"Baş dönmesi efekti"},{value:"= 0",label:"Dehidrasyon efekti (kalıcı hasar)"}],
+    causesTitle:"Susuzluk Azalma Nedenleri",causes:["Zaman geçtikçe yavaş yavaş (varsayılan: her 90 saniyede 1)","Koşarken daha hızlı (varsayılan: her 22,5 saniyede 1)","Her 10 zıplamada 1","Hasar alındığında 1 (5 saniyelik bekleme süresiyle)","İshal efekti varken çok daha hızlı"],
+    biomeTitle:"Biyom Etkisi",biomes:[{name:"Sıcak biyomlar (çöl, savana vb.)",mult:"×1.5 hız"},{name:"Soğuk biyomlar (tundra, karlar)",mult:"×0.85 hız"},{name:"Nether",mult:"×1.8 hız"},{name:"Yağmur altında",mult:"×0.9 hız"}],
+    sourcesTitle:"Su Kaynakları ve Kazanç",sourceRows:[{source:"Kazandan içme",gain:"+6 ile +12 susuzluk"},{source:"Arıtılmış kaynaktan",gain:"+6 ile +12 susuzluk"},{source:"Doğal su (şanslı, %20)",gain:"+6 ile +12 susuzluk"},{source:"Doğal su (zehirli, %80)",gain:"Zehirlenme + minimal kazanç"},{source:"Keseden içme",gain:"+6 ile +12 susuzluk"},{source:"Süt içme",gain:"+20 susuzluk + tüm efektleri temizler"},{source:"Yağmur toplayıcıdan",gain:"+6 ile +12 susuzluk (temiz)"}],
+    deathTitle:"Ölüm Sonrası",deathText:"Ölüm cezası uygulanır: susuzluk yarıya düşer (min 20, max 60)."},
+  hud:{title:"HUD Sistemi",editTitle:"HUD'u Özelleştirme",editText:"/bardüzenle (veya /baredit, /hudedit) komutuyla arayüz paneli açılır. Panelden her HUD elemanı tek tek açılıp kapatılabilir.",
+    elementsTitle:"Kapatılabilir HUD Elemanları",elements:["Can Barı","Açlık Barı","Susuzluk Barı","Hotbar","Zırh Göstergesi","İkinci El (Offhand)","Karakter Modeli","Oyun Modu Göstergesi"],
+    positionsTitle:"HUD Konumları",positions:[{name:"Barlar",desc:"Can, açlık, susuzluk — sol alt / orta alt bölge"},{name:"Hotbar",desc:"Sağ alt, dikey düzen, küçük ölçekli"},{name:"Zırhlar",desc:"Hotbar'ın hemen yanında, dikey sıralı"},{name:"Karakter",desc:"Sağ alt köşede mini 3D model"},{name:"Oyun modu",desc:"Ekranın özel bölgesinde ikon"}]},
+  items:{title:"Eşyalar ve Bloklar",itemsTitle:"Eşyalar",itemRows:[
+    {name:"Kırmızı Kese (15L)",desc:"Küçük kapasiteli su kesesi"},{name:"Yeşil Kese (35L)",desc:"Orta kapasiteli su kesesi"},{name:"Gri Kese (55L)",desc:"Büyük su kesesi"},{name:"Turuncu Kese (75L)",desc:"Gelişmiş su kesesi"},{name:"Efsanevi Mor Kese (100L)",desc:"Maksimum kapasite, efsanevi kalite"},{name:"Temiz Su Kovası",desc:"Kazanlara doldurulabilir"},{name:"Sönük Meşale (eşya)",desc:"Yakıt gerektiren meşale"}],
+    blocksTitle:"Bloklar",blockRows:[{name:"Temiz Su Kaynağı",desc:"Yakınındaki suyu arıtır (5 blok yarıçap)"},{name:"Kirli Su Kaynağı",desc:"Zehirli bölge oluşturur"},{name:"Yağmur Toplayıcı",desc:"Yağmurla otomatik su biriktirir"},{name:"Sönük Meşale (blok)",desc:"Yakıt eklenince yanabilir meşale"}],
+    effectsTitle:"Özel Efektler",effectRows:[{name:"Dehidrasyon",desc:"Susuzluk 0'da oluşur, sürekli hasar verir"},{name:"İshal",desc:"Kirli su sonucu oluşur, su kazanımı azalır"}]},
+  commands:{title:"Komutlar",rows:[
+    {cmd:"/bardüzenle",desc:"HUD özelleştirme panelini açar"},{cmd:"/baredit",desc:"/bardüzenle ile aynı (İngilizce)"},{cmd:"/hudedit",desc:"/bardüzenle ile aynı (kısa alternatif)"},
+    {cmd:"/otur",desc:"Oyuncuyu oturma pozisyonuna alır"},{cmd:"/kalk",desc:"Oturma pozisyonundan kalkar"},{cmd:"/sirtustuuzan",desc:"Sırt üstü uzanma pozisyonuna geçer"},{cmd:"/sırtüstüuzan",desc:"/sirtustuuzan ile aynı (Türkçe karakter)"}],
+    note:"/otur ve /sirtustuuzan komutlarından çıkmak için Shift tuşuna basılabilir."},
+  keys:{title:"Klavye Kısayolları",rows:[{key:"G",action:"Su iç (bakılan su bloğu / kazan / kaynak)"},{key:"C",action:"Su kesesinden iç"},{key:"Shift + X",action:"Su kesesini doldur (su kaynağı yanında, çömelirken)"},{key:"ESC",action:"HUD panelini kapat"}],
+    note:"Tuş atamaları Ayarlar > Kontroller menüsünden değiştirilebilir. Kategori adı: \"Water is Life\"."},
+  config:{title:"Config Ayarları",intro:"Config dosyası sunucu klasörüne otomatik oluşturulur:",groups:[
+    {name:"[drain]",rows:[{key:"normalDrainTicks",value:"1800",desc:"Normal susama hızı (tick başına)"},{key:"sprintDrainTicks",value:"450",desc:"Koşarken susama hızı"},{key:"jumpDrainEnabled",value:"true",desc:"Zıplamada susuzluk azalsın mı"},{key:"jumpsPerThirstLoss",value:"10",desc:"Kaç zıplamada 1 susuzluk"},{key:"diarrheaDrainTicks",value:"1200",desc:"İshalde susama hızı"}]},
+    {name:"[environment]",rows:[{key:"hotBiomeDrainMultiplier",value:"1.5",desc:"Sıcak biyom çarpanı"},{key:"coldBiomeDrainMultiplier",value:"0.85",desc:"Soğuk biyom çarpanı"},{key:"netherDrainMultiplier",value:"1.8",desc:"Nether çarpanı"},{key:"rainDrainMultiplier",value:"0.9",desc:"Yağmur çarpanı"}]},
+    {name:"[drinking]",rows:[{key:"drinkCooldownMs",value:"4500",desc:"İçmeler arası bekleme (ms)"},{key:"cleanWaterMinGain",value:"6",desc:"Minimum susuzluk kazanımı"},{key:"cleanWaterMaxGain",value:"12",desc:"Maksimum susuzluk kazanımı"},{key:"outdoorWaterCleanChance",value:"0.20",desc:"Doğal suyun temiz çıkma şansı"},{key:"outdoorWaterPoisonChance",value:"0.80",desc:"Doğal suyun zehirli çıkma şansı"},{key:"pouchFillDurationMs",value:"4000",desc:"Kese doldurma süresi (ms)"},{key:"pouchFillLiters",value:"15",desc:"Her dolumda eklenen litre"}]}]},
+  install:{title:"Kurulum",reqTitle:"Gereksinimler",reqs:["Minecraft Java Edition 1.20.1","Minecraft Forge 47.x"],stepsTitle:"Adımlar",
+    steps:["Forge 47.x kurulumunu tamamla.",".jar dosyasını \"mods\" klasörüne koy.","Oyunu başlat.","Config dosyası otomatik oluşturulur (config/craftbornbar-server.toml)."],
+    mpTitle:"Çok Oyunculu Sunucularda",mpText:"Config dosyası sunucu tarafında geçerlidir. İstemciler yalnızca HUD modunu çalıştırır."},
+  footer:{text:"Water is Life — CraftBorn Bar Modu · Minecraft 1.20.1 Forge Modu · v2.0.0 · Yazar: Detroitov"},
+  langModal:{title:"Dil Seçin",subtitle:"Choose your language / Выберите язык / Choisissez votre langue / 言語を選択してください"}
+},
+en: {
+  nav:{brand:"Water is Life",tag:"CraftBorn Bar Mod",switchLabel:"Language"},
+  hero:{title:"Water is Life",subtitle:"Survival isn't only about fighting.",desc:"CraftBorn Bar Mod is a Forge mod for Minecraft 1.20.1 that adds thirst, a customizable HUD, sitting/lying down, and deeper survival mechanics.",badges:["Minecraft 1.20.1","Forge 47.x","5 Languages"],cta:"Explore Features"},
+  about:{title:"What Is This Mod?",lead:"Water is Life (CraftBorn Bar Mod) is a Forge mod built to deepen vanilla Minecraft's survival experience.",points:[
+    "Thirst system: drinking water is required; ignoring it triggers weakness, slowness, dizziness, and dehydration in sequence.",
+    "Water sources: natural water is risky. Getting clean water requires a cauldron, a rain collector, or purification.",
+    "Improved HUD: health, hunger, and thirst bars and the player model have been redesigned and can be toggled on or off.",
+    "Sitting / lying down: players can sit anywhere or lie down on their back.",
+    "Multilingual support: Turkish, English, Russian, French, and Japanese."]},
+  features:{title:"Features",items:[
+    {icon:"💧",title:"Thirst System",desc:"A realistic thirst mechanic. Thirst drops while walking, sprinting, jumping, and taking damage. Biome temperature and weather change the rate."},
+    {icon:"🧪",title:"Water Quality",desc:"Natural river or lake water carries an 80% chance of poisoning. For safe drinking water, use a cauldron, rain collector, clean water source block, or a purified water pouch."},
+    {icon:"🖥️",title:"Custom HUD",desc:"The vanilla HUD is disabled. In its place: health, hunger, and thirst bars, a custom hotbar, armor indicator, character model, and game mode indicator. Configure it all with /baredit."},
+    {icon:"🎒",title:"Water Pouches",desc:"Five pouch capacities are available. Fill one next to a water source with Shift + X, and drink with the C key. Dirty water can be purified in a furnace."},
+    {icon:"🪑",title:"Sit / Lie Down",desc:"Use /otur to sit and /kalk to stand up. /sirtustuuzan lets you lie on your back. Press Shift to exit either position."},
+    {icon:"🧱",title:"Blocks",desc:"A Clean Water Source purifies nearby water. A Dirty Water Source creates a poisoned area. A Rain Collector gathers water automatically during rain. A Dim Torch needs fuel to burn."},
+    {icon:"⚠️",title:"Status Effects",desc:"Dehydration: a lasting effect once thirst hits 0. Diarrhea: caused by dirty water — water gain is halved and thirst drains faster."}]},
+  thirst:{title:"Thirst System — In Depth",scaleTitle:"Thirst Scale (Maximum: 100)",
+    thresholds:[{value:"≤ 30",label:"Weakness effect"},{value:"≤ 20",label:"Slowness effect"},{value:"≤ 10",label:"Dizziness effect"},{value:"= 0",label:"Dehydration effect (ongoing damage)"}],
+    causesTitle:"What Drains Thirst",causes:["Gradually over time (default: 1 point every 90 seconds)","Faster while sprinting (default: 1 point every 22.5 seconds)","1 point every 10 jumps","1 point on taking damage (with a 5-second cooldown)","Much faster while the diarrhea effect is active"],
+    biomeTitle:"Biome Effects",biomes:[{name:"Hot biomes (desert, savanna, etc.)",mult:"×1.5 rate"},{name:"Cold biomes (tundra, snow)",mult:"×0.85 rate"},{name:"The Nether",mult:"×1.8 rate"},{name:"In the rain",mult:"×0.9 rate"}],
+    sourcesTitle:"Water Sources and Gain",sourceRows:[{source:"Drinking from a cauldron",gain:"+6 to +12 thirst"},{source:"From a purified source",gain:"+6 to +12 thirst"},{source:"Natural water (lucky, 20%)",gain:"+6 to +12 thirst"},{source:"Natural water (poisoned, 80%)",gain:"Poisoning + minimal gain"},{source:"Drinking from a pouch",gain:"+6 to +12 thirst"},{source:"Drinking milk",gain:"+20 thirst + clears all effects"},{source:"From a rain collector",gain:"+6 to +12 thirst (clean)"}],
+    deathTitle:"After Death",deathText:"A death penalty applies: thirst is halved (minimum 20, maximum 60)."},
+  hud:{title:"HUD System",editTitle:"Customizing the HUD",editText:"The /baredit command (or /bardüzenle, /hudedit) opens the interface panel. Each HUD element can be toggled on or off individually.",
+    elementsTitle:"Toggleable HUD Elements",elements:["Health Bar","Hunger Bar","Thirst Bar","Hotbar","Armor Indicator","Offhand Slot","Character Model","Game Mode Indicator"],
+    positionsTitle:"HUD Layout",positions:[{name:"Bars",desc:"Health, hunger, thirst — bottom-left / bottom-center"},{name:"Hotbar",desc:"Bottom-right, vertical layout, small scale"},{name:"Armor",desc:"Right next to the hotbar, stacked vertically"},{name:"Character",desc:"Mini 3D model in the bottom-right corner"},{name:"Game mode",desc:"Icon in its own screen area"}]},
+  items:{title:"Items and Blocks",itemsTitle:"Items",itemRows:[
+    {name:"Red Pouch (15L)",desc:"Small-capacity water pouch"},{name:"Green Pouch (35L)",desc:"Medium-capacity water pouch"},{name:"Gray Pouch (55L)",desc:"Large water pouch"},{name:"Orange Pouch (75L)",desc:"Advanced water pouch"},{name:"Legendary Purple Pouch (100L)",desc:"Maximum capacity, legendary quality"},{name:"Clean Water Bucket",desc:"Can be poured into cauldrons"},{name:"Dim Torch (item)",desc:"Torch that requires fuel"}],
+    blocksTitle:"Blocks",blockRows:[{name:"Clean Water Source",desc:"Purifies nearby water (5-block radius)"},{name:"Dirty Water Source",desc:"Creates a poisoned area"},{name:"Rain Collector",desc:"Automatically gathers water during rain"},{name:"Dim Torch (block)",desc:"Burns once fuel is added"}],
+    effectsTitle:"Special Effects",effectRows:[{name:"Dehydration",desc:"Occurs at 0 thirst; deals continuous damage"},{name:"Diarrhea",desc:"Caused by dirty water; reduces water gain"}]},
+  commands:{title:"Commands",rows:[
+    {cmd:"/bardüzenle",desc:"Opens the HUD customization panel"},{cmd:"/baredit",desc:"Same as /bardüzenle (English)"},{cmd:"/hudedit",desc:"Same as /bardüzenle (short alternative)"},
+    {cmd:"/otur",desc:"Puts the player into a sitting position"},{cmd:"/kalk",desc:"Stands up from sitting"},{cmd:"/sirtustuuzan",desc:"Switches to lying on your back"},{cmd:"/sırtüstüuzan",desc:"Same as /sirtustuuzan (Turkish characters)"}],
+    note:"Press Shift to exit /otur or /sirtustuuzan."},
+  keys:{title:"Keyboard Shortcuts",rows:[{key:"G",action:"Drink water (from the water block / cauldron / source you're looking at)"},{key:"C",action:"Drink from a water pouch"},{key:"Shift + X",action:"Fill a water pouch (next to a water source, while crouching)"},{key:"ESC",action:"Close the HUD panel"}],
+    note:"Key bindings can be changed under Options > Controls, in the \"Water is Life\" category."},
+  config:{title:"Config Settings",intro:"The config file is generated automatically in the server folder:",groups:[
+    {name:"[drain]",rows:[{key:"normalDrainTicks",value:"1800",desc:"Normal thirst drain rate (in ticks)"},{key:"sprintDrainTicks",value:"450",desc:"Thirst drain rate while sprinting"},{key:"jumpDrainEnabled",value:"true",desc:"Whether jumping drains thirst"},{key:"jumpsPerThirstLoss",value:"10",desc:"Jumps per 1 thirst point lost"},{key:"diarrheaDrainTicks",value:"1200",desc:"Thirst drain rate while diarrhea is active"}]},
+    {name:"[environment]",rows:[{key:"hotBiomeDrainMultiplier",value:"1.5",desc:"Hot biome multiplier"},{key:"coldBiomeDrainMultiplier",value:"0.85",desc:"Cold biome multiplier"},{key:"netherDrainMultiplier",value:"1.8",desc:"Nether multiplier"},{key:"rainDrainMultiplier",value:"0.9",desc:"Rain multiplier"}]},
+    {name:"[drinking]",rows:[{key:"drinkCooldownMs",value:"4500",desc:"Cooldown between drinks (ms)"},{key:"cleanWaterMinGain",value:"6",desc:"Minimum thirst gain"},{key:"cleanWaterMaxGain",value:"12",desc:"Maximum thirst gain"},{key:"outdoorWaterCleanChance",value:"0.20",desc:"Chance natural water is clean"},{key:"outdoorWaterPoisonChance",value:"0.80",desc:"Chance natural water is poisoned"},{key:"pouchFillDurationMs",value:"4000",desc:"Pouch fill duration (ms)"},{key:"pouchFillLiters",value:"15",desc:"Liters added per fill"}]}]},
+  install:{title:"Installation",reqTitle:"Requirements",reqs:["Minecraft Java Edition 1.20.1","Minecraft Forge 47.x"],stepsTitle:"Steps",
+    steps:["Install Forge 47.x.","Place the .jar file in your \"mods\" folder.","Launch the game.","The config file is generated automatically (config/craftbornbar-server.toml)."],
+    mpTitle:"On Multiplayer Servers",mpText:"The config file applies on the server side. Clients only run the HUD mode."},
+  footer:{text:"Water is Life — CraftBorn Bar Mod · Minecraft 1.20.1 Forge Mod · v2.0.0 · Author: Detroitov"},
+  langModal:{title:"Choose Your Language",subtitle:"Dil seçin / Выберите язык / Choisissez votre langue / 言語を選択してください"}
+},
+ru: {
+  nav:{brand:"Water is Life",tag:"Мод CraftBorn Bar",switchLabel:"Язык"},
+  hero:{title:"Water is Life",subtitle:"Выживание — это не только бои.",desc:"CraftBorn Bar Mod — это мод на Forge для Minecraft 1.20.1, добавляющий жажду, настраиваемый HUD, сидение/лежание и более глубокую механику выживания.",badges:["Minecraft 1.20.1","Forge 47.x","5 языков"],cta:"Изучить возможности"},
+  about:{title:"Что это за мод?",lead:"Water is Life (CraftBorn Bar Mod) — мод на Forge, созданный для углубления ванильного опыта выживания в Minecraft.",points:[
+    "Система жажды: пить воду обязательно; при игнорировании последовательно появляются слабость, замедление, головокружение и обезвоживание.",
+    "Источники воды: природная вода опасна. Для чистой воды нужен котёл, сборник дождевой воды или очистка.",
+    "Улучшенный HUD: полосы здоровья, голода и жажды, а также модель игрока переработаны и могут включаться и выключаться.",
+    "Сидение / лежание: игроки могут сесть где угодно или лечь на спину.",
+    "Поддержка нескольких языков: турецкий, английский, русский, французский и японский."]},
+  features:{title:"Возможности",items:[
+    {icon:"💧",title:"Система жажды",desc:"Реалистичная механика жажды. Жажда падает при ходьбе, беге, прыжках и получении урона. Температура биома и погода меняют скорость."},
+    {icon:"🧪",title:"Качество воды",desc:"Природная вода из рек и озёр с вероятностью 80% вызывает отравление. Для безопасной питьевой воды используйте котёл, сборник дождевой воды, блок чистого источника или очищенный бурдюк."},
+    {icon:"🖥️",title:"Особый HUD",desc:"Ванильный HUD отключён. Вместо него: полосы здоровья, голода и жажды, особый хотбар, индикатор брони, модель персонажа и индикатор режима игры. Настраивается командой /baredit."},
+    {icon:"🎒",title:"Бурдюки для воды",desc:"Доступно 5 бурдюков разной вместимости. Наполняется у источника воды через Shift + X, пьётся клавишей C. Грязную воду можно очистить в печи."},
+    {icon:"🪑",title:"Сидение / лежание",desc:"Команда /otur — сесть, /kalk — встать. /sirtustuuzan — лечь на спину. Shift позволяет выйти из любой позиции."},
+    {icon:"🧱",title:"Блоки",desc:"Блок чистого источника очищает воду поблизости. Блок грязного источника создаёт отравленную зону. Сборник дождевой воды собирает воду во время дождя. Потухший факел требует топлива."},
+    {icon:"⚠️",title:"Эффекты",desc:"Обезвоживание: длительный эффект при нулевой жажде. Диарея: возникает от грязной воды — восполнение воды снижается вдвое, а жажда падает быстрее."}]},
+  thirst:{title:"Система жажды — подробно",scaleTitle:"Шкала жажды (максимум: 100)",
+    thresholds:[{value:"≤ 30",label:"Эффект слабости"},{value:"≤ 20",label:"Эффект замедления"},{value:"≤ 10",label:"Эффект головокружения"},{value:"= 0",label:"Эффект обезвоживания (постоянный урон)"}],
+    causesTitle:"Причины снижения жажды",causes:["Постепенно со временем (по умолчанию: 1 пункт каждые 90 секунд)","Быстрее при беге (по умолчанию: 1 пункт каждые 22,5 секунды)","1 пункт за каждые 10 прыжков","1 пункт при получении урона (с перезарядкой 5 секунд)","Гораздо быстрее при активной диарее"],
+    biomeTitle:"Влияние биома",biomes:[{name:"Жаркие биомы (пустыня, саванна и т.д.)",mult:"×1.5 скорости"},{name:"Холодные биомы (тундра, снега)",mult:"×0.85 скорости"},{name:"Незер",mult:"×1.8 скорости"},{name:"Под дождём",mult:"×0.9 скорости"}],
+    sourcesTitle:"Источники воды и восполнение",sourceRows:[{source:"Питьё из котла",gain:"+6…+12 жажды"},{source:"Из очищенного источника",gain:"+6…+12 жажды"},{source:"Природная вода (удача, 20%)",gain:"+6…+12 жажды"},{source:"Природная вода (яд, 80%)",gain:"Отравление + минимум"},{source:"Питьё из бурдюка",gain:"+6…+12 жажды"},{source:"Питьё молока",gain:"+20 жажды + снимает все эффекты"},{source:"Из сборника дождя",gain:"+6…+12 жажды (чистая)"}],
+    deathTitle:"После смерти",deathText:"Применяется штраф: жажда снижается вдвое (минимум 20, максимум 60)."},
+  hud:{title:"Система HUD",editTitle:"Настройка HUD",editText:"Команда /baredit (или /bardüzenle, /hudedit) открывает панель интерфейса. Каждый элемент HUD можно включать и выключать отдельно.",
+    elementsTitle:"Отключаемые элементы HUD",elements:["Полоса здоровья","Полоса голода","Полоса жажды","Хотбар","Индикатор брони","Второй слот","Модель персонажа","Индикатор режима игры"],
+    positionsTitle:"Расположение HUD",positions:[{name:"Полосы",desc:"Здоровье, голод, жажда — слева внизу / по центру внизу"},{name:"Хотбар",desc:"Справа внизу, вертикально, уменьшенный масштаб"},{name:"Броня",desc:"Рядом с хотбаром, вертикальный ряд"},{name:"Персонаж",desc:"Мини-модель 3D в правом нижнем углу"},{name:"Режим игры",desc:"Иконка в отдельной области экрана"}]},
+  items:{title:"Предметы и блоки",itemsTitle:"Предметы",itemRows:[
+    {name:"Красный бурдюк (15Л)",desc:"Бурдюк малой ёмкости"},{name:"Зелёный бурдюк (35Л)",desc:"Бурдюк средней ёмкости"},{name:"Серый бурдюк (55Л)",desc:"Большой бурдюк"},{name:"Оранжевый бурдюк (75Л)",desc:"Улучшенный бурдюк"},{name:"Легендарный фиолетовый бурдюк (100Л)",desc:"Максимальная ёмкость, легендарное качество"},{name:"Ведро чистой воды",desc:"Можно заливать в котлы"},{name:"Потухший факел (предмет)",desc:"Факел, требующий топлива"}],
+    blocksTitle:"Блоки",blockRows:[{name:"Блок чистого источника",desc:"Очищает воду поблизости (радиус 5 блоков)"},{name:"Блок грязного источника",desc:"Создаёт отравленную зону"},{name:"Сборник дождевой воды",desc:"Автоматически собирает воду во время дождя"},{name:"Потухший факел (блок)",desc:"Загорается после добавления топлива"}],
+    effectsTitle:"Особые эффекты",effectRows:[{name:"Обезвоживание",desc:"Возникает при нулевой жажде, наносит постоянный урон"},{name:"Диарея",desc:"Возникает из-за грязной воды, снижает восполнение воды"}]},
+  commands:{title:"Команды",rows:[
+    {cmd:"/bardüzenle",desc:"Открывает панель настройки HUD"},{cmd:"/baredit",desc:"То же, что /bardüzenle (на английском)"},{cmd:"/hudedit",desc:"То же, что /bardüzenle (короткий вариант)"},
+    {cmd:"/otur",desc:"Переводит игрока в положение сидя"},{cmd:"/kalk",desc:"Встать из положения сидя"},{cmd:"/sirtustuuzan",desc:"Переход в положение лёжа на спине"},{cmd:"/sırtüstüuzan",desc:"То же, что /sirtustuuzan (турецкие символы)"}],
+    note:"Чтобы выйти из /otur или /sirtustuuzan, нажмите Shift."},
+  keys:{title:"Горячие клавиши",rows:[{key:"G",action:"Пить воду (из блока воды / котла / источника, на который смотрите)"},{key:"C",action:"Пить из бурдюка"},{key:"Shift + X",action:"Наполнить бурдюк (у источника воды, в приседе)"},{key:"ESC",action:"Закрыть панель HUD"}],
+    note:"Привязки клавиш можно изменить в разделе Настройки > Управление, категория «Water is Life»."},
+  config:{title:"Настройки конфигурации",intro:"Файл конфигурации создаётся автоматически в папке сервера:",groups:[
+    {name:"[drain]",rows:[{key:"normalDrainTicks",value:"1800",desc:"Обычная скорость жажды (в тиках)"},{key:"sprintDrainTicks",value:"450",desc:"Скорость жажды при беге"},{key:"jumpDrainEnabled",value:"true",desc:"Снижается ли жажда от прыжков"},{key:"jumpsPerThirstLoss",value:"10",desc:"Прыжков на 1 пункт жажды"},{key:"diarrheaDrainTicks",value:"1200",desc:"Скорость жажды при диарее"}]},
+    {name:"[environment]",rows:[{key:"hotBiomeDrainMultiplier",value:"1.5",desc:"Множитель жаркого биома"},{key:"coldBiomeDrainMultiplier",value:"0.85",desc:"Множитель холодного биома"},{key:"netherDrainMultiplier",value:"1.8",desc:"Множитель Незера"},{key:"rainDrainMultiplier",value:"0.9",desc:"Множитель дождя"}]},
+    {name:"[drinking]",rows:[{key:"drinkCooldownMs",value:"4500",desc:"Задержка между глотками (мс)"},{key:"cleanWaterMinGain",value:"6",desc:"Минимальное восполнение жажды"},{key:"cleanWaterMaxGain",value:"12",desc:"Максимальное восполнение жажды"},{key:"outdoorWaterCleanChance",value:"0.20",desc:"Шанс, что природная вода чистая"},{key:"outdoorWaterPoisonChance",value:"0.80",desc:"Шанс, что природная вода отравлена"},{key:"pouchFillDurationMs",value:"4000",desc:"Время наполнения бурдюка (мс)"},{key:"pouchFillLiters",value:"15",desc:"Литров за одно наполнение"}]}]},
+  install:{title:"Установка",reqTitle:"Требования",reqs:["Minecraft Java Edition 1.20.1","Minecraft Forge 47.x"],stepsTitle:"Шаги",
+    steps:["Установите Forge 47.x.","Поместите файл .jar в папку «mods».","Запустите игру.","Файл конфигурации создастся автоматически (config/craftbornbar-server.toml)."],
+    mpTitle:"На многопользовательских серверах",mpText:"Файл конфигурации действует на стороне сервера. Клиенты используют только режим HUD."},
+  footer:{text:"Water is Life — CraftBorn Bar Mod · Мод Minecraft 1.20.1 Forge · v2.0.0 · Автор: Detroitov"},
+  langModal:{title:"Выберите язык",subtitle:"Dil seçin / Choose your language / Choisissez votre langue / 言語を選択してください"}
+},
+fr: {
+  nav:{brand:"Water is Life",tag:"Mod CraftBorn Bar",switchLabel:"Langue"},
+  hero:{title:"Water is Life",subtitle:"Survivre, ce n'est pas seulement se battre.",desc:"CraftBorn Bar Mod est un mod Forge pour Minecraft 1.20.1 qui ajoute la soif, un HUD personnalisable, la possibilité de s'asseoir ou de s'allonger, et une mécanique de survie plus poussée.",badges:["Minecraft 1.20.1","Forge 47.x","5 langues"],cta:"Découvrir les fonctionnalités"},
+  about:{title:"Qu'est-ce que ce mod ?",lead:"Water is Life (CraftBorn Bar Mod) est un mod Forge conçu pour approfondir l'expérience de survie du Minecraft vanilla.",points:[
+    "Système de soif : boire de l'eau est obligatoire ; l'ignorer déclenche successivement faiblesse, lenteur, vertiges puis déshydratation.",
+    "Sources d'eau : l'eau naturelle est risquée. De l'eau propre nécessite un chaudron, un collecteur de pluie ou une purification.",
+    "HUD amélioré : les barres de vie, de faim et de soif ainsi que le modèle du joueur ont été repensés et peuvent être activés ou désactivés.",
+    "S'asseoir / s'allonger : les joueurs peuvent s'asseoir n'importe où ou s'allonger sur le dos.",
+    "Support multilingue : turc, anglais, russe, français et japonais."]},
+  features:{title:"Fonctionnalités",items:[
+    {icon:"💧",title:"Système de soif",desc:"Une mécanique de soif réaliste. La soif diminue en marchant, en courant, en sautant et en subissant des dégâts. La température du biome et la météo modifient la vitesse."},
+    {icon:"🧪",title:"Qualité de l'eau",desc:"L'eau naturelle des rivières et lacs comporte 80 % de risque d'empoisonnement. Pour boire en toute sécurité, utilisez un chaudron, un collecteur de pluie, un bloc de source d'eau propre ou une gourde purifiée."},
+    {icon:"🖥️",title:"HUD personnalisé",desc:"Le HUD vanilla est désactivé. À la place : barres de vie, de faim et de soif, barre d'accès rapide personnalisée, indicateur d'armure, modèle du personnage et indicateur de mode de jeu. Se configure avec /baredit."},
+    {icon:"🎒",title:"Gourdes d'eau",desc:"Cinq capacités de gourde sont disponibles. Remplissez-en une près d'une source d'eau avec Shift + X, et buvez avec la touche C. L'eau sale peut être purifiée dans un four."},
+    {icon:"🪑",title:"S'asseoir / s'allonger",desc:"/otur pour s'asseoir, /kalk pour se relever. /sirtustuuzan pour s'allonger sur le dos. Appuyez sur Shift pour quitter l'une ou l'autre position."},
+    {icon:"🧱",title:"Blocs",desc:"Une Source d'eau propre purifie l'eau à proximité. Une Source d'eau sale crée une zone empoisonnée. Un Collecteur de pluie récupère l'eau automatiquement pendant la pluie. Une Torche éteinte a besoin de combustible."},
+    {icon:"⚠️",title:"Effets",desc:"Déshydratation : effet durable une fois la soif à 0. Diarrhée : causée par l'eau sale — le gain d'eau est réduit de moitié et la soif diminue plus vite."}]},
+  thirst:{title:"Système de soif — en détail",scaleTitle:"Échelle de soif (maximum : 100)",
+    thresholds:[{value:"≤ 30",label:"Effet de faiblesse"},{value:"≤ 20",label:"Effet de lenteur"},{value:"≤ 10",label:"Effet de vertiges"},{value:"= 0",label:"Effet de déshydratation (dégâts continus)"}],
+    causesTitle:"Causes de la baisse de soif",causes:["Progressivement avec le temps (par défaut : 1 point toutes les 90 secondes)","Plus vite en sprintant (par défaut : 1 point toutes les 22,5 secondes)","1 point tous les 10 sauts","1 point en cas de dégâts (avec un délai de 5 secondes)","Bien plus vite avec l'effet de diarrhée actif"],
+    biomeTitle:"Effet du biome",biomes:[{name:"Biomes chauds (désert, savane, etc.)",mult:"vitesse ×1,5"},{name:"Biomes froids (toundra, neiges)",mult:"vitesse ×0,85"},{name:"Le Nether",mult:"vitesse ×1,8"},{name:"Sous la pluie",mult:"vitesse ×0,9"}],
+    sourcesTitle:"Sources d'eau et gain",sourceRows:[{source:"Boire au chaudron",gain:"+6 à +12 de soif"},{source:"Depuis une source purifiée",gain:"+6 à +12 de soif"},{source:"Eau naturelle (chance, 20 %)",gain:"+6 à +12 de soif"},{source:"Eau naturelle (empoisonnée, 80 %)",gain:"Empoisonnement + gain minimal"},{source:"Boire à la gourde",gain:"+6 à +12 de soif"},{source:"Boire du lait",gain:"+20 de soif + retire tous les effets"},{source:"Depuis un collecteur de pluie",gain:"+6 à +12 de soif (propre)"}],
+    deathTitle:"Après la mort",deathText:"Une pénalité de mort s'applique : la soif est réduite de moitié (minimum 20, maximum 60)."},
+  hud:{title:"Système de HUD",editTitle:"Personnaliser le HUD",editText:"La commande /baredit (ou /bardüzenle, /hudedit) ouvre le panneau d'interface. Chaque élément du HUD peut être activé ou désactivé individuellement.",
+    elementsTitle:"Éléments de HUD désactivables",elements:["Barre de vie","Barre de faim","Barre de soif","Barre d'accès rapide","Indicateur d'armure","Emplacement secondaire","Modèle du personnage","Indicateur de mode de jeu"],
+    positionsTitle:"Disposition du HUD",positions:[{name:"Barres",desc:"Vie, faim, soif — en bas à gauche / en bas au centre"},{name:"Barre d'accès rapide",desc:"En bas à droite, disposition verticale, échelle réduite"},{name:"Armure",desc:"Juste à côté de la barre d'accès rapide, empilée verticalement"},{name:"Personnage",desc:"Mini-modèle 3D dans le coin inférieur droit"},{name:"Mode de jeu",desc:"Icône dans sa propre zone de l'écran"}]},
+  items:{title:"Objets et blocs",itemsTitle:"Objets",itemRows:[
+    {name:"Gourde rouge (15L)",desc:"Gourde de petite capacité"},{name:"Gourde verte (35L)",desc:"Gourde de capacité moyenne"},{name:"Gourde grise (55L)",desc:"Grande gourde"},{name:"Gourde orange (75L)",desc:"Gourde avancée"},{name:"Gourde violette légendaire (100L)",desc:"Capacité maximale, qualité légendaire"},{name:"Seau d'eau propre",desc:"Peut être versé dans les chaudrons"},{name:"Torche éteinte (objet)",desc:"Torche nécessitant du combustible"}],
+    blocksTitle:"Blocs",blockRows:[{name:"Source d'eau propre",desc:"Purifie l'eau à proximité (rayon de 5 blocs)"},{name:"Source d'eau sale",desc:"Crée une zone empoisonnée"},{name:"Collecteur de pluie",desc:"Récupère l'eau automatiquement pendant la pluie"},{name:"Torche éteinte (bloc)",desc:"S'allume une fois du combustible ajouté"}],
+    effectsTitle:"Effets spéciaux",effectRows:[{name:"Déshydratation",desc:"Survient à 0 de soif, inflige des dégâts continus"},{name:"Diarrhée",desc:"Causée par l'eau sale, réduit le gain d'eau"}]},
+  commands:{title:"Commandes",rows:[
+    {cmd:"/bardüzenle",desc:"Ouvre le panneau de personnalisation du HUD"},{cmd:"/baredit",desc:"Identique à /bardüzenle (en anglais)"},{cmd:"/hudedit",desc:"Identique à /bardüzenle (alternative courte)"},
+    {cmd:"/otur",desc:"Met le joueur en position assise"},{cmd:"/kalk",desc:"Se relève de la position assise"},{cmd:"/sirtustuuzan",desc:"Passe en position allongée sur le dos"},{cmd:"/sırtüstüuzan",desc:"Identique à /sirtustuuzan (caractères turcs)"}],
+    note:"Appuyez sur Shift pour quitter /otur ou /sirtustuuzan."},
+  keys:{title:"Raccourcis clavier",rows:[{key:"G",action:"Boire de l'eau (bloc d'eau / chaudron / source visé)"},{key:"C",action:"Boire à la gourde"},{key:"Shift + X",action:"Remplir la gourde (près d'une source d'eau, en s'accroupissant)"},{key:"ESC",action:"Fermer le panneau HUD"}],
+    note:"Les raccourcis peuvent être modifiés dans Options > Commandes, catégorie « Water is Life »."},
+  config:{title:"Paramètres de configuration",intro:"Le fichier de configuration est généré automatiquement dans le dossier du serveur :",groups:[
+    {name:"[drain]",rows:[{key:"normalDrainTicks",value:"1800",desc:"Vitesse normale de la soif (en ticks)"},{key:"sprintDrainTicks",value:"450",desc:"Vitesse de la soif en sprintant"},{key:"jumpDrainEnabled",value:"true",desc:"La soif diminue-t-elle en sautant"},{key:"jumpsPerThirstLoss",value:"10",desc:"Nombre de sauts pour perdre 1 point de soif"},{key:"diarrheaDrainTicks",value:"1200",desc:"Vitesse de la soif avec la diarrhée"}]},
+    {name:"[environment]",rows:[{key:"hotBiomeDrainMultiplier",value:"1.5",desc:"Multiplicateur biome chaud"},{key:"coldBiomeDrainMultiplier",value:"0.85",desc:"Multiplicateur biome froid"},{key:"netherDrainMultiplier",value:"1.8",desc:"Multiplicateur Nether"},{key:"rainDrainMultiplier",value:"0.9",desc:"Multiplicateur de pluie"}]},
+    {name:"[drinking]",rows:[{key:"drinkCooldownMs",value:"4500",desc:"Délai entre les gorgées (ms)"},{key:"cleanWaterMinGain",value:"6",desc:"Gain minimum de soif"},{key:"cleanWaterMaxGain",value:"12",desc:"Gain maximum de soif"},{key:"outdoorWaterCleanChance",value:"0.20",desc:"Chance que l'eau naturelle soit propre"},{key:"outdoorWaterPoisonChance",value:"0.80",desc:"Chance que l'eau naturelle soit empoisonnée"},{key:"pouchFillDurationMs",value:"4000",desc:"Durée de remplissage de la gourde (ms)"},{key:"pouchFillLiters",value:"15",desc:"Litres ajoutés par remplissage"}]}]},
+  install:{title:"Installation",reqTitle:"Prérequis",reqs:["Minecraft Java Edition 1.20.1","Minecraft Forge 47.x"],stepsTitle:"Étapes",
+    steps:["Installez Forge 47.x.","Placez le fichier .jar dans le dossier « mods ».","Lancez le jeu.","Le fichier de configuration est généré automatiquement (config/craftbornbar-server.toml)."],
+    mpTitle:"Sur les serveurs multijoueurs",mpText:"Le fichier de configuration s'applique côté serveur. Les clients n'exécutent que le mode HUD."},
+  footer:{text:"Water is Life — CraftBorn Bar Mod · Mod Forge Minecraft 1.20.1 · v2.0.0 · Auteur : Detroitov"},
+  langModal:{title:"Choisissez votre langue",subtitle:"Dil seçin / Choose your language / Выберите язык / 言語を選択してください"}
+},
+ja: {
+  nav:{brand:"Water is Life",tag:"CraftBorn Bar Mod",switchLabel:"言語"},
+  hero:{title:"Water is Life",subtitle:"サバイバルは戦うことだけではない。",desc:"Water is Life（CraftBorn Bar Mod）は、Minecraft 1.20.1向けのForge MODで、喉の渇き、カスタマイズ可能なHUD、座る・横たわる動作、そしてより深いサバイバル要素を追加します。",badges:["Minecraft 1.20.1","Forge 47.x","5言語対応"],cta:"機能を見る"},
+  about:{title:"このMODについて",lead:"Water is Life（CraftBorn Bar Mod）は、バニラのMinecraftのサバイバル体験をより深めるために作られたForge MODです。",points:[
+    "喉の渇きシステム：水を飲むことが必須になります。放置すると衰弱、鈍化、めまい、脱水症状が順番に発生します。",
+    "水源：自然の水は危険です。安全な水を得るには大釜、雨水収集機、または浄化が必要です。",
+    "改良されたHUD：体力・満腹度・喉の渇きバーとプレイヤーモデルが再設計され、個別にオン/オフできます。",
+    "座る・横たわる：プレイヤーはどこでも座ったり、仰向けに横たわったりできます。",
+    "多言語対応：トルコ語、英語、ロシア語、フランス語、日本語。"]},
+  features:{title:"機能",items:[
+    {icon:"💧",title:"喉の渇きシステム",desc:"リアルな喉の渇きの仕組み。歩く、走る、ジャンプする、ダメージを受けると喉の渇きが減少します。バイオームの気温や天候によって速度が変化します。"},
+    {icon:"🧪",title:"水質",desc:"川や湖の自然水は80%の確率で中毒のリスクがあります。安全な飲み水には大釜、雨水収集機、きれいな水源ブロック、または浄化された水袋を使用してください。"},
+    {icon:"🖥️",title:"専用HUD",desc:"バニラのHUDは無効化されます。代わりに体力・満腹度・喉の渇きバー、専用ホットバー、防具インジケーター、キャラクターモデル、ゲームモードインジケーターが表示されます。/bareditでカスタマイズ可能です。"},
+    {icon:"🎒",title:"水袋",desc:"5種類の容量の水袋があります。水源の近くでShift + Xで補充し、Cキーで飲みます。汚れた水はかまどで浄化できます。"},
+    {icon:"🪑",title:"座る・横たわる",desc:"/oturで座り、/kalkで立ち上がります。/sirtustuuzanで仰向けに横たわります。Shiftキーでどちらの姿勢からも解除できます。"},
+    {icon:"🧱",title:"ブロック",desc:"きれいな水源ブロックは近くの水を浄化します。汚れた水源ブロックは中毒エリアを作ります。雨水収集機は雨の間に自動で水を集めます。消えた松明には燃料が必要です。"},
+    {icon:"⚠️",title:"エフェクト",desc:"脱水症状：喉の渇きが0になると発生する持続効果。下痢：汚れた水が原因で発生し、水分補給量が半減し、喉の渇きの減少が速くなります。"}]},
+  thirst:{title:"喉の渇きシステム — 詳細",scaleTitle:"喉の渇きゲージ（最大値：100）",
+    thresholds:[{value:"≤ 30",label:"衰弱効果"},{value:"≤ 20",label:"鈍化効果"},{value:"≤ 10",label:"めまい効果"},{value:"= 0",label:"脱水症状効果（継続ダメージ）"}],
+    causesTitle:"喉の渇きが減少する原因",causes:["時間経過とともに緩やかに（デフォルト：90秒ごとに1ポイント）","ダッシュ中はより速く（デフォルト：22.5秒ごとに1ポイント）","10回ジャンプするごとに1ポイント","ダメージを受けると1ポイント（5秒のクールダウンあり）","下痢の効果中ははるかに速く減少"],
+    biomeTitle:"バイオームの影響",biomes:[{name:"高温バイオーム（砂漠、サバンナなど）",mult:"速度×1.5"},{name:"寒冷バイオーム（ツンドラ、雪原）",mult:"速度×0.85"},{name:"ネザー",mult:"速度×1.8"},{name:"雨の中",mult:"速度×0.9"}],
+    sourcesTitle:"水源と回復量",sourceRows:[{source:"大釜から飲む",gain:"喉の渇き +6〜+12"},{source:"浄化された水源から",gain:"喉の渇き +6〜+12"},{source:"自然水（幸運、20%）",gain:"喉の渇き +6〜+12"},{source:"自然水（中毒、80%）",gain:"中毒＋わずかな回復"},{source:"水袋から飲む",gain:"喉の渇き +6〜+12"},{source:"牛乳を飲む",gain:"喉の渇き +20＋全効果を解除"},{source:"雨水収集機から",gain:"喉の渇き +6〜+12（清潔）"}],
+    deathTitle:"死亡後",deathText:"死亡ペナルティが適用され、喉の渇きが半分になります（最小20、最大60）。"},
+  hud:{title:"HUDシステム",editTitle:"HUDのカスタマイズ",editText:"/bareditコマンド（または/bardüzenle、/hudedit）でインターフェースパネルが開きます。各HUD要素は個別にオン/オフできます。",
+    elementsTitle:"オン/オフ可能なHUD要素",elements:["体力バー","満腹度バー","喉の渇きバー","ホットバー","防具インジケーター","オフハンドスロット","キャラクターモデル","ゲームモードインジケーター"],
+    positionsTitle:"HUDの配置",positions:[{name:"バー類",desc:"体力・満腹度・喉の渇き — 左下／中央下部"},{name:"ホットバー",desc:"右下、縦配置、小さめのスケール"},{name:"防具",desc:"ホットバーのすぐ横に縦に並ぶ"},{name:"キャラクター",desc:"右下隅のミニ3Dモデル"},{name:"ゲームモード",desc:"画面専用エリアのアイコン"}]},
+  items:{title:"アイテムとブロック",itemsTitle:"アイテム",itemRows:[
+    {name:"赤い水袋（15L）",desc:"小容量の水袋"},{name:"緑の水袋（35L）",desc:"中容量の水袋"},{name:"灰色の水袋（55L）",desc:"大容量の水袋"},{name:"オレンジの水袋（75L）",desc:"上級水袋"},{name:"伝説の紫の水袋（100L）",desc:"最大容量、伝説品質"},{name:"きれいな水入りバケツ",desc:"大釜に注ぐことができる"},{name:"消えた松明（アイテム）",desc:"燃料が必要な松明"}],
+    blocksTitle:"ブロック",blockRows:[{name:"きれいな水源ブロック",desc:"近くの水を浄化する（半径5ブロック）"},{name:"汚れた水源ブロック",desc:"中毒エリアを作る"},{name:"雨水収集機",desc:"雨の間に自動で水を集める"},{name:"消えた松明（ブロック）",desc:"燃料を追加すると燃える"}],
+    effectsTitle:"特殊効果",effectRows:[{name:"脱水症状",desc:"喉の渇きが0のときに発生し、継続的にダメージを与える"},{name:"下痢",desc:"汚れた水が原因で発生し、水分補給量が減少する"}]},
+  commands:{title:"コマンド",rows:[
+    {cmd:"/bardüzenle",desc:"HUDカスタマイズパネルを開く"},{cmd:"/baredit",desc:"/bardüzenleと同じ（英語）"},{cmd:"/hudedit",desc:"/bardüzenleと同じ（短縮形）"},
+    {cmd:"/otur",desc:"プレイヤーを座った状態にする"},{cmd:"/kalk",desc:"座った状態から立ち上がる"},{cmd:"/sirtustuuzan",desc:"仰向けに横たわった状態に切り替える"},{cmd:"/sırtüstüuzan",desc:"/sirtustuuzanと同じ（トルコ語表記）"}],
+    note:"/oturや/sirtustuuzanから抜けるにはShiftキーを押します。"},
+  keys:{title:"キーボードショートカット",rows:[{key:"G",action:"水を飲む（見ている水ブロック／大釜／水源）"},{key:"C",action:"水袋から飲む"},{key:"Shift + X",action:"水袋を補充する（水源の近くでしゃがみながら）"},{key:"ESC",action:"HUDパネルを閉じる"}],
+    note:"キー割り当ては「設定 > 操作」メニューの「Water is Life」カテゴリーから変更できます。"},
+  config:{title:"コンフィグ設定",intro:"コンフィグファイルはサーバーフォルダに自動生成されます：",groups:[
+    {name:"[drain]",rows:[{key:"normalDrainTicks",value:"1800",desc:"通常時の喉の渇きの減少速度（Tick単位）"},{key:"sprintDrainTicks",value:"450",desc:"ダッシュ時の喉の渇きの減少速度"},{key:"jumpDrainEnabled",value:"true",desc:"ジャンプで喉の渇きが減少するか"},{key:"jumpsPerThirstLoss",value:"10",desc:"喉の渇きが1減るまでのジャンプ回数"},{key:"diarrheaDrainTicks",value:"1200",desc:"下痢中の喉の渇きの減少速度"}]},
+    {name:"[environment]",rows:[{key:"hotBiomeDrainMultiplier",value:"1.5",desc:"高温バイオームの倍率"},{key:"coldBiomeDrainMultiplier",value:"0.85",desc:"寒冷バイオームの倍率"},{key:"netherDrainMultiplier",value:"1.8",desc:"ネザーの倍率"},{key:"rainDrainMultiplier",value:"0.9",desc:"雨の倍率"}]},
+    {name:"[drinking]",rows:[{key:"drinkCooldownMs",value:"4500",desc:"飲用間のクールダウン（ミリ秒）"},{key:"cleanWaterMinGain",value:"6",desc:"最小の喉の渇き回復量"},{key:"cleanWaterMaxGain",value:"12",desc:"最大の喉の渇き回復量"},{key:"outdoorWaterCleanChance",value:"0.20",desc:"自然水がきれいになる確率"},{key:"outdoorWaterPoisonChance",value:"0.80",desc:"自然水が中毒になる確率"},{key:"pouchFillDurationMs",value:"4000",desc:"水袋の補充時間（ミリ秒）"},{key:"pouchFillLiters",value:"15",desc:"1回の補充で追加される水量（リットル）"}]}]},
+  install:{title:"インストール",reqTitle:"必要環境",reqs:["Minecraft Java Edition 1.20.1","Minecraft Forge 47.x"],stepsTitle:"手順",
+    steps:["Forge 47.xをインストールする。",".jarファイルを「mods」フォルダに入れる。","ゲームを起動する。","コンフィグファイルが自動生成される（config/craftbornbar-server.toml）。"],
+    mpTitle:"マルチプレイサーバーでは",mpText:"コンフィグファイルはサーバー側で適用されます。クライアントはHUDモードのみを実行します。"},
+  footer:{text:"Water is Life — CraftBorn Bar Mod · Minecraft 1.20.1 Forge MOD · v2.0.0 · 作者：Detroitov"},
+  langModal:{title:"言語を選択してください",subtitle:"Dil seçin / Choose your language / Выберите язык / Choisissez votre langue"}
+}
+};
+
+const htmlLangMap = {tr:"tr",en:"en",ru:"ru",fr:"fr",ja:"ja"};
+
+function el(tag, cls, html){
+  const e = document.createElement(tag);
+  if(cls) e.className = cls;
+  if(html !== undefined) e.innerHTML = html;
+  return e;
+}
+
+function render(lang){
+  const t = translations[lang];
+  document.documentElement.lang = htmlLangMap[lang] || "en";
+
+  document.getElementById("nav-brand").textContent = t.nav.brand;
+  document.getElementById("nav-tag").textContent = t.nav.tag;
+  document.getElementById("lang-btn-label").textContent = t.nav.switchLabel;
+
+  const badgeWrap = document.getElementById("hero-badges");
+  badgeWrap.innerHTML = "";
+  t.hero.badges.forEach(b=>{ badgeWrap.appendChild(el("span","badge",b)); });
+  document.getElementById("hero-title").textContent = t.hero.title;
+  document.getElementById("hero-subtitle").textContent = t.hero.subtitle;
+  document.getElementById("hero-desc").textContent = t.hero.desc;
+  document.getElementById("hero-cta").textContent = t.hero.cta + " ↓";
+
+  document.getElementById("about-title").textContent = t.about.title;
+  document.getElementById("about-lead").textContent = t.about.lead;
+  const ap = document.getElementById("about-points");
+  ap.innerHTML = "";
+  t.about.points.forEach(pt=>{
+    const row = el("div","about-point");
+    row.appendChild(el("span","mark","💧"));
+    row.appendChild(el("p",null,pt));
+    ap.appendChild(row);
   });
 
-  updateUI();
-}
-
-function goTo(idx) {
-  current = Math.max(0, Math.min(idx, KARTLAR.length - 1));
-  track.style.transform = `translateX(-${current * 100}%)`;
-  updateUI();
-}
-
-function updateUI() {
-  document.querySelectorAll('.dot').forEach((d, i) => {
-    d.classList.toggle('active', i === current);
+  document.getElementById("features-title").textContent = t.features.title;
+  const fg = document.getElementById("feature-grid");
+  fg.innerHTML = "";
+  const sizeClasses = ["big","small","","big","small","",""];
+  t.features.items.forEach((f,i)=>{
+    const card = el("div","feature-card"+(sizeClasses[i]?(" "+sizeClasses[i]):""));
+    card.appendChild(el("span","fi",f.icon));
+    card.appendChild(el("h3",null,f.title));
+    card.appendChild(el("p",null,f.desc));
+    fg.appendChild(card);
   });
-  btnPrev.disabled = current === 0;
-  btnNext.disabled = current === KARTLAR.length - 1;
+
+  document.getElementById("thirst-title").textContent = t.thirst.title;
+  document.getElementById("thirst-scale-title").textContent = t.thirst.scaleTitle;
+  const tg = document.getElementById("threshold-grid");
+  tg.innerHTML = "";
+  t.thirst.thresholds.forEach(th=>{
+    const card = el("div","threshold-card");
+    card.appendChild(el("div","val",th.value));
+    card.appendChild(el("p",null,th.label));
+    tg.appendChild(card);
+  });
+  document.getElementById("causes-title").textContent = t.thirst.causesTitle;
+  const cl = document.getElementById("causes-list");
+  cl.innerHTML = "";
+  t.thirst.causes.forEach(c=>{ cl.appendChild(el("li",null,c)); });
+  document.getElementById("biome-title").textContent = t.thirst.biomeTitle;
+  const bl = document.getElementById("biome-list");
+  bl.innerHTML = "";
+  t.thirst.biomes.forEach(b=>{
+    const row = el("div","biome-row");
+    row.appendChild(el("span",null,b.name));
+    row.appendChild(el("span","mult",b.mult));
+    bl.appendChild(row);
+  });
+  document.getElementById("sources-title").textContent = t.thirst.sourcesTitle;
+  const st = document.getElementById("sources-table").querySelector("tbody");
+  st.innerHTML = "";
+  t.thirst.sourceRows.forEach(r=>{
+    const tr_ = el("tr",null,`<td>${r.source}</td><td>${r.gain}</td>`);
+    st.appendChild(tr_);
+  });
+  document.getElementById("death-title").textContent = t.thirst.deathTitle;
+  document.getElementById("death-text").textContent = t.thirst.deathText;
+
+  document.getElementById("hud-title").textContent = t.hud.title;
+  document.getElementById("hud-edit-title").textContent = t.hud.editTitle;
+  document.getElementById("hud-edit-text").textContent = t.hud.editText;
+  const hel = document.getElementById("hud-el-list");
+  hel.innerHTML = "";
+  t.hud.elements.forEach(e_=>{
+    const row = el("div","hud-el");
+    row.appendChild(el("span","toggle-dot"));
+    row.appendChild(el("span",null,e_));
+    hel.appendChild(row);
+  });
+  document.getElementById("hud-pos-title").textContent = t.hud.positionsTitle;
+  const pl = document.getElementById("pos-list");
+  pl.innerHTML = "";
+  t.hud.positions.forEach(p=>{
+    const row = el("div","pos-row");
+    row.appendChild(el("span","name",p.name));
+    row.appendChild(el("span",null,p.desc));
+    pl.appendChild(row);
+  });
+
+  document.getElementById("items-title").textContent = t.items.title;
+  document.getElementById("items-sub-title").textContent = t.items.itemsTitle;
+  const ig = document.getElementById("item-grid");
+  ig.innerHTML = "";
+  t.items.itemRows.forEach(it=>{
+    const card = el("div","item-card");
+    card.appendChild(el("div","iname",it.name));
+    card.appendChild(el("div","idesc",it.desc));
+    ig.appendChild(card);
+  });
+  document.getElementById("blocks-sub-title").textContent = t.items.blocksTitle;
+  const bg = document.getElementById("block-grid");
+  bg.innerHTML = "";
+  t.items.blockRows.forEach(it=>{
+    const card = el("div","item-card");
+    card.appendChild(el("div","iname",it.name));
+    card.appendChild(el("div","idesc",it.desc));
+    bg.appendChild(card);
+  });
+  document.getElementById("effects-sub-title").textContent = t.items.effectsTitle;
+  const efl = document.getElementById("effect-list");
+  efl.innerHTML = "";
+  t.items.effectRows.forEach(ef=>{
+    const row = el("div","effect-row");
+    row.appendChild(el("span","ei","⚠️"));
+    const wrap = el("div");
+    wrap.appendChild(el("h3",null,ef.name));
+    wrap.appendChild(el("p",null,ef.desc));
+    row.appendChild(wrap);
+    efl.appendChild(row);
+  });
+
+  document.getElementById("commands-title").textContent = t.commands.title;
+  const ct = document.getElementById("commands-table").querySelector("tbody");
+  ct.innerHTML = "";
+  t.commands.rows.forEach(r=>{
+    ct.appendChild(el("tr",null,`<td><code>${r.cmd}</code></td><td>${r.desc}</td>`));
+  });
+  document.getElementById("commands-note").textContent = t.commands.note;
+
+  document.getElementById("keys-title").textContent = t.keys.title;
+  const kt = document.getElementById("keys-table").querySelector("tbody");
+  kt.innerHTML = "";
+  t.keys.rows.forEach(r=>{
+    kt.appendChild(el("tr",null,`<td><code>${r.key}</code></td><td>${r.action}</td>`));
+  });
+  document.getElementById("keys-note").textContent = t.keys.note;
+
+  document.getElementById("config-title").textContent = t.config.title;
+  document.getElementById("config-intro-text").textContent = t.config.intro;
+  const cg = document.getElementById("config-groups");
+  cg.innerHTML = "";
+  t.config.groups.forEach(g=>{
+    const wrap = el("div","config-group");
+    wrap.appendChild(el("h3",null,g.name));
+    const card = el("div","table-card");
+    const table = el("table","data");
+    const tbody = el("tbody");
+    g.rows.forEach(r=>{
+      tbody.appendChild(el("tr",null,`<td><code>${r.key}</code></td><td>${r.value}</td><td>${r.desc}</td>`));
+    });
+    table.appendChild(tbody);
+    card.appendChild(table);
+    wrap.appendChild(card);
+    cg.appendChild(wrap);
+  });
+
+  document.getElementById("install-title").textContent = t.install.title;
+  document.getElementById("req-title").textContent = t.install.reqTitle;
+  const rl = document.getElementById("req-list");
+  rl.innerHTML = "";
+  t.install.reqs.forEach(r=>{ rl.appendChild(el("li",null,r)); });
+  document.getElementById("mp-title").textContent = t.install.mpTitle;
+  document.getElementById("mp-text").textContent = t.install.mpText;
+  document.getElementById("steps-title").textContent = t.install.stepsTitle;
+  const sl = document.getElementById("steps-list");
+  sl.innerHTML = "";
+  t.install.steps.forEach(s=>{
+    const row = el("div","step");
+    row.appendChild(el("span","num"));
+    row.appendChild(el("p",null,s));
+    sl.appendChild(row);
+  });
+
+  document.getElementById("footer-text").textContent = t.footer.text;
+
+  document.getElementById("lm-title").textContent = t.langModal.title;
+  document.getElementById("lm-sub").textContent = t.langModal.subtitle;
+
+  try{ localStorage.setItem("wil_lang", lang); }catch(e){}
 }
 
-btnPrev.addEventListener('click', () => goTo(current - 1));
-btnNext.addEventListener('click', () => goTo(current + 1));
+function openModal(){ document.getElementById("langModal").hidden = false; }
+function closeModal(){ document.getElementById("langModal").hidden = true; }
 
-// Touch/swipe support
-let touchStartX = 0;
-document.getElementById('carousel-track').addEventListener('touchstart', e => {
-  touchStartX = e.touches[0].clientX;
-}, { passive: true });
-document.getElementById('carousel-track').addEventListener('touchend', e => {
-  const dx = e.changedTouches[0].clientX - touchStartX;
-  if (Math.abs(dx) > 40) dx < 0 ? goTo(current + 1) : goTo(current - 1);
-}, { passive: true });
-
-// Keyboard
-document.addEventListener('keydown', e => {
-  if (e.key === 'ArrowRight') goTo(current + 1);
-  if (e.key === 'ArrowLeft')  goTo(current - 1);
+document.querySelectorAll(".lang-opt").forEach(btn=>{
+  btn.addEventListener("click", ()=>{
+    render(btn.dataset.lang);
+    closeModal();
+  });
+});
+document.getElementById("openLangBtn").addEventListener("click", openModal);
+document.getElementById("hero-cta").addEventListener("click", ()=>{
+  document.getElementById("features").scrollIntoView({behavior:"smooth"});
 });
 
-buildCards();
-
-// =====================================================
-//   STARFIELD
-// =====================================================
-(function() {
-  const canvas = document.getElementById('starfield');
-  const ctx = canvas.getContext('2d');
-  let stars = [];
-
-  function resize() {
-    canvas.width  = window.innerWidth;
-    canvas.height = window.innerHeight;
-  }
-
-  function initStars() {
-    stars = [];
-    for (let i = 0; i < 180; i++) {
-      stars.push({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        r: Math.random() * 1.2 + 0.2,
-        alpha: Math.random() * 0.7 + 0.1,
-        speed: Math.random() * 0.3 + 0.05,
-        twinkle: Math.random() * Math.PI * 2,
-      });
-    }
-  }
-
-  function draw(ts) {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    stars.forEach(s => {
-      s.twinkle += 0.008;
-      const a = s.alpha * (0.6 + 0.4 * Math.sin(s.twinkle));
-      ctx.beginPath();
-      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(200,220,255,${a})`;
-      ctx.fill();
-    });
-    requestAnimationFrame(draw);
-  }
-
-  window.addEventListener('resize', () => { resize(); initStars(); });
-  resize(); initStars(); draw(0);
-})();
+let savedLang = null;
+try{ savedLang = localStorage.getItem("wil_lang"); }catch(e){}
+if(savedLang && translations[savedLang]){
+  render(savedLang);
+  closeModal();
+}else{
+  render("tr");
+  openModal();
+}
 </script>
 </body>
 </html>
