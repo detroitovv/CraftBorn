@@ -1,1 +1,557 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Compton County Sheriff's Department — Personel Kayıtları</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rye&family=Special+Elite&family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0a0a0a;
+    --bg2:#131313;
+    --panel:#1b1b1b;
+    --panel-light:#242424;
+    --line:#3a3a3a;
+    --line-soft:#2a2a2a;
+    --white:#f2f2f2;
+    --dim:#9a9a9a;
+    --silver:#c9c9c9;
+    --silver-dark:#6d6d6d;
+    --ink:#0a0a0a;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:
+      repeating-linear-gradient(90deg, rgba(255,255,255,0.02) 0 2px, transparent 2px 42px),
+      linear-gradient(180deg, var(--bg), var(--bg2) 40%, var(--bg));
+    color:var(--white);
+    font-family:'Oswald', sans-serif;
+    min-height:100vh;
+  }
+  a{color:inherit;}
+
+  header.topbar{
+    position:sticky; top:0; z-index:40;
+    background:linear-gradient(180deg, #161616, #0c0c0c 90%);
+    border-bottom:3px solid var(--line);
+    box-shadow:0 6px 18px rgba(0,0,0,0.6);
+  }
+  .topbar-inner{
+    max-width:1180px; margin:0 auto;
+    display:flex; align-items:center;
+    padding:16px 20px; gap:16px;
+  }
+  .brand{display:flex; align-items:center; gap:14px;}
+  .brand img.dept-emblem{width:92px; height:92px; object-fit:contain; flex:none; filter:drop-shadow(0 3px 4px rgba(0,0,0,0.7));}
+  .brand h1{
+    font-family:'Rye', serif;
+    font-size:22px; letter-spacing:0.5px;
+    margin:0; color:var(--white);
+    text-shadow:0 2px 0 rgba(0,0,0,0.8);
+  }
+  .brand p{margin:2px 0 0; font-size:11px; color:var(--dim); letter-spacing:2px;}
+
+  .hero{
+    max-width:1180px; margin:0 auto; padding:34px 20px 10px;
+  }
+  .hero-text h2{
+    font-family:'Rye', serif; font-size:30px; margin:0 0 6px; color:var(--white);
+    text-shadow:0 2px 0 rgba(0,0,0,0.8);
+  }
+  .hero-text p{margin:0; color:var(--dim); font-size:14px; max-width:60ch; line-height:1.5;}
+
+  main{max-width:1180px; margin:0 auto; padding:10px 20px 90px;}
+
+  .rank-section{margin-top:44px; scroll-margin-top:120px;}
+  .rank-head{
+    display:flex; align-items:baseline; gap:14px;
+    border-bottom:2px solid var(--line); padding-bottom:8px; margin-bottom:20px;
+  }
+  .rank-head h3{
+    font-family:'Rye', serif; font-size:22px; color:var(--white); margin:0;
+  }
+  .rank-head span{font-size:12px; color:var(--dim); letter-spacing:1px;}
+
+  .wall{
+    background:
+      repeating-linear-gradient(90deg, rgba(255,255,255,0.015) 0 3px, transparent 3px 60px),
+      var(--panel);
+    border:1px solid var(--line-soft);
+    border-radius:4px;
+    padding:26px;
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(250px, 1fr));
+    gap:28px;
+    box-shadow:inset 0 0 30px rgba(0,0,0,0.6);
+  }
+  .empty-slot{
+    grid-column:1/-1;
+    border:2px dashed var(--line);
+    border-radius:4px; padding:22px; text-align:center;
+    color:var(--dim); font-size:13px; font-family:'Special Elite', monospace;
+  }
+
+  .frame{
+    background:linear-gradient(180deg, #d8d8d8, #6d6d6d);
+    padding:10px; border-radius:3px;
+    box-shadow:0 10px 20px rgba(0,0,0,0.6), inset 0 0 0 1px rgba(0,0,0,0.4);
+    position:relative;
+  }
+  .frame .photo-wrap{
+    background:#050505; border:1px solid rgba(0,0,0,0.6);
+    aspect-ratio:3/4; overflow:hidden; position:relative;
+  }
+  .frame .photo-wrap img{width:100%; height:100%; object-fit:cover; display:block;}
+  .badge-tag{
+    position:absolute; top:-8px; right:-8px;
+    background:#111; color:var(--white);
+    font-family:'Special Elite', monospace; font-size:11.5px;
+    padding:5px 8px; border-radius:2px; border:1px solid #555;
+    box-shadow:0 2px 4px rgba(0,0,0,0.6);
+  }
+  .nameplate{
+    margin-top:9px; background:linear-gradient(180deg,#2a2a2a,#111);
+    border:1px solid #000; border-radius:2px; padding:9px 9px 10px;
+    text-align:center;
+  }
+  .nameplate .nm{
+    font-family:'Special Elite', monospace; font-size:14.5px; color:var(--white);
+    letter-spacing:0.5px; margin:0;
+  }
+  .nameplate .un{
+    font-size:11px; color:var(--dim); margin:4px 0 0; letter-spacing:0.5px;
+  }
+  .nameplate .dc{
+    font-size:10.5px; color:var(--silver-dark); margin:2px 0 0; letter-spacing:0.5px;
+  }
+  .del-btn{
+    position:absolute; bottom:6px; left:6px;
+    background:#2a2a2a; color:#fff; border:1px solid #555;
+    font-size:10px; padding:3px 6px; border-radius:2px; cursor:pointer;
+    display:none;
+  }
+  body.admin-mode .del-btn{display:block;}
+
+  footer{
+    text-align:center; padding:24px; color:var(--dim);
+    font-size:11px; letter-spacing:1px; border-top:1px solid var(--line-soft);
+  }
+  footer .credit{display:block; margin-top:6px; color:var(--silver-dark); font-size:10px; letter-spacing:2px;}
+
+  /* ---------- minimal admin fab ---------- */
+  .admin-fab{
+    position:fixed; bottom:22px; right:22px; z-index:60;
+    width:48px; height:48px; border-radius:50%;
+    background:linear-gradient(180deg, #e6e6e6, #a8a8a8);
+    border:1px solid #6d6d6d; color:var(--ink);
+    font-size:19px; display:flex; align-items:center; justify-content:center;
+    cursor:pointer; box-shadow:0 6px 16px rgba(0,0,0,0.6);
+  }
+  .admin-fab:hover{filter:brightness(1.08);}
+
+  .overlay{
+    position:fixed; inset:0; background:rgba(0,0,0,0.82);
+    display:none; align-items:center; justify-content:center; z-index:100; padding:20px;
+  }
+  .overlay.show{display:flex;}
+  .modal{
+    background:linear-gradient(180deg, #181818, #0c0c0c);
+    border:1px solid var(--line); border-radius:6px;
+    width:100%; max-width:420px; padding:26px;
+    box-shadow:0 20px 60px rgba(0,0,0,0.7);
+    position:relative;
+  }
+  .modal.wide{max-width:780px;}
+  .modal h3{
+    font-family:'Rye', serif; color:var(--white); margin:0 0 6px; font-size:20px;
+  }
+  .modal p.sub{color:var(--dim); font-size:12.5px; margin:0 0 18px;}
+  .field{margin-bottom:14px;}
+  .field label{display:block; font-size:11px; letter-spacing:1px; color:var(--dim); margin-bottom:5px;}
+  .field input, .field select{
+    width:100%; padding:9px 10px; background:#0a0a0a; color:var(--white);
+    border:1px solid var(--line); border-radius:3px; font-family:'Oswald',sans-serif; font-size:13px;
+  }
+  .field input:focus, .field select:focus{outline:1px solid var(--silver);}
+  .row2{display:grid; grid-template-columns:1fr 1fr; gap:12px;}
+  .btn-row{display:flex; gap:10px; margin-top:18px; flex-wrap:wrap;}
+  .btn{
+    flex:1; padding:10px 14px; border-radius:3px; border:1px solid var(--line);
+    font-family:'Oswald',sans-serif; font-weight:600; font-size:12.5px; letter-spacing:0.5px;
+    cursor:pointer;
+  }
+  .btn-primary{background:linear-gradient(180deg, #e6e6e6, #a8a8a8); color:var(--ink);}
+  .btn-ghost{background:transparent; color:var(--dim);}
+  .err{color:#e5b0b0; font-size:12px; margin-top:8px; display:none;}
+  .close-x{
+    position:absolute; top:14px; right:16px; background:none; border:none;
+    color:var(--dim); font-size:18px; cursor:pointer;
+  }
+
+  .admin-list{max-height:280px; overflow:auto; margin-top:10px; border-top:1px solid var(--line-soft);}
+  .admin-list table{width:100%; border-collapse:collapse; font-size:12px;}
+  .admin-list th, .admin-list td{text-align:left; padding:7px 6px; border-bottom:1px solid var(--line-soft);}
+  .admin-list th{color:var(--white); font-weight:600; font-size:11px;}
+  .admin-list button{background:#2a2a2a; color:#fff; border:1px solid #555; padding:4px 8px; border-radius:2px; font-size:11px; cursor:pointer;}
+
+  .tag-live{display:inline-block; background:#222; color:var(--silver); font-size:10px; padding:2px 7px; border-radius:2px; margin-left:8px; border:1px solid #444;}
+  .helpbox{
+    background:rgba(255,255,255,0.03); border:1px dashed var(--line);
+    border-radius:4px; padding:12px 14px; font-size:11.5px; color:var(--dim);
+    line-height:1.6; margin-top:16px;
+  }
+  .helpbox b{color:var(--white);}
+  textarea.jsonbox{
+    width:100%; min-height:110px; background:#0a0a0a; color:var(--white);
+    border:1px solid var(--line); border-radius:3px; font-family:'Special Elite',monospace; font-size:11px; padding:8px;
+  }
+</style>
+</head>
+<body>
+
+<script>
+  /* Amblem — County.png bulunamazsa bu yerleşik rozet gösterilir */
+  function handleEmblemError(el){
+    el.onerror = null;
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+      <polygon points="50,3 61,30 90,32 66,50 75,80 50,63 25,80 34,50 10,32 39,30"
+        fill="#e6e6e6" stroke="#6d6d6d" stroke-width="2"/>
+      <circle cx="50" cy="47" r="24" fill="#111" stroke="#e6e6e6" stroke-width="2"/>
+      <text x="50" y="43" text-anchor="middle" font-family="Oswald, sans-serif" font-size="9" fill="#f2f2f2" font-weight="700">COMPTON</text>
+      <text x="50" y="53" text-anchor="middle" font-family="Oswald, sans-serif" font-size="8" fill="#f2f2f2">COUNTY</text>
+      <text x="50" y="62" text-anchor="middle" font-family="Oswald, sans-serif" font-size="7" fill="#c9c9c9" letter-spacing="1">SHERIFF</text>
+    </svg>`;
+    el.src = "data:image/svg+xml;utf8," + encodeURIComponent(svg);
+  }
+</script>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <img class="dept-emblem" src="County.png" alt="Compton County Sheriff Amblemi" onerror="handleEmblemError(this)">
+      <div>
+        <h1>Compton County Sheriff's Department</h1>
+        <p>RESMİ PERSONEL KAYIT SİSTEMİ</p>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="hero-text">
+    <h2>Duvardaki Onur Listesi</h2>
+    <p>Departmanda görev yapan tüm personel, rütbelerine göre aşağıdaki tablolarda listelenmiştir. En üst rütbeden en alta doğru sıralanmıştır.</p>
+  </div>
+</div>
+
+<main id="mainList"></main>
+
+<footer>
+  COMPTON COUNTY SHERIFF'S DEPARTMENT — TO PROTECT AND SERVE
+  <span class="credit">by Detroitov</span>
+</footer>
+
+<button class="admin-fab" id="openLoginBtn" title="Yönetici Girişi" aria-label="Yönetici Girişi">🔑</button>
+
+<div class="overlay" id="loginOverlay">
+  <div class="modal">
+    <button class="close-x" data-close="loginOverlay">✕</button>
+    <h3>Yönetici Girişi</h3>
+    <p class="sub">Devam etmek için yönetici şifresini girin.</p>
+    <div class="field">
+      <label>ŞİFRE</label>
+      <input type="password" id="pwInput" placeholder="••••••••">
+    </div>
+    <div class="err" id="pwErr">Hatalı şifre. Tekrar deneyin.</div>
+    <div class="btn-row">
+      <button class="btn btn-primary" id="pwSubmit">Giriş Yap</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="adminOverlay">
+  <div class="modal wide">
+    <button class="close-x" data-close="adminOverlay">✕</button>
+    <h3>Yönetici Paneli <span class="tag-live" id="liveTag">yerel taslak</span></h3>
+    <p class="sub">Yeni personel oluşturun. Fotoğraf Kodu, HTML dosyasıyla aynı klasöre koyacağınız görsel dosyasının adıdır (uzantısız). Örn: kod "Leon" → dosya adı "Leon.png".</p>
+
+    <div class="row2">
+      <div class="field"><label>AD</label><input id="f_ad" placeholder="Leon"></div>
+      <div class="field"><label>SOYAD</label><input id="f_soyad" placeholder="Tyrell"></div>
+    </div>
+    <div class="row2">
+      <div class="field"><label>BİRİM</label><input id="f_birim" placeholder="Devriye Birimi"></div>
+      <div class="field"><label>ROZET NUMARASI</label><input id="f_rozet" placeholder="5072"></div>
+    </div>
+    <div class="row2">
+      <div class="field">
+        <label>RÜTBE</label>
+        <select id="f_rutbe"></select>
+      </div>
+      <div class="field"><label>FOTOĞRAF KODU</label><input id="f_foto" placeholder="Leon"></div>
+    </div>
+    <div class="field"><label>DISCORD KULLANICI ADI</label><input id="f_discord" placeholder="leon.tyrell"></div>
+
+    <div class="btn-row">
+      <button class="btn btn-primary" id="addBtn">+ Personeli Ekle</button>
+      <button class="btn btn-ghost" id="logoutBtn">Çıkış Yap</button>
+    </div>
+
+    <div class="admin-list">
+      <table>
+        <thead><tr><th>Ad Soyad</th><th>Rütbe</th><th>Rozet</th><th>Birim</th><th>Discord</th><th></th></tr></thead>
+        <tbody id="adminTableBody"></tbody>
+      </table>
+    </div>
+
+    <div class="helpbox">
+      <b>Önemli — kalıcı hale getirme:</b> Buradan eklediğiniz personel sadece <b>bu tarayıcıda</b> görünür (localStorage). GitHub Pages üzerinde <u>herkesin</u> görmesi için: "JSON Dışa Aktar" ile listeyi kopyalayın ve bunu, html ile <u>aynı klasördeki</u> <code>personnel.json</code> dosyasının içeriğiyle değiştirip GitHub reponuza commit/push edin. HTML dosyasına dokunmanıza gerek yok.
+      <div class="btn-row">
+        <button class="btn btn-ghost" id="exportBtn">JSON Dışa Aktar</button>
+        <button class="btn btn-ghost" id="importBtn">JSON İçe Aktar</button>
+      </div>
+      <textarea class="jsonbox" id="jsonBox" placeholder="JSON burada görünecek..."></textarea>
+    </div>
+  </div>
+</div>
+
+<script>
+const RANKS = [
+  {key:"captain",  label:"Captain / High Command (Kaptan)"},
+  {key:"lt3",      label:"Lieutenant 3 (Teğmen 3)"},
+  {key:"lt2",      label:"Lieutenant 2 (Teğmen 2)"},
+  {key:"lt1",      label:"Lieutenant 1 (Teğmen 1)"},
+  {key:"sgt3",     label:"Sergeant 3 (Çavuş 3)"},
+  {key:"sgt2",     label:"Sergeant 2 (Çavuş 2)"},
+  {key:"sgt1",     label:"Sergeant 1 (Çavuş 1)"},
+  {key:"det3",     label:"Detective 3 (Dedektif 3)"},
+  {key:"det2",     label:"Detective 2 (Dedektif 2)"},
+  {key:"det1",     label:"Detective 1 (Dedektif 1)"},
+  {key:"sh3",      label:"Sheriff 3"},
+  {key:"sh2",      label:"Sheriff 2"},
+  {key:"sh1",      label:"Sheriff 1"},
+];
+
+/* Şifre düz metin olarak tutulmaz — sadece SHA-256 özeti (hash) saklanır. */
+const PASSWORD_HASH = "ab327c435b57b142d5e5971d3d3f85f889b20aa9e94ce1844301d6e8c8cade31";
+
+const STORAGE_KEY = "ccsd_personnel_v1";
+const DATA_URL = "./personnel.json";
+const FALLBACK_DATA = [
+  {ad:"Leon", soyad:"Tyrell", birim:"Devriye Birimi", rozet:"5072", rutbe:"sh3", foto:"Leon", discord:"leon.tyrell"}
+];
+const PLACEHOLDER = "data:image/svg+xml;utf8," + encodeURIComponent(
+  `<svg xmlns="http://www.w3.org/2000/svg" width="200" height="266" viewBox="0 0 200 266">
+   <rect width="200" height="266" fill="#050505"/>
+   <circle cx="100" cy="95" r="42" fill="#242424"/>
+   <path d="M30 250 Q100 170 170 250 Z" fill="#242424"/>
+   <text x="100" y="240" text-anchor="middle" fill="#6d6d6d" font-family="Oswald" font-size="11">FOTOĞRAF YOK</text>
+   </svg>`);
+
+let isAdmin = false;
+let personnel = [];
+
+async function sha256(text){
+  const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(text));
+  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,"0")).join("");
+}
+
+async function loadData(){
+  const local = localStorage.getItem(STORAGE_KEY);
+  if(local){
+    try{ return JSON.parse(local); }catch(e){}
+  }
+  try{
+    const res = await fetch(DATA_URL, {cache:"no-store"});
+    if(res.ok){ return await res.json(); }
+  }catch(e){ /* fetch başarısız - dosyayı doğrudan açtıysanız (file://) tarayıcı engeller */ }
+  return FALLBACK_DATA.slice();
+}
+
+function saveData(list){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+}
+
+function rankLabel(key){
+  const r = RANKS.find(r=>r.key===key);
+  return r ? r.label : key;
+}
+
+function render(){
+  const main = document.getElementById("mainList");
+  main.innerHTML = "";
+
+  RANKS.forEach(r=>{
+    const list = personnel.filter(p=>p.rutbe===r.key);
+    const section = document.createElement("section");
+    section.className = "rank-section";
+    section.id = "rank-" + r.key;
+
+    section.innerHTML = `
+      <div class="rank-head">
+        <h3>${r.label}</h3>
+        <span>${list.length} personel</span>
+      </div>
+      <div class="wall" id="wall-${r.key}"></div>
+    `;
+    main.appendChild(section);
+
+    const wall = section.querySelector(".wall");
+    if(list.length===0){
+      wall.innerHTML = `<div class="empty-slot">Bu rütbede henüz personel yok.</div>`;
+      return;
+    }
+    list.forEach(p=>{
+      const frame = document.createElement("div");
+      frame.className = "frame";
+      const imgSrc = p.foto ? (p.foto + ".png") : PLACEHOLDER;
+      frame.innerHTML = `
+        <div class="badge-tag">#${p.rozet||"—"}</div>
+        <div class="photo-wrap">
+          <img src="${imgSrc}" alt="${p.ad} ${p.soyad}"
+               onerror="this.onerror=null;this.src='${PLACEHOLDER}';">
+        </div>
+        <div class="nameplate">
+          <p class="nm">${p.ad} ${p.soyad}</p>
+          <p class="un">${p.birim||""}</p>
+          ${p.discord ? `<p class="dc">Discord: ${p.discord}</p>` : ""}
+        </div>
+        <button class="del-btn" data-id="${p.id}">Sil</button>
+      `;
+      wall.appendChild(frame);
+    });
+  });
+
+  document.querySelectorAll(".del-btn").forEach(btn=>{
+    btn.addEventListener("click", e=>{
+      const id = e.target.getAttribute("data-id");
+      personnel = personnel.filter(p=>String(p.id)!==String(id));
+      saveData(personnel);
+      render();
+      renderAdminTable();
+    });
+  });
+}
+
+function renderRankOptions(){
+  const sel = document.getElementById("f_rutbe");
+  sel.innerHTML = RANKS.map(r=>`<option value="${r.key}">${r.label}</option>`).join("");
+}
+
+function renderAdminTable(){
+  const body = document.getElementById("adminTableBody");
+  body.innerHTML = personnel.map(p=>`
+    <tr>
+      <td>${p.ad} ${p.soyad}</td>
+      <td>${rankLabel(p.rutbe)}</td>
+      <td>#${p.rozet||"—"}</td>
+      <td>${p.birim||""}</td>
+      <td>${p.discord||""}</td>
+      <td><button data-id="${p.id}">Sil</button></td>
+    </tr>
+  `).join("") || `<tr><td colspan="6" style="color:#9a9a9a;">Henüz personel yok.</td></tr>`;
+
+  body.querySelectorAll("button").forEach(btn=>{
+    btn.addEventListener("click", e=>{
+      const id = e.target.getAttribute("data-id");
+      personnel = personnel.filter(p=>String(p.id)!==String(id));
+      saveData(personnel);
+      render();
+      renderAdminTable();
+    });
+  });
+}
+
+function openOverlay(id){ document.getElementById(id).classList.add("show"); }
+function closeOverlay(id){ document.getElementById(id).classList.remove("show"); }
+
+document.querySelectorAll("[data-close]").forEach(el=>{
+  el.addEventListener("click", ()=>closeOverlay(el.getAttribute("data-close")));
+});
+document.querySelectorAll(".overlay").forEach(ov=>{
+  ov.addEventListener("click", e=>{ if(e.target===ov) ov.classList.remove("show"); });
+});
+
+document.getElementById("openLoginBtn").addEventListener("click", ()=>{
+  if(isAdmin){ openOverlay("adminOverlay"); }
+  else{ openOverlay("loginOverlay"); document.getElementById("pwInput").focus(); }
+});
+
+document.getElementById("pwSubmit").addEventListener("click", tryLogin);
+document.getElementById("pwInput").addEventListener("keydown", e=>{ if(e.key==="Enter") tryLogin(); });
+
+async function tryLogin(){
+  const val = document.getElementById("pwInput").value;
+  const hash = await sha256(val);
+  if(hash === PASSWORD_HASH){
+    isAdmin = true;
+    document.body.classList.add("admin-mode");
+    document.getElementById("pwInput").value = "";
+    document.getElementById("pwErr").style.display = "none";
+    closeOverlay("loginOverlay");
+    openOverlay("adminOverlay");
+    renderRankOptions();
+    renderAdminTable();
+  } else {
+    document.getElementById("pwErr").style.display = "block";
+  }
+}
+
+document.getElementById("logoutBtn").addEventListener("click", ()=>{
+  isAdmin = false;
+  document.body.classList.remove("admin-mode");
+  closeOverlay("adminOverlay");
+});
+
+document.getElementById("addBtn").addEventListener("click", ()=>{
+  const ad = document.getElementById("f_ad").value.trim();
+  const soyad = document.getElementById("f_soyad").value.trim();
+  const birim = document.getElementById("f_birim").value.trim();
+  const rozet = document.getElementById("f_rozet").value.trim();
+  const rutbe = document.getElementById("f_rutbe").value;
+  const foto = document.getElementById("f_foto").value.trim();
+  const discord = document.getElementById("f_discord").value.trim();
+
+  if(!ad || !soyad){ alert("Ad ve soyad zorunludur."); return; }
+
+  personnel.push({
+    id: Date.now(),
+    ad, soyad, birim, rozet, rutbe, foto, discord
+  });
+  saveData(personnel);
+
+  ["f_ad","f_soyad","f_birim","f_rozet","f_foto","f_discord"].forEach(id=>document.getElementById(id).value="");
+
+  render();
+  renderAdminTable();
+});
+
+document.getElementById("exportBtn").addEventListener("click", ()=>{
+  const clean = personnel.map(({id, ...rest})=>rest);
+  document.getElementById("jsonBox").value = JSON.stringify(clean, null, 2);
+});
+document.getElementById("importBtn").addEventListener("click", ()=>{
+  try{
+    const parsed = JSON.parse(document.getElementById("jsonBox").value);
+    personnel = parsed.map((p,i)=>({id: Date.now()+i, ...p}));
+    saveData(personnel);
+    render();
+    renderAdminTable();
+    alert("İçe aktarma başarılı.");
+  }catch(e){
+    alert("Geçersiz JSON.");
+  }
+});
+
+(async function init(){
+  personnel = await loadData();
+  render();
+})();
+</script>
+</body>
+</html>
 
