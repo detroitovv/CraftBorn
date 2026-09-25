@@ -1,22 +1,83 @@
-[
+
+  {
+    "ad": "Lucas",
+    "soyad": "Tyrell",
+    "birim": "Hava Birimi (AİR)",
+    "rozet": "6500",
+    "rutbe": "sh1",
+    "foto": "Lucas",
+    "discord": "Lucas"
+  },
   {
     "ad": "Leon",
     "soyad": "Tyrell",
-    "birim": "Devriye Birimi",
+    "birim": "Hava Birimi ( AİR )",
     "rozet": "5072",
     "rutbe": "sh3",
     "foto": "Leon",
     "discord": "Detroitov"
-  }
-
-    {
+  },
+  {
     "ad": "Lucas",
     "soyad": "Tyrell",
-    "birim": "Devriye Birimi",
-    "rozet": "6500",
-    "rutbe": "sh1",
-    "foto": "Lucas",
+    "birim": "Hava Birimi ( AİR )",
+    "rozet": "",
+    "rutbe": "captain",
+    "foto": "",
     "discord": "kafatasif_96979"
+  },
+  {
+    "ad": "Maya",
+    "soyad": "Laurent",
+    "birim": "High Comand",
+    "rozet": "1000",
+    "rutbe": "captain",
+    "foto": "Maya",
+    "discord": "puudingg"
+  },
+  {
+    "ad": "Mike",
+    "soyad": "Shawn",
+    "birim": "Eğitim Birimi",
+    "rozet": "3521",
+    "rutbe": "sgt1",
+    "foto": "Mike",
+    "discord": "heyydmrr"
+  },
+  {
+    "ad": "Lillian",
+    "soyad": "Reed",
+    "birim": "Motorsiklet Birimi",
+    "rozet": "1881",
+    "rutbe": "lt3",
+    "foto": "Lillian",
+    "discord": "despoyna"
+  },
+  {
+    "ad": "Neculai",
+    "soyad": "Leca",
+    "birim": "Petrol Birimi",
+    "rozet": "2661",
+    "rutbe": "sgt3",
+    "foto": "Neculai",
+    "discord": "puficik"
+  },
+  {
+    "ad": "Evelyn",
+    "soyad": "Fike",
+    "birim": "Swat Birimi",
+    "rozet": "6077",
+    "rutbe": "sh1",
+    "foto": "Evelyn",
+    "discord": "sdeao"
+  },
+  {
+    "ad": "Dominic",
+    "soyad": "Fike",
+    "birim": "Swat Birimi",
+    "rozet": "6333",
+    "rutbe": "sh1",
+    "foto": "Dominic",
+    "discord": "warlocksanc"
   }
 ]
-
