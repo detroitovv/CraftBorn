@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CraftBorn Stüdyo — Mod & Eklenti Geliştirme</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#07090f;
+  --bg-2:#0c1018;
+  --surface:rgba(255,255,255,.035);
+  --surface-2:rgba(255,255,255,.06);
+  --line:rgba(255,255,255,.09);
+  --line-2:rgba(255,255,255,.16);
+  --text:#e9edf5;
+  --muted:#8d96ab;
+  --accent:#ff7a2f;
+  --accent-2:#39d0ff;
+  --accent-3:#7c5cff;
+  --ok:#3ddc84;
+  --font:'Space Grotesk',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+  --radius:18px;
+  --maxw:1180px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--font);
+  background:var(--bg);
+  color:var(--text);
+  line-height:1.65;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+body::before{
+  content:"";position:fixed;inset:0;z-index:-2;
+  background:
+    radial-gradient(900px 500px at 12% -5%, rgba(255,122,47,.16), transparent 60%),
+    radial-gradient(800px 500px at 88% 8%, rgba(57,208,255,.12), transparent 60%),
+    radial-gradient(1000px 700px at 50% 110%, rgba(124,92,255,.14), transparent 60%),
+    var(--bg);
+}
+body::after{
+  content:"";position:fixed;inset:0;z-index:-1;opacity:.35;pointer-events:none;
+  background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);
+  background-size:58px 58px;
+  mask-image:radial-gradient(circle at 50% 30%,#000 0%,transparent 78%);
+  -webkit-mask-image:radial-gradient(circle at 50% 30%,#000 0%,transparent 78%);
+}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+.wrap{width:100%;max-width:var(--maxw);margin:0 auto;padding:0 22px}
+
+/* ---------- NAV ---------- */
+header{
+  position:sticky;top:0;z-index:50;
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  background:rgba(7,9,15,.72);
+  border-bottom:1px solid var(--line);
+}
+.nav{display:flex;align-items:center;justify-content:space-between;height:68px;gap:16px}
+.brand{display:flex;align-items:center;gap:11px;font-weight:700;letter-spacing:-.4px;font-size:1.05rem}
+.logo{
+  width:34px;height:34px;border-radius:10px;flex:none;
+  background:linear-gradient(135deg,var(--accent),var(--accent-3));
+  display:grid;place-items:center;font-family:var(--mono);font-weight:700;font-size:.85rem;color:#0a0a0a;
+  box-shadow:0 0 22px rgba(255,122,47,.35);
+}
+.brand small{display:block;font-size:.62rem;color:var(--muted);font-family:var(--mono);letter-spacing:1.6px;font-weight:500;text-transform:uppercase;line-height:1}
+.nav-links{display:flex;gap:26px;font-size:.9rem;color:var(--muted)}
+.nav-links a{transition:color .2s}
+.nav-links a:hover{color:var(--text)}
+.nav-cta{
+  font-size:.82rem;font-weight:600;padding:9px 16px;border-radius:99px;
+  border:1px solid var(--line-2);background:var(--surface-2);transition:.22s;white-space:nowrap;
+}
+.nav-cta:hover{background:var(--accent);color:#0a0a0a;border-color:var(--accent)}
+@media(max-width:860px){.nav-links{display:none}}
+
+/* ---------- HERO ---------- */
+.hero{padding:96px 0 78px;text-align:center;position:relative}
+.pill{
+  display:inline-flex;align-items:center;gap:9px;
+  font-family:var(--mono);font-size:.7rem;letter-spacing:1.6px;text-transform:uppercase;
+  padding:7px 15px;border-radius:99px;border:1px solid var(--line-2);background:var(--surface);
+  color:var(--muted);margin-bottom:26px;
+}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--ok);box-shadow:0 0 10px var(--ok);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+.hero h1{
+  font-size:clamp(2.6rem,8vw,5.2rem);line-height:1.02;letter-spacing:-3px;font-weight:700;
+  background:linear-gradient(180deg,#fff 20%,#9aa3b8 115%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.hero h1 span{
+  background:linear-gradient(100deg,var(--accent),#ffb057 45%,var(--accent-2));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.hero p{max-width:640px;margin:22px auto 0;color:var(--muted);font-size:1.07rem}
+.hero-actions{display:flex;gap:13px;justify-content:center;flex-wrap:wrap;margin-top:38px}
+.btn{
+  display:inline-flex;align-items:center;gap:9px;
+  padding:13px 26px;border-radius:99px;font-weight:600;font-size:.94rem;
+  border:1px solid var(--line-2);background:var(--surface-2);transition:.22s;cursor:pointer;
+}
+.btn:hover{transform:translateY(-2px);border-color:var(--line-2);background:rgba(255,255,255,.1)}
+.btn-primary{
+  background:linear-gradient(135deg,var(--accent),#ff9d4d);color:#120800;border-color:transparent;
+  box-shadow:0 10px 32px -10px rgba(255,122,47,.7);
+}
+.btn-primary:hover{background:linear-gradient(135deg,#ff9146,#ffb069)}
+.stats{
+  display:flex;justify-content:center;gap:0;flex-wrap:wrap;margin-top:62px;
+  border:1px solid var(--line);border-radius:var(--radius);background:var(--surface);overflow:hidden;
+}
+.stat{flex:1;min-width:150px;padding:22px 18px;border-right:1px solid var(--line)}
+.stat:last-child{border-right:none}
+.stat b{display:block;font-size:1.7rem;letter-spacing:-1px;background:linear-gradient(135deg,#fff,#96a0b6);-webkit-background-clip:text;background-clip:text;color:transparent}
+.stat span{font-family:var(--mono);font-size:.66rem;letter-spacing:1.4px;text-transform:uppercase;color:var(--muted)}
+
+/* ---------- SECTION ---------- */
+section{padding:84px 0;position:relative}
+.sec-head{margin-bottom:44px}
+.sec-tag{font-family:var(--mono);font-size:.7rem;letter-spacing:2.2px;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+.sec-head h2{font-size:clamp(1.8rem,4.4vw,2.7rem);letter-spacing:-1.4px;line-height:1.12;font-weight:700}
+.sec-head p{color:var(--muted);margin-top:12px;max-width:620px}
+
+/* ---------- ABOUT ---------- */
+.about{display:grid;grid-template-columns:1.15fr .85fr;gap:26px;align-items:stretch}
+@media(max-width:880px){.about{grid-template-columns:1fr}}
+.card{
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+  padding:30px;transition:.25s;
+}
+.card:hover{border-color:var(--line-2);background:var(--surface-2)}
+.about-list{list-style:none;margin-top:20px;display:grid;gap:13px}
+.about-list li{display:flex;gap:12px;align-items:flex-start;color:var(--muted);font-size:.95rem}
+.about-list b{color:var(--text);font-weight:600}
+.tick{color:var(--accent);font-weight:700;flex:none}
+.owner{display:flex;flex-direction:column;justify-content:center;text-align:center;gap:4px}
+.avatar{
+  width:78px;height:78px;border-radius:22px;margin:0 auto 16px;
+  background:linear-gradient(135deg,var(--accent-3),var(--accent-2));
+  display:grid;place-items:center;font-size:2rem;font-weight:700;color:#07090f;
+  box-shadow:0 0 40px -6px rgba(124,92,255,.6);
+}
+.owner h3{font-size:1.35rem;letter-spacing:-.6px}
+.owner .alias{font-family:var(--mono);font-size:.78rem;color:var(--accent-2);letter-spacing:1px}
+.owner p{color:var(--muted);font-size:.9rem;margin-top:10px}
+.tags{display:flex;gap:7px;flex-wrap:wrap;justify-content:center;margin-top:18px}
+.tag{font-family:var(--mono);font-size:.66rem;padding:5px 11px;border-radius:99px;border:1px solid var(--line-2);color:var(--muted)}
+
+/* ---------- PORTALS ---------- */
+.portals{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+@media(max-width:980px){.portals{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:520px){.portals{grid-template-columns:1fr}}
+.portal{
+  position:relative;overflow:hidden;
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+  padding:26px 22px;transition:.28s;display:block;
+}
+.portal::before{
+  content:"";position:absolute;inset:0;opacity:0;transition:.3s;
+  background:radial-gradient(400px 160px at 50% 0%,var(--glow),transparent 70%);
+}
+.portal:hover{transform:translateY(-6px);border-color:var(--line-2)}
+.portal:hover::before{opacity:1}
+.portal-ico{
+  width:46px;height:46px;border-radius:13px;display:grid;place-items:center;margin-bottom:18px;
+  background:var(--surface-2);border:1px solid var(--line-2);position:relative;z-index:1;
+}
+.portal-ico svg{width:23px;height:23px;fill:currentColor}
+.portal h3{font-size:1.06rem;letter-spacing:-.3px;position:relative;z-index:1}
+.portal p{color:var(--muted);font-size:.85rem;margin-top:5px;position:relative;z-index:1}
+.portal .go{
+  margin-top:18px;font-family:var(--mono);font-size:.7rem;letter-spacing:1.4px;text-transform:uppercase;
+  display:flex;align-items:center;gap:7px;position:relative;z-index:1;transition:gap .25s;
+}
+.portal:hover .go{gap:13px}
+.p-discord{--glow:rgba(88,101,242,.30);color:#8b95f6}
+.p-instagram{--glow:rgba(225,48,108,.28);color:#f06a9b}
+.p-github{--glow:rgba(255,255,255,.16);color:#d5dbe8}
+.p-curseforge{--glow:rgba(241,100,54,.30);color:#f97a4e}
+
+/* ---------- PROJECTS ---------- */
+.projects{display:grid;grid-template-columns:repeat(2,1fr);gap:22px}
+@media(max-width:900px){.projects{grid-template-columns:1fr}}
+.proj{
+  border:1px solid var(--line);border-radius:22px;background:var(--surface);
+  overflow:hidden;display:flex;flex-direction:column;transition:.28s;
+}
+.proj:hover{transform:translateY(-5px);border-color:var(--line-2)}
+.proj-top{padding:30px 28px 24px;position:relative;overflow:hidden}
+.proj-top::after{
+  content:"";position:absolute;top:-70px;right:-70px;width:210px;height:210px;border-radius:50%;
+  background:var(--pg);filter:blur(52px);opacity:.55;
+}
+.proj-emoji{font-size:2.3rem;line-height:1;margin-bottom:14px;position:relative;z-index:1}
+.proj h3{font-size:1.5rem;letter-spacing:-.9px;position:relative;z-index:1}
+.proj .sub{font-family:var(--mono);font-size:.72rem;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted);margin-top:5px;position:relative;z-index:1}
+.proj-body{padding:0 28px 26px;display:flex;flex-direction:column;flex:1}
+.proj-body>p{color:var(--muted);font-size:.93rem}
+.meta{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0}
+.meta span{
+  font-family:var(--mono);font-size:.66rem;padding:5px 10px;border-radius:7px;
+  background:var(--surface-2);border:1px solid var(--line);color:var(--muted);
+}
+.feat{list-style:none;display:grid;gap:9px;margin-bottom:22px}
+.feat li{display:flex;gap:10px;font-size:.88rem;color:var(--muted)}
+.feat li::before{content:"▸";color:var(--accent);flex:none}
+.proj-actions{display:flex;gap:10px;margin-top:auto;flex-wrap:wrap}
+.proj-actions .btn{padding:11px 18px;font-size:.85rem;flex:1;justify-content:center;min-width:130px}
+.btn-cf{background:linear-gradient(135deg,#f16436,#ff8a5c);color:#1a0800;border-color:transparent;box-shadow:0 8px 26px -10px rgba(241,100,54,.8)}
+.btn-cf:hover{background:linear-gradient(135deg,#ff744a,#ff9e76)}
+
+/* ---------- STATUS CARD ---------- */
+.status-card{
+  border:1px solid var(--line-2);border-radius:24px;overflow:hidden;
+  background:linear-gradient(160deg,rgba(255,122,47,.09),rgba(124,92,255,.07) 55%,rgba(255,255,255,.03));
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+}
+.status-head{
+  display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;
+  padding:24px 28px;border-bottom:1px solid var(--line);
+}
+.status-head h3{font-size:1.25rem;letter-spacing:-.6px;display:flex;align-items:center;gap:10px}
+.live{
+  font-family:var(--mono);font-size:.66rem;letter-spacing:1.4px;text-transform:uppercase;color:var(--ok);
+  display:flex;align-items:center;gap:7px;border:1px solid rgba(61,220,132,.3);background:rgba(61,220,132,.08);
+  padding:6px 12px;border-radius:99px;
+}
+.status-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line)}
+@media(max-width:860px){.status-grid{grid-template-columns:1fr}}
+.status-item{background:var(--bg-2);padding:24px 26px}
+.status-item .row{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.status-item h4{font-size:1rem;letter-spacing:-.3px}
+.status-item .pct{font-family:var(--mono);font-size:1.05rem;font-weight:700;color:var(--accent)}
+.status-item .desc{color:var(--muted);font-size:.84rem;margin-top:6px;min-height:40px}
+.bar{height:6px;border-radius:99px;background:rgba(255,255,255,.08);overflow:hidden;margin-top:14px}
+.bar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--accent),var(--accent-2))}
+.badge{
+  display:inline-block;margin-top:13px;font-family:var(--mono);font-size:.62rem;letter-spacing:1.3px;
+  text-transform:uppercase;padding:4px 10px;border-radius:6px;border:1px solid var(--line-2);color:var(--muted);
+}
+.badge.rel{color:var(--ok);border-color:rgba(61,220,132,.35);background:rgba(61,220,132,.08)}
+.badge.dev{color:#ffb057;border-color:rgba(255,176,87,.35);background:rgba(255,176,87,.08)}
+.badge.plan{color:var(--accent-2);border-color:rgba(57,208,255,.3);background:rgba(57,208,255,.08)}
+.status-foot{padding:16px 28px;font-family:var(--mono);font-size:.7rem;color:var(--muted);letter-spacing:.5px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+
+/* ---------- CONTACT ---------- */
+.contact{
+  text-align:center;border:1px solid var(--line-2);border-radius:26px;padding:56px 28px;
+  background:radial-gradient(600px 260px at 50% 0%,rgba(255,122,47,.14),transparent 70%),var(--surface);
+}
+.contact h2{font-size:clamp(1.7rem,4.2vw,2.5rem);letter-spacing:-1.3px}
+.contact p{color:var(--muted);max-width:520px;margin:14px auto 0}
+.mail{
+  display:inline-flex;align-items:center;gap:10px;margin-top:28px;
+  font-family:var(--mono);font-size:1rem;padding:14px 26px;border-radius:99px;
+  border:1px dashed var(--line-2);background:var(--surface-2);transition:.25s;
+}
+.mail:hover{border-color:var(--accent);color:var(--accent);border-style:solid}
+
+/* ---------- FOOTER ---------- */
+footer{border-top:1px solid var(--line);padding:38px 0;margin-top:20px}
+.foot{display:flex;justify-content:space-between;align-items:center;gap:18px;flex-wrap:wrap}
+.foot p{color:var(--muted);font-size:.83rem;font-family:var(--mono)}
+.foot-links{display:flex;gap:18px;font-size:.83rem;color:var(--muted)}
+.foot-links a:hover{color:var(--accent)}
+
+/* reveal */
+.rv{opacity:0;transform:translateY(24px);transition:opacity .7s ease,transform .7s cubic-bezier(.2,.7,.3,1)}
+.rv.in{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}*{animation:none!important}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <a href="#top" class="brand">
+      <div class="logo">CB</div>
+      <div>CraftBorn<small>Stüdyo</small></div>
+    </a>
+    <nav class="nav-links">
+      <a href="#hakkimizda">Hakkımızda</a>
+      <a href="#portallar">Portallar</a>
+      <a href="#projeler">Projeler</a>
+      <a href="#durum">Güncel Durum</a>
+    </nav>
+    <a href="#iletisim" class="nav-cta">İletişime Geç</a>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- HERO -->
+  <div class="wrap hero">
+    <div class="pill"><span class="dot"></span> Aktif Geliştirme · Minecraft 1.20.1 Forge</div>
+    <h1>Oyunlara <span>mod</span> ve<br>eklenti üretiyoruz.</h1>
+    <p>CraftBorn Stüdyo; Minecraft modları, sunucu eklentileri ve özel oyun içi sistemler geliştiren bağımsız bir yazılım stüdyosudur. Az sayıda proje, yüksek özen.</p>
+    <div class="hero-actions">
+      <a href="#projeler" class="btn btn-primary">Projeleri Gör →</a>
+      <a href="#portallar" class="btn">Topluluğa Katıl</a>
+    </div>
+    <div class="stats rv">
+      <div class="stat"><b>2</b><span>Yayınlanan Mod</span></div>
+      <div class="stat"><b>1.20.1</b><span>Minecraft Sürümü</span></div>
+      <div class="stat"><b>Forge</b><span>Mod Loader</span></div>
+      <div class="stat"><b>5</b><span>Desteklenen Dil</span></div>
+    </div>
+  </div>
+
+  <!-- HAKKIMIZDA -->
+  <section id="hakkimizda">
+    <div class="wrap">
+      <div class="sec-head rv">
+        <div class="sec-tag">// 01 — Hakkımızda</div>
+        <h2>Stüdyo diyoruz ama<br>aslında tek kişiyiz.</h2>
+        <p>Büyük bir ekip yok; fikirden koda, tasarımdan yayına kadar her şey tek elden çıkıyor. Bu yüzden her satır kod ve her piksel bilinçli bir tercih.</p>
+      </div>
+      <div class="about">
+        <div class="card rv">
+          <h3 style="font-size:1.2rem;letter-spacing:-.5px">Ne yapıyoruz?</h3>
+          <ul class="about-list">
+            <li><span class="tick">✦</span><span><b>Minecraft Modları.</b> Forge tabanlı, oynanışı kökten değiştiren özgün mekanikler: susuzluk sistemleri, yaralanma & kurtarma sistemleri, özel HUD'lar.</span></li>
+            <li><span class="tick">✦</span><span><b>Eklenti (Ex) Geliştirme.</b> Sunucular için özel istek üzerine yazılan sistemler, komutlar ve entegrasyonlar.</span></li>
+            <li><span class="tick">✦</span><span><b>Roleplay Altyapıları.</b> CraftBorn RP için tasarlanmış, takım çalışmasını zorunlu kılan gerçekçi oyun sistemleri.</span></li>
+            <li><span class="tick">✦</span><span><b>Çok Dilli Destek.</b> Tüm projelerimiz TR, EN, RU, FR ve JA dillerini destekler.</span></li>
+            <li><span class="tick">✦</span><span><b>Config & Özelleştirme.</b> Sunucu sahiplerinin her ayarı kendine göre düzenleyebileceği esnek yapılandırma dosyaları.</span></li>
+          </ul>
+        </div>
+        <div class="card owner rv">
+          <div class="avatar">D</div>
+          <h3>Detroitov</h3>
+          <div class="alias">// Luxiov</div>
+          <p>Kurucu, geliştirici ve tasarımcı. CraftBorn'un arkasındaki tek kişi.</p>
+          <div class="tags">
+            <span class="tag">Java</span>
+            <span class="tag">Forge API</span>
+            <span class="tag">UI / HUD</span>
+            <span class="tag">Web</span>
+            <span class="tag">Sunucu Sistemleri</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PORTALLAR -->
+  <section id="portallar">
+    <div class="wrap">
+      <div class="sec-head rv">
+        <div class="sec-tag">// 02 — Portallar</div>
+        <h2>Bizi bulabileceğin yerler</h2>
+        <p>Duyurular, erken erişim sürümleri, hata bildirimi ve destek için doğru kapıyı seç.</p>
+      </div>
+      <div class="portals">
+
+        <a href="https://discord.gg/DISCORD-DAVET-KODUN" target="_blank" rel="noopener" class="portal p-discord rv">
+          <div class="portal-ico">
+            <svg viewBox="0 0 24 24"><path d="M20.3 4.4A19.8 19.8 0 0 0 15.4 3l-.3.5c1.6.4 3 1 4.3 1.9a16.6 16.6 0 0 0-14.8 0A15 15 0 0 1 9 3.5L8.6 3a19.8 19.8 0 0 0-4.9 1.4C.6 9 0 13.4.3 17.7A19.9 19.9 0 0 0 6.3 21l.8-1.2c-.7-.2-1.3-.5-1.9-.9l.4-.3a14.2 14.2 0 0 0 12.8 0l.4.3c-.6.4-1.2.7-1.9.9l.8 1.2a19.9 19.9 0 0 0 6-3.3c.4-5-.6-9.3-3.4-13.3ZM8.3 15.3c-1.2 0-2.1-1.1-2.1-2.4 0-1.3.9-2.4 2.1-2.4s2.2 1.1 2.2 2.4c0 1.3-1 2.4-2.2 2.4Zm7.4 0c-1.2 0-2.1-1.1-2.1-2.4 0-1.3.9-2.4 2.1-2.4s2.2 1.1 2.2 2.4c0 1.3-1 2.4-2.2 2.4Z"/></svg>
+          </div>
+          <h3>Discord</h3>
+          <p>Topluluk, destek ve duyurular</p>
+          <div class="go">Portala Gir →</div>
+        </a>
+
+        <a href="https://instagram.com/INSTAGRAM-KULLANICI-ADIN" target="_blank" rel="noopener" class="portal p-instagram rv">
+          <div class="portal-ico">
+            <svg viewBox="0 0 24 24"><path d="M12 2.2c3.2 0 3.6 0 4.9.1 1.2.1 1.8.2 2.2.4.6.2 1 .5 1.4.9.4.4.7.8.9 1.4.2.4.3 1 .4 2.2.1 1.3.1 1.7.1 4.8s0 3.5-.1 4.8c-.1 1.2-.2 1.8-.4 2.2-.2.6-.5 1-.9 1.4-.4.4-.8.7-1.4.9-.4.2-1 .3-2.2.4-1.3.1-1.7.1-4.9.1s-3.6 0-4.9-.1c-1.2-.1-1.8-.2-2.2-.4-.6-.2-1-.5-1.4-.9-.4-.4-.7-.8-.9-1.4-.2-.4-.3-1-.4-2.2C2.2 15.5 2.2 15.1 2.2 12s0-3.5.1-4.8c.1-1.2.2-1.8.4-2.2.2-.6.5-1 .9-1.4.4-.4.8-.7 1.4-.9.4-.2 1-.3 2.2-.4 1.3-.1 1.7-.1 4.8-.1Zm0 5a4.8 4.8 0 1 0 0 9.6 4.8 4.8 0 0 0 0-9.6Zm0 7.9a3.1 3.1 0 1 1 0-6.2 3.1 3.1 0 0 1 0 6.2Zm6.1-8.1a1.1 1.1 0 1 1-2.3 0 1.1 1.1 0 0 1 2.3 0Z"/></svg>
+          </div>
+          <h3>Instagram</h3>
+          <p>Görseller, kısa tanıtımlar</p>
+          <div class="go">Portala Gir →</div>
+        </a>
+
+        <a href="https://github.com/detroitovv" target="_blank" rel="noopener" class="portal p-github rv">
+          <div class="portal-ico">
+            <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.8c-2.8.6-3.4-1.3-3.4-1.3-.4-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.3 1.1 2.9.8.1-.6.4-1.1.6-1.3-2.2-.3-4.6-1.1-4.6-5 0-1.1.4-2 1-2.7-.1-.3-.4-1.3.1-2.7 0 0 .8-.3 2.7 1a9.4 9.4 0 0 1 5 0c1.9-1.3 2.7-1 2.7-1 .5 1.4.2 2.4.1 2.7.6.7 1 1.6 1 2.7 0 3.9-2.4 4.7-4.6 5 .4.3.7.9.7 1.9v2.8c0 .3.2.6.7.5A10 10 0 0 0 12 2Z"/></svg>
+          </div>
+          <h3>GitHub</h3>
+          <p>Kaynak kod ve sürüm geçmişi</p>
+          <div class="go">Portala Gir →</div>
+        </a>
+
+        <a href="https://www.curseforge.com/members/detroitovv/projects" target="_blank" rel="noopener" class="portal p-curseforge rv">
+          <div class="portal-ico">
+            <svg viewBox="0 0 24 24"><path d="M2 5h9.6l1 2.4H7.4c.6 2.4 2.4 4 4.7 4.9 2.2.9 3.4 2 3.9 3.6.4 1.3.2 2.6-.4 4.1h-1.2c.3-1 .2-1.8-.3-2.4-.6-.7-1.7-1.1-3.4-1.4-2.3-.4-4.1-1.3-5.4-2.7C3.7 11.7 2.9 9.6 2.6 7L2 5Zm11.6 0H22l-.7 2.6-3.3 1.6 2.4.7-1.3 4.2c-.6-1.2-1.6-2.1-3-2.8-1.9-.9-3-1.9-3.5-3.1L13.6 5Z"/></svg>
+          </div>
+          <h3>CurseForge</h3>
+          <p>Modların resmî indirme sayfası</p>
+          <div class="go">Portala Gir →</div>
+        </a>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJELER -->
+  <section id="projeler">
+    <div class="wrap">
+      <div class="sec-head rv">
+        <div class="sec-tag">// 03 — Projeler</div>
+        <h2>Minecraft Mod Projelerimiz</h2>
+        <p>Tüm indirmeler CurseForge üzerinden yapılır. Detaylı dokümantasyon için mod sayfalarını ziyaret et.</p>
+      </div>
+      <div class="projects">
+
+        <article class="proj rv" style="--pg:#39d0ff">
+          <div class="proj-top">
+            <div class="proj-emoji">💧</div>
+            <h3>Water of Life</h3>
+            <div class="sub">Susuzluk & Hayatta Kalma Sistemi</div>
+          </div>
+          <div class="proj-body">
+            <p>Hayatta kalmak sadece savaşmaktan ibaret değil. Oyuncuya tam donanımlı bir susuzluk mekaniği, özelleştirilebilir HUD ve biyoma göre değişen su tüketimi getirir.</p>
+            <div class="meta"><span>1.20.1</span><span>Forge</span><span>Yayında</span><span>5 Dil</span></div>
+            <ul class="feat">
+              <li>100 birimlik susuzluk ölçeği ve dinamik azalma</li>
+              <li>Biyoma göre değişen susuzluk hızı (çöl, kar, nether)</li>
+              <li>Konumu ve görünümü ayarlanabilir HUD</li>
+              <li>Özel eşyalar, bloklar ve içecek efektleri</li>
+              <li>Sunucu tarafı <code style="font-family:var(--mono);font-size:.8em">craftbornbar-server.toml</code> config desteği</li>
+            </ul>
+            <div class="proj-actions">
+              <a href="https://www.curseforge.com/minecraft/mc-mods/water-of-life/preview" target="_blank" rel="noopener" class="btn btn-cf">⬇ CurseForge'dan İndir</a>
+              <a href="https://detroitovv.github.io/CraftBorn/WaterOfLife.html" target="_blank" rel="noopener" class="btn">Detaylar</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="proj rv" style="--pg:#ff7a2f">
+          <div class="proj-top">
+            <div class="proj-emoji">🩸</div>
+            <h3>Revive Me Brother</h3>
+            <div class="sub">Yaralanma & Kurtarma Sistemi</div>
+          </div>
+          <div class="proj-body">
+            <p>Ölümcül hasar aldığında oyuncu direkt ölmez, yaralı duruma geçer. Takım çalışmasını zorunlu kılan gerçekçi bir combat revive sistemi.</p>
+            <div class="meta"><span>1.20.1</span><span>Forge</span><span>v1.0.0</span><span>CraftBorn RP</span></div>
+            <ul class="feat">
+              <li>Yaralı durumu: hareket, saldırı ve görüş kısıtlaması</li>
+              <li>5 dakikalık geri sayım ve kırmızı HUD arayüzü</li>
+              <li>50 blok yarıçapında yardım çağrısı sistemi</li>
+              <li>30 saniyelik kurtarma mekaniği (+50 XP ödülü)</li>
+              <li>T1–T4 acil yardım çantaları ve hologramlı doğum bloğu</li>
+            </ul>
+            <div class="proj-actions">
+              <a href="https://www.curseforge.com/minecraft/mc-mods/revivemebrother" target="_blank" rel="noopener" class="btn btn-cf">⬇ CurseForge'dan İndir</a>
+              <a href="https://detroitovv.github.io/CraftBorn/ReviveMeBrother.html" target="_blank" rel="noopener" class="btn">Detaylar</a>
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- DURUM KARTI -->
+  <section id="durum">
+    <div class="wrap">
+      <div class="sec-head rv">
+        <div class="sec-tag">// 04 — Bilgilendirme</div>
+        <h2>Güncel Modlar & Proje Durumu</h2>
+        <p>Hangi proje ne aşamada? Bu kart yeni sürümlerde güncellenir.</p>
+      </div>
+
+      <div class="status-card rv">
+        <div class="status-head">
+          <h3>📊 Geliştirme Panosu</h3>
+          <div class="live"><span class="dot"></span> Canlı Durum</div>
+        </div>
+        <div class="status-grid">
+
+          <div class="status-item">
+            <div class="row"><h4>Water of Life</h4><div class="pct">100%</div></div>
+            <div class="desc">Yayında ve stabil. Susuzluk sistemi, HUD ve config tamamlandı.</div>
+            <div class="bar"><i style="width:100%"></i></div>
+            <span class="badge rel">Yayında</span>
+          </div>
+
+          <div class="status-item">
+            <div class="row"><h4>Revive Me Brother</h4><div class="pct">100%</div></div>
+            <div class="desc">v1.0.0 yayında. Kurtarma, tier sistemi ve hologram aktif.</div>
+            <div class="bar"><i style="width:100%"></i></div>
+            <span class="badge rel">Yayında</span>
+          </div>
+
+          <div class="status-item">
+            <div class="row"><h4>Sıradaki Proje</h4><div class="pct">15%</div></div>
+            <div class="desc">CraftBorn RP için yeni bir sistem üzerinde çalışılıyor. Detaylar yakında Discord'da.</div>
+            <div class="bar"><i style="width:15%"></i></div>
+            <span class="badge plan">Planlama</span>
+          </div>
+
+        </div>
+        <div class="status-foot">
+          <span>// Tüm indirmeler CurseForge üzerinden sağlanır</span>
+          <span>Minecraft 1.20.1 · Forge</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- İLETİŞİM -->
+  <section id="iletisim">
+    <div class="wrap">
+      <div class="contact rv">
+        <h2>Bir fikrin mi var?</h2>
+        <p>Özel mod, eklenti veya sunucu sistemi talepleri, iş birlikleri ve hata bildirimleri için doğrudan yaz.</p>
+        <a href="mailto:Detroitovv@gmail.com" class="mail">✉ Detroitovv@gmail.com</a>
+        <div class="hero-actions" style="margin-top:22px">
+          <a href="https://discord.gg/DISCORD-DAVET-KODUN" target="_blank" rel="noopener" class="btn">Discord'dan Ulaş</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <div class="brand">
+      <div class="logo">CB</div>
+      <div>CraftBorn<small>Detroitov // Luxiov</small></div>
+    </div>
+    <div class="foot-links">
+      <a href="https://discord.gg/DISCORD-DAVET-KODUN" target="_blank" rel="noopener">Discord</a>
+      <a href="https://instagram.com/INSTAGRAM-KULLANICI-ADIN" target="_blank" rel="noopener">Instagram</a>
+      <a href="https://github.com/detroitovv/CraftBorn" target="_blank" rel="noopener">GitHub</a>
+      <a href="https://www.curseforge.com/members/detroitov/projects" target="_blank" rel="noopener">CurseForge</a>
+    </div>
+    <p>© 2026 CraftBorn Stüdyo</p>
+  </div>
+</footer>
+
+<script>
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+  },{threshold:.12});
+  document.querySelectorAll('.rv').forEach((el,i)=>{ el.style.transitionDelay=(i%4*60)+'ms'; io.observe(el); });
+</script>
+</body>
+</html>
